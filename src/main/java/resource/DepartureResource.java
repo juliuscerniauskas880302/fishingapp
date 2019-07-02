@@ -1,7 +1,7 @@
 package resource;
 
-import domain.Catch;
-import ejb.CatchEJB;
+import domain.Departure;
+import ejb.DepartureEJB;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -15,33 +15,33 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/catches")
-public class CatchResource {
+@Path("/departures")
+public class DepartureResource {
     @Inject
-    private CatchEJB catchEJB;
+    private DepartureEJB departureEJB;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Catch> findAll() {
-        return catchEJB.findAll();
+    public List<Departure> findAll() {
+        return departureEJB.findAll();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Catch aCatch) {
-        catchEJB.create(aCatch);
+    public void create(Departure departure) {
+        departureEJB.create(departure);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("id") final Long id, Catch aCatch) {
-        catchEJB.update(id, aCatch);
+    public void update(@PathParam("id") final Long id, Departure departure) {
+        departureEJB.update(id, departure);
     }
 
     @DELETE
     @Path("/{id}")
     public void remove(@PathParam("id") final Long id) {
-        catchEJB.remove(id);
+        departureEJB.remove(id);
     }
 }

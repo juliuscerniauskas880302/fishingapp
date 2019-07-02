@@ -1,7 +1,7 @@
 package resource;
 
-import domain.Catch;
-import ejb.CatchEJB;
+import domain.EndFishing;
+import ejb.EndFishingEJB;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -15,33 +15,33 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/catches")
-public class CatchResource {
+@Path("/ends")
+public class EndFishingResource {
     @Inject
-    private CatchEJB catchEJB;
+    private EndFishingEJB endFishingEJB;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Catch> findAll() {
-        return catchEJB.findAll();
+    public List<EndFishing> findAll() {
+        return endFishingEJB.findAll();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Catch aCatch) {
-        catchEJB.create(aCatch);
+    public void create(EndFishing departure) {
+        endFishingEJB.create(departure);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("id") final Long id, Catch aCatch) {
-        catchEJB.update(id, aCatch);
+    public void update(@PathParam("id") final Long id, EndFishing departure) {
+        endFishingEJB.update(id, departure);
     }
 
     @DELETE
     @Path("/{id}")
     public void remove(@PathParam("id") final Long id) {
-        catchEJB.remove(id);
+        endFishingEJB.remove(id);
     }
 }

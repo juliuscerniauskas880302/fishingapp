@@ -26,8 +26,12 @@ public class EndFishingEJBImpl implements EndFishingEJB {
     }
 
     @Override
-    public void update(Long id, EndFishing endFishing) {
-
+    public void update(Long id, EndFishing body) {
+        EndFishing endFishing = em.find(EndFishing.class, id);
+        if(endFishing != null) {
+            endFishing.setDate(body.getDate());
+            em.merge(endFishing);
+        }
     }
 
     @Override

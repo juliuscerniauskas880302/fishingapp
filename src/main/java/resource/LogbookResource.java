@@ -10,7 +10,12 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.validation.Valid;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +23,6 @@ import java.util.List;
 
 @Path("/logs")
 public class LogbookResource {
-
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public JsonArray findAll() {
