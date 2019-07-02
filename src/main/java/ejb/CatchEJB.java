@@ -2,14 +2,17 @@ package ejb;
 
 import domain.Catch;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public interface CatchEJB {
     List<Catch> findAll();
 
-    void create(Catch aCatch);
+    Catch findById(Long id);
 
-    void update(Long id, Catch body);
+    Response create(Catch aCatch);
 
-    void remove(Long id);
+    Response update(Long id, Catch body);
+
+    Response remove(Long id);
 }

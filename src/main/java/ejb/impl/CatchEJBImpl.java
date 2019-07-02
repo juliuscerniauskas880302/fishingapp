@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Stateless
@@ -21,23 +22,35 @@ public class CatchEJBImpl implements CatchEJB {
     }
 
     @Override
-    public void create(Catch aCatch) {
-        em.persist(aCatch);
+    public Catch findById(Long id) {
+        return em.find(Catch.class, id);
     }
 
     @Override
-    public void update(Long id, Catch body) {
+    public Response create(Catch aCatch) {
+        em.persist(aCatch);
+        return Response.ok("Catch created").build();
+    }
+
+    @Override
+    public Response update(Long id, Catch body) {
         Catch aCatch = em.find(Catch.class, id);
-        if(aCatch != null) {
+        if (aCatch != null) {
             aCatch.setSpecies(body.getSpecies());
             aCatch.setWeight(body.getWeight());
             em.merge(aCatch);
+            return Response.ok("Catch updated").build();
         }
+        return Response.status(404).build();
     }
 
     @Override
-    public void remove(Long id) {
+    public Response remove(Long id) {
         Catch aCatch = em.find(Catch.class, id);
-        em.remove(aCatch);
+        if (aCatch != null) {
+            em.remove(aCatch);
+            return Response.ok("Catch deleted").build();
+        }
+        return Response.status(404).build();
     }
 }

@@ -2,14 +2,17 @@ package ejb;
 
 import domain.Departure;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public interface DepartureEJB {
     List<Departure> findAll();
 
-    void create(Departure departure);
+    Departure findById(Long id);
 
-    void update(Long id, Departure departure);
+    Response create(Departure departure);
 
-    void remove(Long id);
+    Response update(Long id, Departure departure);
+
+    Response remove(Long id);
 }

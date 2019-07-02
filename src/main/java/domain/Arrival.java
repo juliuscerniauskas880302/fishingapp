@@ -2,11 +2,15 @@ package domain;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Arrival implements Serializable {
@@ -18,12 +22,12 @@ public class Arrival implements Serializable {
     @Column
     private String port;
     @NotNull
-    private Date date;
+    private LocalDate date;
 
     public Arrival() {
     }
 
-    public Arrival(String port, Date date) {
+    public Arrival(String port, LocalDate date) {
         this.port = port;
         this.date = date;
     }
@@ -44,11 +48,11 @@ public class Arrival implements Serializable {
         this.port = port;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

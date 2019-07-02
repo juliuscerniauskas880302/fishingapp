@@ -7,7 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class EndFishing {
@@ -15,12 +15,12 @@ public class EndFishing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
     private Long id;
-    private Date date;
+    private LocalDate date;
 
     public EndFishing() {
     }
 
-    public EndFishing(Date date) {
+    public EndFishing(LocalDate date) {
         this.date = date;
     }
 
@@ -32,11 +32,11 @@ public class EndFishing {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

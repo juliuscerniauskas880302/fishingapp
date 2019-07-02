@@ -8,7 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Departure {
@@ -19,12 +19,12 @@ public class Departure {
     @NotNull
     private String port;
     @NotNull
-    private Date date;
+    private LocalDate date;
 
     public Departure() {
     }
 
-    public Departure(String port, Date date) {
+    public Departure(String port, LocalDate date) {
         this.port = port;
         this.date = date;
     }
@@ -45,11 +45,11 @@ public class Departure {
         this.port = port;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

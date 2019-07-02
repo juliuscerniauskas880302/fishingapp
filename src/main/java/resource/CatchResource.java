@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/catches")
@@ -26,22 +27,29 @@ public class CatchResource {
         return catchEJB.findAll();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Catch findById(@PathParam("id") final Long id) {
+        return catchEJB.findById(id);
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Catch aCatch) {
-        catchEJB.create(aCatch);
+    public Response create(Catch aCatch) {
+        return catchEJB.create(aCatch);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("id") final Long id, Catch aCatch) {
-        catchEJB.update(id, aCatch);
+    public Response update(@PathParam("id") final Long id, Catch aCatch) {
+        return catchEJB.update(id, aCatch);
     }
 
     @DELETE
     @Path("/{id}")
-    public void remove(@PathParam("id") final Long id) {
-        catchEJB.remove(id);
+    public Response remove(@PathParam("id") final Long id) {
+        return catchEJB.remove(id);
     }
 }

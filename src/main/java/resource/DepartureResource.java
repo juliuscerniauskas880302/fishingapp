@@ -13,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/departures")
@@ -26,22 +27,29 @@ public class DepartureResource {
         return departureEJB.findAll();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Departure findById(@PathParam("id") final Long id) {
+        return departureEJB.findById(id);
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void create(Departure departure) {
-        departureEJB.create(departure);
+    public Response create(Departure departure) {
+        return departureEJB.create(departure);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void update(@PathParam("id") final Long id, Departure departure) {
-        departureEJB.update(id, departure);
+    public Response update(@PathParam("id") final Long id, Departure departure) {
+        return departureEJB.update(id, departure);
     }
 
     @DELETE
     @Path("/{id}")
-    public void remove(@PathParam("id") final Long id) {
-        departureEJB.remove(id);
+    public Response remove(@PathParam("id") final Long id) {
+        return departureEJB.remove(id);
     }
 }

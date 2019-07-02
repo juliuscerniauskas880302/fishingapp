@@ -1,65 +1,59 @@
 package resource;
 
-import domain.Arrival;
-import domain.Catch;
-import domain.Departure;
-import domain.EndFishing;
 import domain.Logbook;
+import ejb.impl.LogbookEBJImpl;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Path("/logs")
 public class LogbookResource {
+    @Inject
+    private LogbookEBJImpl logbookEBJ;
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonArray findAll() {
-        Arrival arrival = new Arrival("Vilnius Port", new Date());
-        List<Catch> catches = new ArrayList<>();
-        catches.add(new Catch("Salmon", 50.0D));
-        catches.add(new Catch("Salmon", 50.0D));
-        catches.add(new Catch("Salmon", 50.0D));
-        catches.add(new Catch("Salmon", 50.0D));
-        catches.add(new Catch("Salmon", 50.0D));
-        catches.add(new Catch("Salmon", 50.0D));
-        catches.add(new Catch("Salmon", 50.0D));
-        Departure departure = new Departure("Klaipeda Port", new Date());
-        EndFishing endFishing = new EndFishing(new Date());
-        Logbook logbook = new Logbook(arrival, catches, departure, endFishing);
-        Logbook logbook2 = new Logbook(arrival, catches, departure, endFishing);
-        Logbook logbook3 = new Logbook(arrival, catches, departure, endFishing);
-        return Json.createArrayBuilder().add(logbook.toJson())
-                .add(logbook2.toJson())
-                .add(logbook3.toJson())
-                .build();
+    public List<Logbook> findAll() {
+        return logbookEBJ.findAll();
     }
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public JsonObject findById(@PathParam("id") final Long id) {
-        Logbook logbook = new Logbook();
-        logbook.setId(id);
-        return logbook.toJson();
+    public Logbook findById(@PathParam("id") final Long id) {
+        return logbookEBJ.findById(id);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteById(@PathParam("id") final Long id) {
+        return logbookEBJ.remove(id);
+    }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response updateById(@PathParam("id") final Long id, Logbook logbook) {
+        return logbookEBJ.update(id, logbook);
     }
 
     @POST
+    @Path("/{place}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Logbook add(@Valid Logbook logbook) {
-        return logbook;
+    public Response create(@Valid Logbook logbook, @PathParam("place") String place) {
+        logbookEBJ.create(logbook, place);
+        return Response.ok("Logbook created").build();
     }
 }

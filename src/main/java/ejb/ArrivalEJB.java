@@ -2,14 +2,17 @@ package ejb;
 
 import domain.Arrival;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public interface ArrivalEJB {
     List<Arrival> findAll();
 
-    void create(Arrival arrival);
+    Arrival findById(Long id);
 
-    void update(Long id, Arrival body);
+    Response create(Arrival arrival);
 
-    void remove(Long id);
+    Response update(Long id, Arrival body);
+
+    Response remove(Long id);
 }

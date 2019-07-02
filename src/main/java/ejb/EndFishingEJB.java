@@ -2,14 +2,17 @@ package ejb;
 
 import domain.EndFishing;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public interface EndFishingEJB {
     List<EndFishing> findAll();
 
-    void create(EndFishing endFishing);
+    EndFishing findById(Long id);
 
-    void update(Long id, EndFishing endFishing);
+    Response create(EndFishing endFishing);
 
-    void remove(Long id);
+    Response update(Long id, EndFishing endFishing);
+
+    Response remove(Long id);
 }
