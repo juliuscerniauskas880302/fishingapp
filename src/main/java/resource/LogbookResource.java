@@ -1,6 +1,10 @@
 package resource;
 
-import domain.*;
+import domain.Arrival;
+import domain.Catch;
+import domain.Departure;
+import domain.EndFishing;
+import domain.Logbook;
 
 import javax.json.Json;
 import javax.json.JsonArray;

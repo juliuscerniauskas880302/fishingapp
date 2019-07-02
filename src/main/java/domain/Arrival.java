@@ -2,21 +2,20 @@ package domain;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
 import java.util.Date;
 
-@XmlRootElement
-public class Arrival {
+@Entity
+public class Arrival implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
     private Long id;
     @NotNull
+    @Column
     private String port;
     @NotNull
     private Date date;
