@@ -1,19 +1,26 @@
 package domain;
 
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.LocalDate;
+import javax.xml.bind.annotation.XmlTransient;
+import java.util.Date;
 
 @XmlRootElement
 public class EndFishing {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @XmlTransient
     private Long id;
-    private LocalDate date;
+    private Date date;
 
     public EndFishing() {
     }
 
-    public EndFishing(Long id, LocalDate date) {
+    public EndFishing(Long id, Date date) {
         this.id = id;
         this.date = date;
     }
@@ -26,11 +33,17 @@ public class EndFishing {
         this.id = id;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
+    }
+
+    public JsonObject toJson() {
+        return Json.createObjectBuilder()
+                .add("date", this.date.toString())
+                .build();
     }
 }

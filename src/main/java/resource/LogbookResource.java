@@ -1,19 +1,29 @@
 package resource;
 
-import domain.Arrival;
+import domain.*;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.validation.Valid;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.time.LocalDate;
+import java.util.Date;
 
-@Path("/arrivals")
-public class ArrivalResource {
+@Path("/logs")
+public class LogbookResource {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public Arrival getAll() {
-        return new Arrival(1L,"Vilnius port", LocalDate.now());
+    public Logbook findAll() {
+        Arrival arrival = new Arrival(1L, "Vilnius Port", new Date());
+        Catch aCatch = new Catch(2L,"Salmon", 50.0D);
+        Departure departure = new Departure(3L,"Klaipeda Port", new Date());
+        EndFishing endFishing = new EndFishing(5L, new Date());
+        return new Logbook(5L, arrival, aCatch, departure, endFishing);
+    }
+
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Logbook add(@Valid Logbook logbook) {
+        return logbook;
     }
 }
