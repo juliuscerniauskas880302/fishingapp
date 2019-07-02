@@ -3,16 +3,26 @@ package domain;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
+@Entity
 public class Logbook {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @XmlTransient
     private Long id;
+    @OneToOne
     private Arrival arrival;
+    @OneToMany
     private List<Catch> catches = new ArrayList<>();
+    @OneToOne
     private Departure departure;
+    @OneToOne
     private EndFishing endFishing;
 
     public Logbook() {

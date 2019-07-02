@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,7 +56,7 @@ public class LogbookResource {
         return logbook.toJson();
     }
 
-    @PUT
+    @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Logbook add(@Valid Logbook logbook) {
