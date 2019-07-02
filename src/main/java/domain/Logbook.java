@@ -1,22 +1,26 @@
 package domain;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
+import javax.json.JsonObject;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
 public class Logbook {
     private Long id;
     private Arrival arrival;
-    private Catch aCatch;
+    private List<Catch> catches = new ArrayList<>();
     private Departure departure;
     private EndFishing endFishing;
 
     public Logbook() {
     }
 
-    public Logbook(Long id, Arrival arrival, Catch aCatch, Departure departure, EndFishing endFishing) {
-        this.id = id;
+    public Logbook(Arrival arrival, List<Catch> catches, Departure departure, EndFishing endFishing) {
         this.arrival = arrival;
-        this.aCatch = aCatch;
+        this.catches = catches;
         this.departure = departure;
         this.endFishing = endFishing;
     }
@@ -37,12 +41,12 @@ public class Logbook {
         this.arrival = arrival;
     }
 
-    public Catch getaCatch() {
-        return aCatch;
+    public List<Catch> getCatches() {
+        return catches;
     }
 
-    public void setaCatch(Catch aCatch) {
-        this.aCatch = aCatch;
+    public void setCatches(List<Catch> catches) {
+        this.catches = catches;
     }
 
     public Departure getDeparture() {
@@ -59,5 +63,23 @@ public class Logbook {
 
     public void setEndFishing(EndFishing endFishing) {
         this.endFishing = endFishing;
+    }
+
+    public JsonObject toJson() {
+
+        JsonArrayBuilder catchList = Json.createArrayBuilder();
+        if (catches != null) {
+            catches.stream().forEach(c -> catchList.add(c.toJson()));
+        } else {
+            catches = new ArrayList<>();
+        }
+
+        return Json.createObjectBuilder()
+                .add("LogBook", Json.createObjectBuilder()
+                        .add("departure", departure != null ? departure.toJson() : new Departure().toJson())
+                        .add("arrival", arrival != null ? arrival.toJson() : new Arrival().toJson())
+                        .add("catches", catchList)
+                        .add("endOfFishing", endFishing != null ? endFishing.toJson() : new EndFishing().toJson())
+                        .build()).build();
     }
 }

@@ -24,8 +24,7 @@ public class Departure {
     public Departure() {
     }
 
-    public Departure(Long id, String port, Date date) {
-        this.id = id;
+    public Departure(String port, Date date) {
         this.port = port;
         this.date = date;
     }
@@ -56,8 +55,8 @@ public class Departure {
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
-                .add("port", this.port)
-                .add("date", this.date.toString())
+                .add("port", this.port != null ? this.port : "")
+                .add("date", this.date != null ? this.date.toString() : "")
                 .build();
     }
 }

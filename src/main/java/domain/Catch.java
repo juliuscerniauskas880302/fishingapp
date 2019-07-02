@@ -2,7 +2,6 @@ package domain;
 
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,8 +20,7 @@ public class Catch {
     public Catch() {
     }
 
-    public Catch(Long id, String species, Double weight) {
-        this.id = id;
+    public Catch(String species, Double weight) {
         this.species = species;
         this.weight = weight;
     }
@@ -53,8 +51,8 @@ public class Catch {
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
-                .add("species", this.species)
-                .add("weight", this.weight)
+                .add("species", this.species != null ? this.species : "")
+                .add("weight", this.weight!= null ? this.weight : 0)
                 .build();
     }
 }

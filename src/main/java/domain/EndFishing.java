@@ -20,8 +20,7 @@ public class EndFishing {
     public EndFishing() {
     }
 
-    public EndFishing(Long id, Date date) {
-        this.id = id;
+    public EndFishing(Date date) {
         this.date = date;
     }
 
@@ -43,7 +42,7 @@ public class EndFishing {
 
     public JsonObject toJson() {
         return Json.createObjectBuilder()
-                .add("date", this.date.toString())
+                .add("date", this.date != null ? this.date.toString() : "")
                 .build();
     }
 }
