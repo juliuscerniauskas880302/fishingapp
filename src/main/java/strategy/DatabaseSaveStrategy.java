@@ -1,5 +1,6 @@
 package strategy;
 
+import camel.DataSaveRouteContext;
 import domain.Logbook;
 
 import javax.persistence.EntityManager;
