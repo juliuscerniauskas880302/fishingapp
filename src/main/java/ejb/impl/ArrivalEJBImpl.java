@@ -41,7 +41,7 @@ public class ArrivalEJBImpl implements ArrivalEJB {
             em.merge(arrival);
             return Response.ok("Arrival updated").build();
         }
-        return Response.status(404).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Override
@@ -51,6 +51,6 @@ public class ArrivalEJBImpl implements ArrivalEJB {
             em.remove(arrival);
             return Response.ok("Arrival removed").build();
         }
-        return Response.status(404).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

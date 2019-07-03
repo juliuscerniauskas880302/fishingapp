@@ -46,7 +46,7 @@ public class LogbookEBJDBImpl implements LogbookEJB {
     public Response update(Long id, Logbook body) {
         Logbook logbook = em.find(Logbook.class, id);
         if (logbook == null) {
-            return Response.status(404).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         logbook.setArrival(body.getArrival());
         logbook.setCatches(body.getCatches());
@@ -60,7 +60,7 @@ public class LogbookEBJDBImpl implements LogbookEJB {
     public Response remove(Long id) {
         Logbook logbook = em.find(Logbook.class, id);
         if (logbook == null) {
-            return Response.status(404).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
         em.remove(logbook);
         return Response.ok("Logbook removed").build();

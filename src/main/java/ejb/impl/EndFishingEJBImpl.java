@@ -40,7 +40,7 @@ public class EndFishingEJBImpl implements EndFishingEJB {
             em.merge(endFishing);
             return Response.ok("EndOfFishing updated").build();
         }
-        return Response.status(404).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Override
@@ -50,6 +50,6 @@ public class EndFishingEJBImpl implements EndFishingEJB {
             em.remove(endFishing);
             return Response.ok("EndOfFishing removed").build();
         }
-        return Response.status(404).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

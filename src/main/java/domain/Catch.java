@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
@@ -14,7 +15,9 @@ public class Catch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
     private Long id;
+    @NotNull
     private String species;
+    @NotNull
     private Double weight;
 
     public Catch() {

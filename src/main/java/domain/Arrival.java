@@ -20,7 +20,6 @@ public class Arrival implements Serializable {
     @XmlTransient
     private Long id;
     @NotNull
-    @Column
     private String port;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)

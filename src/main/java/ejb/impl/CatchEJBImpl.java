@@ -41,7 +41,7 @@ public class CatchEJBImpl implements CatchEJB {
             em.merge(aCatch);
             return Response.ok("Catch updated").build();
         }
-        return Response.status(404).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Override
@@ -51,6 +51,6 @@ public class CatchEJBImpl implements CatchEJB {
             em.remove(aCatch);
             return Response.ok("Catch deleted").build();
         }
-        return Response.status(404).build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

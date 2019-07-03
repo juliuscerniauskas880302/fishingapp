@@ -15,7 +15,7 @@ public class FileSaveStrategy implements SaveStrategy {
         try {
             writeToFile(logbook.toJson());
         } catch (IOException e) {
-            return Response.serverError().build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
         return Response.ok("Logbook saved on file").build();
     }
