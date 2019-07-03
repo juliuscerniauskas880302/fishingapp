@@ -1,7 +1,6 @@
 package ejb;
 
 import domain.Logbook;
-import strategy.SaveStrategy;
 
 import javax.ws.rs.core.Response;
 import java.util.List;

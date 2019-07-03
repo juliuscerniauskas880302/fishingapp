@@ -21,8 +21,6 @@ public class FileSaveStrategy implements SaveStrategy {
     private void writeToFile(JsonObject obj) throws IOException {
         try (FileWriter file = new FileWriter("logbook.txt")) {
             file.write(String.valueOf(obj));
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + obj);
         }
     }
 }
