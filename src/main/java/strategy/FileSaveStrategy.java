@@ -15,11 +15,11 @@ public class FileSaveStrategy implements SaveStrategy {
         } catch (IOException e) {
             return Response.status(404).build();
         }
-        return Response.ok("Logbook saved in file").build();
+        return Response.ok("Logbook saved on file").build();
     }
 
     private void writeToFile(JsonObject obj) throws IOException {
-        try (FileWriter file = new FileWriter("logbook.txt")) {
+        try (FileWriter file = new FileWriter("C:\\Users\\julius.cerniauskas\\Desktop\\logbook.log")) {
             file.write(String.valueOf(obj));
         }
     }
