@@ -1,7 +1,12 @@
 package resource;
 
+import domain.Arrival;
+import domain.Catch;
+import domain.Departure;
+import domain.EndFishing;
 import domain.Logbook;
-import ejb.impl.LogbookEBJImpl;
+import ejb.LogbookEJB;
+import enums.CommunicationType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -15,12 +20,29 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/logs")
 public class LogbookResource {
     @Inject
-    private LogbookEBJImpl logbookEBJ;
+    private LogbookEJB logbookEBJ;
+
+    @GET
+    @Path("/test")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Logbook test() {
+        Arrival arrival = new Arrival("Port 1", LocalDate.now());
+        Catch aCatch = new Catch("Salmon", 52.0D);
+        Departure departure = new Departure("Port 2", LocalDate.now());
+        List<Catch> catches = new ArrayList<>();
+        catches.add(aCatch);
+        EndFishing endFishing = new EndFishing(LocalDate.now());
+        CommunicationType communicationType = CommunicationType.OFFLINE;
+        Logbook logbook = new Logbook(arrival, catches, departure, endFishing, communicationType.toString());
+        return logbook;
+    }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -49,11 +71,10 @@ public class LogbookResource {
     }
 
     @POST
-    @Path("/{place}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Logbook logbook, @PathParam("place") String place) {
-        logbookEBJ.create(logbook, place);
+    public Response create(@Valid Logbook logbook) {
+        logbookEBJ.create(logbook);
         return Response.ok("Logbook created").build();
     }
 }

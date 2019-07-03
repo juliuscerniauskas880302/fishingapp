@@ -1,5 +1,7 @@
 package domain;
 
+import enums.CommunicationType;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
@@ -25,14 +27,19 @@ public class Logbook {
     @OneToOne
     private EndFishing endFishing;
 
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private CommunicationType communicationType;
+
     public Logbook() {
     }
 
-    public Logbook(Arrival arrival, List<Catch> catches, Departure departure, EndFishing endFishing) {
+    public Logbook(Arrival arrival, List<Catch> catches, Departure departure, EndFishing endFishing, String communicationType) {
         this.arrival = arrival;
         this.catches = catches;
         this.departure = departure;
         this.endFishing = endFishing;
+        this.communicationType = CommunicationType.valueOf(communicationType);
     }
 
     public Long getId() {
@@ -75,6 +82,14 @@ public class Logbook {
         this.endFishing = endFishing;
     }
 
+    public CommunicationType getCommunicationType() {
+        return communicationType;
+    }
+
+    public void setCommunicationType(CommunicationType communicationType) {
+        this.communicationType = communicationType;
+    }
+
     public JsonObject toJson() {
 
         JsonArrayBuilder catchList = Json.createArrayBuilder();
@@ -86,6 +101,7 @@ public class Logbook {
 
         return Json.createObjectBuilder()
                 .add("LogBook", Json.createObjectBuilder()
+                        .add("communication", this.communicationType.toString())
                         .add("departure", departure != null ? departure.toJson() : new Departure().toJson())
                         .add("arrival", arrival != null ? arrival.toJson() : new Arrival().toJson())
                         .add("catches", catchList)

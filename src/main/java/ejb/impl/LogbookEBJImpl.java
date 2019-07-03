@@ -2,21 +2,26 @@ package ejb.impl;
 
 import domain.Logbook;
 import ejb.LogbookEJB;
+import enums.CommunicationType;
 import strategy.DatabaseSaveStrategy;
 import strategy.FileSaveStrategy;
 import strategy.SaveContext;
 
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
+@Stateless
 public class LogbookEBJImpl implements LogbookEJB {
     @PersistenceContext
     private EntityManager em;
 
-    private SaveContext saveContext = new SaveContext();
+    @Inject
+    private SaveContext saveContext;
 
     @Override
     public List<Logbook> findAll() {
@@ -30,8 +35,8 @@ public class LogbookEBJImpl implements LogbookEJB {
     }
 
     @Override
-    public Response create(Logbook logbook, String place) {
-        if (place.equals("file")) {
+    public Response create(Logbook logbook) {
+        if (logbook.getCommunicationType() == CommunicationType.OFFLINE) {
             saveContext.setSaveStrategy(new FileSaveStrategy());
         } else {
             saveContext.setSaveStrategy(new DatabaseSaveStrategy());

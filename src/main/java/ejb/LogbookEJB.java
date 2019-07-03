@@ -10,7 +10,7 @@ public interface LogbookEJB {
 
     Logbook findById(Long id);
 
-    Response create(Logbook logbook, String place);
+    Response create(Logbook logbook);
 
     Response update(Long id, Logbook logbook);
 
