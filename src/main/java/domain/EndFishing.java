@@ -1,11 +1,13 @@
 package domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import utilities.LocalDateDeserializer;
+import utilities.LocalDateSerializer;
+
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 import java.time.LocalDate;
 
@@ -15,6 +17,8 @@ public class EndFishing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
     private Long id;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate date;
 
     public EndFishing() {

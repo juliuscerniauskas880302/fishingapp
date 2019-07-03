@@ -20,14 +20,12 @@ public class Logbook {
     private Long id;
     @OneToOne
     private Arrival arrival;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Catch> catches = new ArrayList<>();
     @OneToOne
     private Departure departure;
     @OneToOne
     private EndFishing endFishing;
-
-    @Transient
     @Enumerated(EnumType.STRING)
     private CommunicationType communicationType;
 

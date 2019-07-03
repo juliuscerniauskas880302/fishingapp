@@ -5,10 +5,9 @@ import ejb.LogbookEJB;
 import enums.CommunicationType;
 import strategy.DatabaseSaveStrategy;
 import strategy.FileSaveStrategy;
-import strategy.SaveContext;
+import strategy.SaveStrategy;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -16,12 +15,11 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Stateless
-public class LogbookEBJImpl implements LogbookEJB {
+public class LogbookEBJDBImpl implements LogbookEJB {
     @PersistenceContext
     private EntityManager em;
 
-    @Inject
-    private SaveContext saveContext;
+    private SaveStrategy saveStrategy;
 
     @Override
     public List<Logbook> findAll() {
@@ -37,11 +35,11 @@ public class LogbookEBJImpl implements LogbookEJB {
     @Override
     public Response create(Logbook logbook) {
         if (logbook.getCommunicationType() == CommunicationType.OFFLINE) {
-            saveContext.setSaveStrategy(new FileSaveStrategy());
+            saveStrategy = new FileSaveStrategy();
         } else {
-            saveContext.setSaveStrategy(new DatabaseSaveStrategy());
+            saveStrategy = new DatabaseSaveStrategy(em);
         }
-        return saveContext.save(logbook);
+        return saveStrategy.create(logbook);
     }
 
     @Override

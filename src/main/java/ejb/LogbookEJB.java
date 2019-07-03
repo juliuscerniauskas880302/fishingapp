@@ -1,6 +1,7 @@
 package ejb;
 
 import domain.Logbook;
+import strategy.SaveStrategy;
 
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -15,4 +16,5 @@ public interface LogbookEJB {
     Response update(Long id, Logbook logbook);
 
     Response remove(Long id);
+
 }

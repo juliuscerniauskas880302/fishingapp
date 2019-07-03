@@ -7,6 +7,8 @@ import domain.EndFishing;
 import domain.Logbook;
 import ejb.LogbookEJB;
 import enums.CommunicationType;
+import strategy.DatabaseSaveStrategy;
+import strategy.FileSaveStrategy;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -33,12 +35,12 @@ public class LogbookResource {
     @Path("/test")
     @Produces({MediaType.APPLICATION_JSON})
     public Logbook test() {
-        Arrival arrival = new Arrival("Port 1", LocalDate.now());
+        Arrival arrival = new Arrival("Port 1", LocalDate.of(1999, 3, 15));
         Catch aCatch = new Catch("Salmon", 52.0D);
-        Departure departure = new Departure("Port 2", LocalDate.now());
+        Departure departure = new Departure("Port 2", LocalDate.of(2016, 3, 17));
         List<Catch> catches = new ArrayList<>();
         catches.add(aCatch);
-        EndFishing endFishing = new EndFishing(LocalDate.now());
+        EndFishing endFishing = new EndFishing(LocalDate.of(2222, 11, 11));
         CommunicationType communicationType = CommunicationType.OFFLINE;
         Logbook logbook = new Logbook(arrival, catches, departure, endFishing, communicationType.toString());
         return logbook;
@@ -74,7 +76,7 @@ public class LogbookResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@Valid Logbook logbook) {
-        logbookEBJ.create(logbook);
-        return Response.ok("Logbook created").build();
+        return logbookEBJ.create(logbook);
     }
+
 }
