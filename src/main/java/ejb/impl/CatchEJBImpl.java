@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class CatchEJBImpl implements CatchEJB {
@@ -23,7 +24,8 @@ public class CatchEJBImpl implements CatchEJB {
 
     @Override
     public Catch findById(Long id) {
-        return em.find(Catch.class, id);
+        Optional<Catch> optional = Optional.ofNullable(em.find(Catch.class, id));
+        return optional.orElseGet(null);
     }
 
     @Override
@@ -34,8 +36,9 @@ public class CatchEJBImpl implements CatchEJB {
 
     @Override
     public Response update(Long id, Catch body) {
-        Catch aCatch = em.find(Catch.class, id);
-        if (aCatch != null) {
+        Optional<Catch> optional = Optional.ofNullable(em.find(Catch.class, id));
+        if (optional.isPresent()) {
+            Catch aCatch = optional.get();
             aCatch.setSpecies(body.getSpecies());
             aCatch.setWeight(body.getWeight());
             em.merge(aCatch);
@@ -46,8 +49,9 @@ public class CatchEJBImpl implements CatchEJB {
 
     @Override
     public Response remove(Long id) {
-        Catch aCatch = em.find(Catch.class, id);
-        if (aCatch != null) {
+        Optional<Catch> optional = Optional.ofNullable(em.find(Catch.class, id));
+        if (optional.isPresent()) {
+            Catch aCatch = optional.get();
             em.remove(aCatch);
             return Response.ok("Catch deleted").build();
         }

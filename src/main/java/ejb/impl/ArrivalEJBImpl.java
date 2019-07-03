@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class ArrivalEJBImpl implements ArrivalEJB {
@@ -23,7 +24,8 @@ public class ArrivalEJBImpl implements ArrivalEJB {
 
     @Override
     public Arrival findById(Long id) {
-        return em.find(Arrival.class, id);
+        Optional<Arrival> optional = Optional.ofNullable(em.find(Arrival.class, id));
+        return optional.orElseGet(null);
     }
 
     @Override
@@ -34,8 +36,9 @@ public class ArrivalEJBImpl implements ArrivalEJB {
 
     @Override
     public Response update(Long id, Arrival body) {
-        Arrival arrival = em.find(Arrival.class, id);
-        if (arrival != null) {
+        Optional<Arrival> optional = Optional.ofNullable(em.find(Arrival.class, id));
+        if (optional.isPresent()) {
+            Arrival arrival = optional.get();
             arrival.setPort(body.getPort());
             arrival.setDate(body.getDate());
             em.merge(arrival);
@@ -46,8 +49,9 @@ public class ArrivalEJBImpl implements ArrivalEJB {
 
     @Override
     public Response remove(Long id) {
-        Arrival arrival = em.find(Arrival.class, id);
-        if (arrival != null) {
+        Optional<Arrival> optional = Optional.ofNullable(em.find(Arrival.class, id));
+        if (optional.isPresent()) {
+            Arrival arrival = optional.get();
             em.remove(arrival);
             return Response.ok("Arrival removed").build();
         }

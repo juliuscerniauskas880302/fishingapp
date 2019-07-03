@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class EndFishingEJBImpl implements EndFishingEJB {
@@ -23,7 +24,8 @@ public class EndFishingEJBImpl implements EndFishingEJB {
 
     @Override
     public EndFishing findById(Long id) {
-        return em.find(EndFishing.class, id);
+        Optional<EndFishing> optional = Optional.ofNullable(em.find(EndFishing.class, id));
+        return optional.orElseGet(null);
     }
 
     @Override
@@ -34,8 +36,9 @@ public class EndFishingEJBImpl implements EndFishingEJB {
 
     @Override
     public Response update(Long id, EndFishing body) {
-        EndFishing endFishing = em.find(EndFishing.class, id);
-        if (endFishing != null) {
+        Optional<EndFishing> optional = Optional.ofNullable(em.find(EndFishing.class, id));
+        if (optional.isPresent()) {
+            EndFishing endFishing = optional.get();
             endFishing.setDate(body.getDate());
             em.merge(endFishing);
             return Response.ok("EndOfFishing updated").build();
@@ -45,8 +48,9 @@ public class EndFishingEJBImpl implements EndFishingEJB {
 
     @Override
     public Response remove(Long id) {
-        EndFishing endFishing = em.find(EndFishing.class, id);
-        if (endFishing != null) {
+        Optional<EndFishing> optional = Optional.ofNullable(em.find(EndFishing.class, id));
+        if (optional.isPresent()) {
+            EndFishing endFishing = optional.get();
             em.remove(endFishing);
             return Response.ok("EndOfFishing removed").build();
         }

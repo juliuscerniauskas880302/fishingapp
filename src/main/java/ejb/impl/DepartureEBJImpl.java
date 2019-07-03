@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class DepartureEBJImpl implements DepartureEJB {
@@ -23,7 +24,8 @@ public class DepartureEBJImpl implements DepartureEJB {
 
     @Override
     public Departure findById(Long id) {
-        return em.find(Departure.class, id);
+        Optional<Departure> optional = Optional.ofNullable(em.find(Departure.class, id));
+        return optional.orElseGet(null);
     }
 
     @Override
@@ -34,8 +36,9 @@ public class DepartureEBJImpl implements DepartureEJB {
 
     @Override
     public Response update(Long id, Departure body) {
-        Departure departure = em.find(Departure.class, id);
-        if (departure != null) {
+        Optional<Departure> optional = Optional.ofNullable(em.find(Departure.class, id));
+        if (optional.isPresent()) {
+            Departure departure = optional.get();
             departure.setDate(body.getDate());
             departure.setPort(body.getPort());
             em.merge(departure);
@@ -46,8 +49,9 @@ public class DepartureEBJImpl implements DepartureEJB {
 
     @Override
     public Response remove(Long id) {
-        Departure departure = em.find(Departure.class, id);
-        if (departure != null) {
+        Optional<Departure> optional = Optional.ofNullable(em.find(Departure.class, id));
+        if (optional.isPresent()) {
+            Departure departure = optional.get();
             em.remove(departure);
             return Response.ok("Departure deleted").build();
         }

@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 public class LogbookEBJDBImpl implements LogbookEJB {
@@ -29,7 +30,8 @@ public class LogbookEBJDBImpl implements LogbookEJB {
 
     @Override
     public Logbook findById(Long id) {
-        return em.find(Logbook.class, id);
+        Optional<Logbook> optional = Optional.ofNullable(em.find(Logbook.class, id));
+        return optional.orElseGet(null);
     }
 
     @Override
@@ -44,25 +46,27 @@ public class LogbookEBJDBImpl implements LogbookEJB {
 
     @Override
     public Response update(Long id, Logbook body) {
-        Logbook logbook = em.find(Logbook.class, id);
-        if (logbook == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        Optional<Logbook> optional = Optional.ofNullable(em.find(Logbook.class, id));
+        if (optional.isPresent()) {
+            Logbook logbook = optional.get();
+            logbook.setArrival(body.getArrival());
+            logbook.setCatches(body.getCatches());
+            logbook.setDeparture(body.getDeparture());
+            logbook.setEndFishing(body.getEndFishing());
+            em.merge(logbook);
+            return Response.ok("Logbook updated").build();
         }
-        logbook.setArrival(body.getArrival());
-        logbook.setCatches(body.getCatches());
-        logbook.setDeparture(body.getDeparture());
-        logbook.setEndFishing(body.getEndFishing());
-        em.merge(logbook);
-        return Response.ok("Logbook updated").build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @Override
     public Response remove(Long id) {
-        Logbook logbook = em.find(Logbook.class, id);
-        if (logbook == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+        Optional<Logbook> optional = Optional.ofNullable(em.find(Logbook.class, id));
+        if (optional.isPresent()) {
+            Logbook logbook = optional.get();
+            em.remove(logbook);
+            return Response.ok("Logbook removed").build();
         }
-        em.remove(logbook);
-        return Response.ok("Logbook removed").build();
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }
