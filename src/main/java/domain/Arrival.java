@@ -28,7 +28,8 @@ public class Arrival implements Serializable {
     public Arrival() {
     }
 
-    public Arrival(String port, LocalDate date) {
+    public Arrival(Long id, String port, LocalDate date) {
+        this.id = id;
         this.port = port;
         this.date = date;
     }

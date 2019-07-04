@@ -18,13 +18,13 @@ public class Logbook {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlTransient
     private Long id;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Arrival arrival;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<Catch> catches = new ArrayList<>();
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Departure departure;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private EndFishing endFishing;
     @Enumerated(EnumType.STRING)
     private CommunicationType communicationType;
@@ -98,12 +98,11 @@ public class Logbook {
         }
 
         return Json.createObjectBuilder()
-                .add("LogBook", Json.createObjectBuilder()
-                        .add("communication", this.communicationType.toString())
+                        .add("communicationType", this.communicationType.toString())
                         .add("departure", departure != null ? departure.toJson() : new Departure().toJson())
                         .add("arrival", arrival != null ? arrival.toJson() : new Arrival().toJson())
                         .add("catches", catchList)
-                        .add("endOfFishing", endFishing != null ? endFishing.toJson() : new EndFishing().toJson())
-                        .build()).build();
+                        .add("endFishing", endFishing != null ? endFishing.toJson() : new EndFishing().toJson())
+                        .build();
     }
 }

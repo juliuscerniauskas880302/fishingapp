@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileSaveStrategy implements SaveStrategy {
-    private final String FILE_PATH = "logbook.log";
+    private final String FILE_PATH = "C:\\datafiles\\input\\logbook.log";
 
     @Override
     public Response create(Logbook logbook) {

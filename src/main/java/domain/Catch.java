@@ -23,7 +23,8 @@ public class Catch {
     public Catch() {
     }
 
-    public Catch(String species, Double weight) {
+    public Catch(Long id, String species, Double weight) {
+        this.id = id;
         this.species = species;
         this.weight = weight;
     }

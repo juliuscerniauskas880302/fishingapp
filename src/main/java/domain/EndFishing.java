@@ -24,7 +24,8 @@ public class EndFishing {
     public EndFishing() {
     }
 
-    public EndFishing(LocalDate date) {
+    public EndFishing(Long id, LocalDate date) {
+        this.id = id;
         this.date = date;
     }
 
