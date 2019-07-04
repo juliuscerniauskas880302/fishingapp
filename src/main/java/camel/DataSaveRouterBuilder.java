@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Logbook;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.io.File;
 
@@ -20,6 +21,9 @@ public class DataSaveRouterBuilder extends RouteBuilder {
                     logbook = mapper.readValue(file, Logbook.class);
                     exchange.getOut().setBody(logbook);
                 })
-        .to("activemq:queue:fish_queue");
+                .marshal().json(JsonLibrary.Gson)
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .to("http://localhost:8080/deployments/logs");
     }
 }
