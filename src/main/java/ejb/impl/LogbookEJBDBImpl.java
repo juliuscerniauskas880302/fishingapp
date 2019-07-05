@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateless
-public class LogbookEBJDBImpl implements LogbookEJB {
+public class LogbookEJBDBImpl implements LogbookEJB {
     @PersistenceContext
     private EntityManager em;
 

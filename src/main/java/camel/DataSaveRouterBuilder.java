@@ -2,9 +2,9 @@ package camel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Logbook;
+import enums.CommunicationType;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.dataformat.JsonLibrary;
 
 import java.io.File;
 
@@ -17,13 +17,14 @@ public class DataSaveRouterBuilder extends RouteBuilder {
                 .process(exchange -> {
                     File file = exchange.getIn().getBody(File.class);
                     ObjectMapper mapper = new ObjectMapper();
-                    Logbook logbook = null;
+                    Logbook logbook;
                     logbook = mapper.readValue(file, Logbook.class);
-                    exchange.getOut().setBody(logbook);
+                    logbook.setCommunicationType(CommunicationType.NETWORK);
+                    exchange.getOut().setBody(logbook.toJson().toString());
                 })
-                .marshal().json(JsonLibrary.Gson)
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.HTTP_METHOD, constant("GET"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("http://localhost:8080/deployments/logs");
+                .to("http://localhost:8080/deployments/api/logs");
+
     }
 }
