@@ -1,6 +1,5 @@
 package resource;
 
-import camel.DataSaveRouteContext;
 import domain.Logbook;
 import ejb.LogbookEJB;
 
@@ -22,13 +21,6 @@ import java.util.List;
 public class LogbookResource {
     @Inject
     private LogbookEJB logbookEBJ;
-
-    @GET
-    @Path("/test")
-    @Produces({MediaType.APPLICATION_JSON})
-    public void test() {
-        DataSaveRouteContext.save();
-    }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
