@@ -1,48 +1,34 @@
 package domain;
 
-import javax.json.Json;
-import javax.json.JsonObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.base.BaseEntity;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 @Entity
-public class Catch {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlTransient
-    private Long id;
-    @NotNull
-    private String species;
-    @NotNull
+@NamedQueries(
+        @NamedQuery(name = "catch.findAll", query = "SELECT c FROM Catch c")
+)
+public class Catch extends BaseEntity {
+    private String variety;
     private Double weight;
 
     public Catch() {
     }
 
-    public Catch(Long id, String species, Double weight) {
-        this.id = id;
-        this.species = species;
+    public Catch(String variety, Double weight) {
+        this.variety = variety;
         this.weight = weight;
     }
 
-    public Long getId() {
-        return id;
+    public String getVariety() {
+        return variety;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getSpecies() {
-        return species;
-    }
-
-    public void setSpecies(String species) {
-        this.species = species;
+    public void setVariety(String variety) {
+        this.variety = variety;
     }
 
     public Double getWeight() {
@@ -53,10 +39,14 @@ public class Catch {
         this.weight = weight;
     }
 
-    public JsonObject toJson() {
-        return Json.createObjectBuilder()
-                .add("species", this.species != null ? this.species : "")
-                .add("weight", this.weight!= null ? this.weight : 0)
-                .build();
+    @Override
+    public String toString() {
+        ObjectMapper mapperObj = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapperObj.writeValueAsString(this);
+        } catch (Exception e) {
+        }
+        return json;
     }
 }

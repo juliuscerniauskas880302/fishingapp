@@ -1,51 +1,46 @@
 package domain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.base.BaseEntity;
 import enums.CommunicationType;
 
-import javax.json.Json;
-import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement
 @Entity
-public class Logbook {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlTransient
-    private Long id;
+@NamedQueries(
+        @NamedQuery(name = "logbook.findAll", query = "SELECT l FROM Logbook l")
+)
+public class Logbook extends BaseEntity {
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Arrival arrival;
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
-    private List<Catch> catches = new ArrayList<>();
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Departure departure;
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private EndFishing endFishing;
+    private EndOfFishing endOfFishing;
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    private List<Catch> catches = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private CommunicationType communicationType;
 
     public Logbook() {
     }
 
-    public Logbook(Arrival arrival, List<Catch> catches, Departure departure, EndFishing endFishing, String communicationType) {
+    public Logbook(Arrival arrival, Departure departure, EndOfFishing endOfFishing, List<Catch> catches, String communicationType) {
         this.arrival = arrival;
-        this.catches = catches;
         this.departure = departure;
-        this.endFishing = endFishing;
+        this.endOfFishing = endOfFishing;
+        this.catches = catches;
         this.communicationType = CommunicationType.valueOf(communicationType);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Arrival getArrival() {
@@ -56,14 +51,6 @@ public class Logbook {
         this.arrival = arrival;
     }
 
-    public List<Catch> getCatches() {
-        return catches;
-    }
-
-    public void setCatches(List<Catch> catches) {
-        this.catches = catches;
-    }
-
     public Departure getDeparture() {
         return departure;
     }
@@ -72,12 +59,20 @@ public class Logbook {
         this.departure = departure;
     }
 
-    public EndFishing getEndFishing() {
-        return endFishing;
+    public EndOfFishing getEndOfFishing() {
+        return endOfFishing;
     }
 
-    public void setEndFishing(EndFishing endFishing) {
-        this.endFishing = endFishing;
+    public void setEndOfFishing(EndOfFishing endOfFishing) {
+        this.endOfFishing = endOfFishing;
+    }
+
+    public List<Catch> getCatches() {
+        return catches;
+    }
+
+    public void setCatches(List<Catch> catches) {
+        this.catches = catches;
     }
 
     public CommunicationType getCommunicationType() {
@@ -88,21 +83,14 @@ public class Logbook {
         this.communicationType = communicationType;
     }
 
-    public JsonObject toJson() {
-
-        JsonArrayBuilder catchList = Json.createArrayBuilder();
-        if (catches != null) {
-            catches.stream().forEach(c -> catchList.add(c.toJson()));
-        } else {
-            catches = new ArrayList<>();
+    @Override
+    public String toString() {
+        ObjectMapper mapperObj = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapperObj.writeValueAsString(this);
+        } catch (Exception e) {
         }
-
-        return Json.createObjectBuilder()
-                        .add("communicationType", this.communicationType.toString())
-                        .add("departure", departure != null ? departure.toJson() : new Departure().toJson())
-                        .add("arrival", arrival != null ? arrival.toJson() : new Arrival().toJson())
-                        .add("catches", catchList)
-                        .add("endFishing", endFishing != null ? endFishing.toJson() : new EndFishing().toJson())
-                        .build();
+        return json;
     }
 }

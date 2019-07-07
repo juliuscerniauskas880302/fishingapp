@@ -14,28 +14,18 @@ import java.time.LocalDate;
 
 @Entity
 @NamedQueries(
-        @NamedQuery(name = "arrival.findAll", query = "SELECT a FROM Arrival a")
+        @NamedQuery(name = "endOfFishing.findAll", query = "SELECT e FROM EndOfFishing e")
 )
-public class Arrival extends BaseEntity {
-    private String port;
+public class EndOfFishing extends BaseEntity {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate date;
 
-    public Arrival() {
+    public EndOfFishing() {
     }
 
-    public Arrival(String port, LocalDate date) {
-        this.port = port;
+    public EndOfFishing(LocalDate date) {
         this.date = date;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
     }
 
     public LocalDate getDate() {
