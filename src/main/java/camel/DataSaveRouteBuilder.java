@@ -11,7 +11,8 @@ import java.io.File;
 public class DataSaveRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("file:C:\\datafiles\\input\\?noop=false&delete=true")
+        from("timer://schedulerTimer?fixedRate=true&period=5s&delay=5s")
+                .pollEnrich("file:C:\\datafiles\\input\\?noop=false&delete=true")
                 .process(exchange -> {
                     File file = exchange.getIn().getBody(File.class);
                     ObjectMapper mapper = new ObjectMapper();
