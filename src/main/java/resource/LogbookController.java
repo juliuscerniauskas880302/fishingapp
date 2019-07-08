@@ -1,13 +1,12 @@
 package resource;
 
-import common.ResponseMessage;
 import domain.Arrival;
 import domain.Catch;
 import domain.Departure;
 import domain.EndOfFishing;
 import domain.Logbook;
 import enums.CommunicationType;
-import service.LogbookService;
+import service.logbook.LogbookService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -24,7 +23,6 @@ import javax.ws.rs.core.Response;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Path("/logs")
 @Produces({MediaType.APPLICATION_JSON})
@@ -49,21 +47,13 @@ public class LogbookController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getById(@PathParam("id") final String id) {
-        Optional<Logbook> logbook = logbookService.findById(id);
-        if (logbook.isPresent()) {
-            return Response.status(Response.Status.OK).entity(logbook.get()).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ResponseMessage("Not found")).build();
+    public Logbook getById(@PathParam("id") final String id) {
+        return logbookService.findById(id);
     }
 
     @GET
-    public Response findAll() {
-        Optional<List<Logbook>> catches = logbookService.findAll();
-        if (catches.isPresent()) {
-            return Response.status(Response.Status.OK).entity(catches.get()).build();
-        }
-        return Response.status(Response.Status.EXPECTATION_FAILED).entity(new ResponseMessage("Error getting list")).build();
+    public List<Logbook> findAll() {
+        return logbookService.findAll();
     }
 
     @POST
@@ -75,14 +65,14 @@ public class LogbookController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Logbook source) {
-        return logbookService.update(source, id);
+    public void updateById(@PathParam("id") final String id, @Valid Logbook source) {
+        logbookService.update(source, id);
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteById(@PathParam("id") final String id) {
-        return logbookService.deleteById(id);
+    public void deleteById(@PathParam("id") final String id) {
+        logbookService.deleteById(id);
     }
 
 }

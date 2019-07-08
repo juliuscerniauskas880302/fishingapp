@@ -7,8 +7,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 @Entity
-@NamedQueries(
-        @NamedQuery(name = "configuration.findAll", query = "SELECT c FROM Configuration c")
+@NamedQueries({
+        @NamedQuery(name = "configuration.findAll", query = "SELECT c FROM Configuration c"),
+        @NamedQuery(name = "configuration.findValueByKey", query = "SELECT c.value FROM Configuration c where c.key = :key")
+}
 )
 public class Configuration extends BaseEntity {
     private String key;

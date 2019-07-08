@@ -1,8 +1,7 @@
 package resource;
 
-import common.ResponseMessage;
 import domain.Departure;
-import service.DepartureService;
+import service.departure.DepartureService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -17,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Optional;
 
 @Path("/departures")
 @Produces({MediaType.APPLICATION_JSON})
@@ -28,21 +26,13 @@ public class DepartureController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getById(@PathParam("id") final String id) {
-        Optional<Departure> departure = departureService.findById(id);
-        if (departure.isPresent()) {
-            return Response.status(Response.Status.OK).entity(departure.get()).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ResponseMessage("Not found")).build();
+    public Departure getById(@PathParam("id") final String id) {
+        return departureService.findById(id);
     }
 
     @GET
-    public Response findAll() {
-        Optional<List<Departure>> departures = departureService.findAll();
-        if (departures.isPresent()) {
-            return Response.status(Response.Status.OK).entity(departures.get()).build();
-        }
-        return Response.status(Response.Status.EXPECTATION_FAILED).entity(new ResponseMessage("Error getting list")).build();
+    public List<Departure> findAll() {
+        return departureService.findAll();
     }
 
     @POST
@@ -54,13 +44,13 @@ public class DepartureController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Departure source) {
-        return departureService.update(source, id);
+    public void updateById(@PathParam("id") final String id, @Valid Departure source) {
+        departureService.update(source, id);
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteById(@PathParam("id") final String id) {
-        return departureService.deleteById(id);
+    public void deleteById(@PathParam("id") final String id) {
+        departureService.deleteById(id);
     }
 }

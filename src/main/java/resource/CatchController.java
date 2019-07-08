@@ -1,8 +1,7 @@
 package resource;
 
-import common.ResponseMessage;
 import domain.Catch;
-import service.CatchService;
+import service.acatch.CatchService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -17,7 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Optional;
 
 @Path("/catches")
 @Produces({MediaType.APPLICATION_JSON})
@@ -29,21 +27,13 @@ public class CatchController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getById(@PathParam("id") final String id) {
-        Optional<Catch> aCatch = catchService.findById(id);
-        if (aCatch.isPresent()) {
-            return Response.status(Response.Status.OK).entity(aCatch.get()).build();
-        }
-        return Response.status(Response.Status.NOT_FOUND).entity(new ResponseMessage("Not found")).build();
+    public Catch getById(@PathParam("id") final String id) {
+        return catchService.findById(id);
     }
 
     @GET
-    public Response findAll() {
-        Optional<List<Catch>> catches = catchService.findAll();
-        if (catches.isPresent()) {
-            return Response.status(Response.Status.OK).entity(catches.get()).build();
-        }
-        return Response.status(Response.Status.EXPECTATION_FAILED).entity(new ResponseMessage("Error getting list")).build();
+    public List<Catch> findAll() {
+        return catchService.findAll();
     }
 
     @POST
@@ -55,14 +45,14 @@ public class CatchController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Catch source) {
-        return catchService.update(source, id);
+    public void updateById(@PathParam("id") final String id, @Valid Catch source) {
+        catchService.update(source, id);
     }
 
     @DELETE
     @Path("/{id}")
-    public Response deleteById(@PathParam("id") final String id) {
-        return catchService.deleteById(id);
+    public void deleteById(@PathParam("id") final String id) {
+        catchService.deleteById(id);
     }
 
 }

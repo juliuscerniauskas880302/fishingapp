@@ -16,10 +16,10 @@ public class DatabaseSavingStrategy implements SavingStrategy {
     public Response save(Logbook logbook) {
         if (!manager.contains(logbook)) {
             manager.persist(logbook);
-            return Response.status(Response.Status.OK).entity("Logbook created : " + logbook.toString()).build();
+            return Response.status(Response.Status.OK).build();
         } else {
             manager.merge(logbook);
-            return Response.status(Response.Status.OK).entity("Logbook updated : " + logbook.toString()).build();
+            return Response.status(Response.Status.OK).build();
         }
     }
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Entity
 @NamedQueries(
-        @NamedQuery(name = "logbook.findAll", query = "SELECT l FROM Logbook l")
+        @NamedQuery(name = "logbook.findAll", query = "select l from Logbook l")
 )
 public class Logbook extends BaseEntity {
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)

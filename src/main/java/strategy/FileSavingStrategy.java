@@ -22,7 +22,7 @@ public class FileSavingStrategy implements SavingStrategy {
         try {
             writeToFile(logbook);
         } catch (IOException ex) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new ResponseMessage("Error accrued saving logbook: "
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseMessage("Error accrued saving logbook: "
                     + logbook.toString()
                     + " to file: "
                     + path)).build();
@@ -31,11 +31,17 @@ public class FileSavingStrategy implements SavingStrategy {
     }
 
     private void writeToFile(Logbook logbook) throws IOException {
-        String fileName = path + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss'.log'").format(new Date());
+
+        String fileName = path + getTodayDate();
         try (FileWriter file = new FileWriter(fileName)) {
             ObjectMapper mapperObj = new ObjectMapper();
             String json = mapperObj.writeValueAsString(logbook);
             file.write(json);
         }
+    }
+
+    private String getTodayDate() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss'.log'");
+        return simpleDateFormat.format(new Date());
     }
 }
