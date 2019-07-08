@@ -7,6 +7,8 @@ import domain.Logbook;
 import javax.ws.rs.core.Response;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FileSavingStrategy implements SavingStrategy {
     private String path;
@@ -29,7 +31,8 @@ public class FileSavingStrategy implements SavingStrategy {
     }
 
     private void writeToFile(Logbook logbook) throws IOException {
-        try (FileWriter file = new FileWriter(path)) {
+        String fileName = path + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss'.log'").format(new Date());
+        try (FileWriter file = new FileWriter(fileName)) {
             ObjectMapper mapperObj = new ObjectMapper();
             String json = mapperObj.writeValueAsString(logbook);
             file.write(json);

@@ -1,5 +1,5 @@
 package enums;
 
 public enum CommunicationType {
-    SATELLITE, OFFLINE
+    SATELLITE, NETWORK
 }

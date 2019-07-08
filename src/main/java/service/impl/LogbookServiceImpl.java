@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Stateful
 public class LogbookServiceImpl implements LogbookService {
-    private static final String FILE_PATH = "C:\\datafiles\\input\\logbook.log";
+    private static final String FILE_PATH = "C:\\datafiles\\satellite\\";
 
     @PersistenceContext
     private EntityManager manager;
@@ -40,7 +40,7 @@ public class LogbookServiceImpl implements LogbookService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Logbook source) {
         SavingStrategy savingStrategy;
-        if (source.getCommunicationType() == CommunicationType.OFFLINE) {
+        if (source.getCommunicationType() == CommunicationType.SATELLITE) {
             savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);

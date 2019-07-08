@@ -42,7 +42,7 @@ public class LogbookController {
         EndOfFishing endOfFishing = new EndOfFishing(LocalDate.now());
         List<Catch> catches = new ArrayList<>();
         catches.add(new Catch("Salmon", 55.5D));
-        Logbook logbook = new Logbook(arrival,departure,endOfFishing,catches, CommunicationType.OFFLINE.toString());
+        Logbook logbook = new Logbook(arrival,departure,endOfFishing,catches, CommunicationType.NETWORK.toString());
         return Response.ok().entity(logbook).build();
     }
 
