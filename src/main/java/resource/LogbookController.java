@@ -39,7 +39,7 @@ public class LogbookController {
         EndOfFishing endOfFishing = new EndOfFishing(new Date());
         List<Catch> catches = new ArrayList<>();
         catches.add(new Catch("Salmon", 55.5D));
-        Logbook logbook = new Logbook(arrival,departure,endOfFishing,catches, CommunicationType.NETWORK.toString());
+        Logbook logbook = new Logbook(arrival, departure, endOfFishing, catches, CommunicationType.NETWORK.toString());
         return Response.ok().entity(logbook).build();
     }
 
@@ -76,14 +76,32 @@ public class LogbookController {
 
     @GET
     @Path("/search/port/{port}")
-    public List<Logbook> getLogbookByPort(@PathParam("port")final String port) {
+    public List<Logbook> getLogbookByPort(@PathParam("port") final String port) {
         return logbookService.findByPort(port);
     }
 
     @GET
     @Path("/search/species/{species}")
-    public List<Logbook> getLogbookBySpecies(@PathParam("species")final String species) {
+    public List<Logbook> getLogbookBySpecies(@PathParam("species") final String species) {
         return logbookService.findBySpecies(species);
+    }
+
+    @GET
+    @Path("/search/departure/{date1}/{date2}")
+    public List<Logbook> getLogbookByArrivalDate(
+            @PathParam("date1") final String date1,
+            @PathParam("date2") final String date2
+    ) {
+        return logbookService.findByArrivalDate(date1, date2);
+    }
+
+    @GET
+    @Path("/search/arrival/{date1}/{date2}")
+    public List<Logbook> getLogbookByDepartureDate(
+            @PathParam("date1") final String date1,
+            @PathParam("date2") final String date2
+    ) {
+        return logbookService.findByDepartureDate(date1, date2);
     }
 
 }

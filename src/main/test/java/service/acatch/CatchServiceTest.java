@@ -33,14 +33,17 @@ class CatchServiceTest {
     @BeforeEach
     public void init() throws Exception {
         MockitoAnnotations.initMocks(this);
+
         Catch catch1 = new Catch();
         catch1.setWeight(WEIGHT_1);
         catch1.setVariety(VARIETY_1);
         catch1.setId(ID_1);
+
         Catch catch2 = new Catch();
         catch2.setWeight(WEIGHT_2);
         catch2.setVariety(VARIETY_2);
         catch2.setId(ID_2);
+
         when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
     }
 
