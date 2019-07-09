@@ -14,13 +14,17 @@ import java.util.Optional;
 
 @Stateful
 public class LogbookServiceImpl implements LogbookService {
+    private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT DISTINCT (LOGBOOK.*) " +
+            "FROM LOGBOOK " +
+            "LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID " +
+            "LEFT JOIN CATCH C ON LC.CATCHES_ID = C.ID " +
+            "WHERE C.VARIETY LIKE :searchParam group by LOGBOOK.ID";
     private static final String GET_ALL_LOGBOOKS = "SELECT * FROM LOGBOOK";
-    private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT * " +
+    private static final String NOT_WORKING = "SELECT * " +
             "FROM LOGBOOK " +
             "LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID " +
             "LEFT JOIN CATCH C ON LC.CATCHES_ID = C.ID " +
             "WHERE C.VARIETY LIKE :searchParam";
-    // TODO fix query to remove duplicates
     private static final String FIND_ALL_LOGBOOKS_BY_PORT = "SELECT * FROM LOGBOOK " +
             "LEFT JOIN ARRIVAL A ON LOGBOOK.ARRIVAL_ID = A.ID " +
             "LEFT JOIN DEPARTURE D ON LOGBOOK.DEPARTURE_ID = D.ID " +
@@ -69,7 +73,7 @@ public class LogbookServiceImpl implements LogbookService {
 
     @Override
     public List<Logbook> findByPort(String port) {
-        String search = "%" + port + "%";
+        String search = "%" + port;
         return Optional.ofNullable(manager.createNativeQuery(FIND_ALL_LOGBOOKS_BY_PORT, Logbook.class)
                 .setParameter("searchParam", search)
                 .getResultList()).orElse(Collections.emptyList());

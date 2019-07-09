@@ -1,16 +1,14 @@
 package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import domain.base.BaseEntity;
-import utilities.LocalDateDeserializer;
-import utilities.LocalDateSerializer;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import java.time.LocalDate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -19,14 +17,14 @@ import java.util.Objects;
 )
 public class Arrival extends BaseEntity {
     private String port;
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate date;
+
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
     public Arrival() {
     }
 
-    public Arrival(String port, LocalDate date) {
+    public Arrival(String port, Date date) {
         this.port = port;
         this.date = date;
     }
@@ -39,11 +37,11 @@ public class Arrival extends BaseEntity {
         this.port = port;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

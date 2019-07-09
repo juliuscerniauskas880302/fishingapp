@@ -20,8 +20,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Path("/logs")
@@ -34,10 +34,9 @@ public class LogbookController {
     @Path("/test")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getTest() {
-        String strDatewithTime = "2015-08-04T10:11:30";
-        Arrival arrival = new Arrival("Arrival port", LocalDate.now());
-        Departure departure = new Departure("Departure port", LocalDate.now());
-        EndOfFishing endOfFishing = new EndOfFishing(LocalDate.now());
+        Arrival arrival = new Arrival("Arrival port", new Date());
+        Departure departure = new Departure("Departure port", new Date());
+        EndOfFishing endOfFishing = new EndOfFishing(new Date());
         List<Catch> catches = new ArrayList<>();
         catches.add(new Catch("Salmon", 55.5D));
         Logbook logbook = new Logbook(arrival,departure,endOfFishing,catches, CommunicationType.NETWORK.toString());
