@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @NamedQueries(
@@ -90,7 +91,26 @@ public class Logbook extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
+            //TODO add logger
         }
         return json;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Logbook logbook = (Logbook) o;
+        return Objects.equals(arrival, logbook.arrival) &&
+                Objects.equals(departure, logbook.departure) &&
+                Objects.equals(endOfFishing, logbook.endOfFishing) &&
+                Objects.equals(catches, logbook.catches) &&
+                communicationType == logbook.communicationType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), arrival, departure, endOfFishing, catches, communicationType);
     }
 }

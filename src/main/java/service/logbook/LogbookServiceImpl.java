@@ -14,6 +14,17 @@ import java.util.Optional;
 
 @Stateful
 public class LogbookServiceImpl implements LogbookService {
+    private static final String GET_ALL_LOGBOOKS = "SELECT * FROM LOGBOOK";
+    private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT * " +
+            "FROM LOGBOOK " +
+            "LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID " +
+            "LEFT JOIN CATCH C ON LC.CATCHES_ID = C.ID " +
+            "WHERE C.VARIETY LIKE :searchParam";
+    // TODO fix query to remove duplicates
+    private static final String FIND_ALL_LOGBOOKS_BY_PORT = "SELECT * FROM LOGBOOK " +
+            "LEFT JOIN ARRIVAL A ON LOGBOOK.ARRIVAL_ID = A.ID " +
+            "LEFT JOIN DEPARTURE D ON LOGBOOK.DEPARTURE_ID = D.ID " +
+            " WHERE A.PORT LIKE :searchParam OR D.PORT LIKE :searchParam";
 
     @PersistenceContext
     private EntityManager manager;
@@ -25,7 +36,7 @@ public class LogbookServiceImpl implements LogbookService {
 
     @Override
     public List<Logbook> findAll() {
-        return Optional.ofNullable(manager.createNamedQuery("logbook.findAll", Logbook.class)
+        return Optional.ofNullable(manager.createNativeQuery(GET_ALL_LOGBOOKS, Logbook.class)
                 .getResultList()).orElse(Collections.emptyList());
     }
 
@@ -54,5 +65,21 @@ public class LogbookServiceImpl implements LogbookService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook ->
                 manager.remove(logbook));
+    }
+
+    @Override
+    public List<Logbook> findByPort(String port) {
+        String search = "%" + port + "%";
+        return Optional.ofNullable(manager.createNativeQuery(FIND_ALL_LOGBOOKS_BY_PORT, Logbook.class)
+                .setParameter("searchParam", search)
+                .getResultList()).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public List<Logbook> findBySpecies(String species) {
+        String search = "%" + species;
+        return Optional.ofNullable(manager.createNativeQuery(FIND_ALL_LOGBOOKS_BY_SPECIES, Logbook.class)
+                .setParameter("searchParam", search)
+                .getResultList()).orElse(Collections.emptyList());
     }
 }

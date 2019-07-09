@@ -16,7 +16,6 @@ public class DataSaveRouteBuilder extends RouteBuilder {
     private PropertyLoaderDBService propertyLoaderDBService;
     @Override
     public void configure() throws Exception {
-    propertyLoaderDBService.getValueByKey("test", "default");
         from("timer://schedulerTimer?fixedRate=true&period=5s&delay=5s")
                 .pollEnrich("file:C:\\datafiles\\inbox\\?noop=false&delete=true")
                 .process(exchange -> {

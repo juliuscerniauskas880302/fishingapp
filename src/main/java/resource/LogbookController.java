@@ -75,4 +75,16 @@ public class LogbookController {
         logbookService.deleteById(id);
     }
 
+    @GET
+    @Path("/search/port/{port}")
+    public List<Logbook> getLogbookByPort(@PathParam("port")final String port) {
+        return logbookService.findByPort(port);
+    }
+
+    @GET
+    @Path("/search/species/{species}")
+    public List<Logbook> getLogbookBySpecies(@PathParam("species")final String species) {
+        return logbookService.findBySpecies(species);
+    }
+
 }
