@@ -32,7 +32,7 @@ public class DepartureServiceImpl implements DepartureService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Departure source) {
         manager.persist(source);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @Override

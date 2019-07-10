@@ -53,10 +53,12 @@ class ArrivalControllerTest {
 
     @Test
     void shouldGetArrivalById() {
+        // when
         when(arrivalService.findById(anyString())).thenReturn(arrival);
 
         Arrival result = arrivalController.getById(ID);
 
+        // then
         assertNotNull(result);
         assertEquals(ID, result.getId());
         assertEquals(DATE, result.getDate());
@@ -65,10 +67,12 @@ class ArrivalControllerTest {
 
     @Test
     void shouldReturnAllArrivals() {
+        // when
         when(arrivalService.findAll()).thenReturn(Arrays.asList(arrival, arrival2));
 
         List<Arrival> arrivals = arrivalController.findAll();
 
+        //then
         assertEquals(2, arrivals.size());
         assertEquals(ID, arrivals.get(0).getId());
         assertEquals(ID_2, arrivals.get(1).getId());
@@ -85,12 +89,14 @@ class ArrivalControllerTest {
 
     @Test
     void shouldDeleteArrivalById() {
+        //when
         doNothing().when(arrivalService).deleteById(anyString());
         when(arrivalService.findById(anyString())).thenReturn(null);
 
         arrivalController.deleteById(ID);
         Arrival arrival = arrivalController.getById(ID);
 
+        // then
         assertNull(arrival);
     }
 }

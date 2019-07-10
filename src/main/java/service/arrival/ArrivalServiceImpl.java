@@ -32,7 +32,7 @@ public class ArrivalServiceImpl implements ArrivalService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Arrival source) {
         manager.persist(source);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @Override

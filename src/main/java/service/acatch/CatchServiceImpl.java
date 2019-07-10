@@ -32,7 +32,7 @@ public class CatchServiceImpl implements CatchService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Catch source) {
         manager.persist(source);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @Override

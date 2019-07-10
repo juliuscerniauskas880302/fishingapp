@@ -29,7 +29,7 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     @Override
     public Response save(EndOfFishing source) {
         manager.persist(source);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @Override
