@@ -44,44 +44,59 @@ public class Logbook extends BaseEntity {
         this.communicationType = CommunicationType.valueOf(communicationType);
     }
 
+    public Logbook build() {
+        Logbook logbook = new Logbook();
+        logbook.arrival = this.arrival;
+        logbook.endOfFishing = this.endOfFishing;
+        logbook.departure = this.departure;
+        logbook.communicationType = this.getCommunicationType();
+        logbook.catches = this.catches;
+        return logbook;
+    }
+
     public Arrival getArrival() {
         return arrival;
     }
 
-    public void setArrival(Arrival arrival) {
+    public Logbook setArrival(Arrival arrival) {
         this.arrival = arrival;
+        return this;
     }
 
     public Departure getDeparture() {
         return departure;
     }
 
-    public void setDeparture(Departure departure) {
+    public Logbook setDeparture(Departure departure) {
         this.departure = departure;
+        return this;
     }
 
     public EndOfFishing getEndOfFishing() {
         return endOfFishing;
     }
 
-    public void setEndOfFishing(EndOfFishing endOfFishing) {
+    public Logbook setEndOfFishing(EndOfFishing endOfFishing) {
         this.endOfFishing = endOfFishing;
+        return this;
     }
 
     public List<Catch> getCatches() {
         return catches;
     }
 
-    public void setCatches(List<Catch> catches) {
+    public Logbook setCatches(List<Catch> catches) {
         this.catches = catches;
+        return this;
     }
 
     public CommunicationType getCommunicationType() {
         return communicationType;
     }
 
-    public void setCommunicationType(CommunicationType communicationType) {
+    public Logbook setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
+        return this;
     }
 
     @Override

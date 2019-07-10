@@ -29,20 +29,29 @@ public class Arrival extends BaseEntity {
         this.date = date;
     }
 
+    public Arrival build() {
+        Arrival arrival = new Arrival();
+        arrival.date = this.date;
+        arrival.port = this.port;
+        return arrival;
+    }
+
     public String getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public Arrival setPort(String port) {
         this.port = port;
+        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public Arrival setDate(Date date) {
         this.date = date;
+        return this;
     }
 
     @Override

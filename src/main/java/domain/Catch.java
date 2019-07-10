@@ -28,16 +28,25 @@ public class Catch extends BaseEntity {
         return variety;
     }
 
-    public void setVariety(String variety) {
+    public Catch setVariety(String variety) {
         this.variety = variety;
+        return this;
     }
 
     public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(Double weight) {
+    public Catch setWeight(Double weight) {
         this.weight = weight;
+        return this;
+    }
+
+    public Catch build() {
+        Catch aCatch = new Catch();
+        aCatch.variety = this.variety;
+        aCatch.weight = this.weight;
+        return aCatch;
     }
 
     @Override

@@ -29,20 +29,29 @@ public class Departure extends BaseEntity {
         this.date = date;
     }
 
+    public Departure build() {
+        Departure departure = new Departure();
+        departure.port = this.port;
+        departure.date = this.date;
+        return departure;
+    }
+
     public String getPort() {
         return port;
     }
 
-    public void setPort(String port) {
+    public Departure setPort(String port) {
         this.port = port;
+        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public Departure setDate(Date date) {
         this.date = date;
+        return this;
     }
 
     @Override

@@ -27,12 +27,19 @@ public class EndOfFishing extends BaseEntity {
         this.date = date;
     }
 
+    public EndOfFishing build() {
+        EndOfFishing endOfFishing = new EndOfFishing();
+        endOfFishing.date = this.date;
+        return endOfFishing;
+    }
+
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public EndOfFishing setDate(Date date) {
         this.date = date;
+        return this;
     }
 
     @Override
