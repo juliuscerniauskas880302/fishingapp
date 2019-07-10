@@ -15,12 +15,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class CatchServiceImplTest {
@@ -64,14 +65,17 @@ class CatchServiceImplTest {
 
     @Test
     void shouldDeleteCatchById() {
-        //when
-        doNothing().when(entityManager).remove(any());
-        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(null);
+        // given
+        Catch aCatch = new Catch();
+        aCatch.setId(ID_1);
+
+        // when
+        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(aCatch);
 
         catchService.deleteById(ID_1);
-        Catch result = catchService.findById(ID_1);
+
         // then
-        assertNull(result, "Result should be null");
+        verify(entityManager, times(1)).remove(eq(aCatch));
     }
 
     @Test

@@ -16,12 +16,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class LogbookServiceImplTest {
@@ -98,29 +99,22 @@ class LogbookServiceImplTest {
 
     @Test
     void shouldDeleteByLogbookId() {
-        //when
-        doNothing().when(entityManager).remove(anyString());
-        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(null);
+        // given
+        Logbook logbook = new Logbook();
+        logbook.setId(ID_1);
+
+        // when
+        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook);
 
         logbookService.deleteById(ID_1);
-        Logbook result = logbookService.findById(ID_1);
 
         // then
-        assertNull(result, "Result should be null");
+        verify(entityManager, times(1)).remove(eq(logbook));
     }
 
     @Test
     void shouldFindLogbookByPort() {
         // TODO implement method
-
-        Logbook logbook1 = new Logbook();
-
-        TypedQuery query = mock(TypedQuery.class);
-        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_PORT, Logbook.class)).thenReturn(query);
-        when(query.setParameter("searchParam", "searchParam")).thenReturn(query);
-        when(query.getResultList()).thenReturn(Arrays.asList(logbook1));
-
-        List<Logbook> result = logbookService.findByPort("searchParam");
     }
 
     @Test

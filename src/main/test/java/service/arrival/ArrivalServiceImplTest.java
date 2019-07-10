@@ -16,12 +16,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class ArrivalServiceImplTest {
@@ -113,14 +114,16 @@ class ArrivalServiceImplTest {
 
     @Test
     void shouldDeleteByArrivalId() {
-        //when
-        doNothing().when(entityManager).remove(anyString());
-        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(null);
+        // given
+        Arrival arrival = new Arrival();
+        arrival.setId(ID_1);
+
+        // when
+        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival);
 
         arrivalService.deleteById(ID_1);
-        Arrival result = arrivalService.findById(ID_1);
 
         // then
-        assertNull(result, "Result should be null");
+        verify(entityManager, times(1)).remove(eq(arrival));
     }
 }
