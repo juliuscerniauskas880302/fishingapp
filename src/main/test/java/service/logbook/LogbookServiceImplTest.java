@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.persistence.EntityManager;
@@ -28,6 +29,12 @@ class LogbookServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String ID_2 = "ID2";
     private static final String NATIVE_QUERY_FIND_ALL = "SELECT * FROM LOGBOOK";
+
+    private static final String NATIVE_QUERY_FIND_BY_PORT = "SELECT DISTINCT (LOGBOOK.*)" +
+            " FROM LOGBOOK " +
+            " LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID" +
+            " LEFT JOIN CATCH C ON LC.CATCHES_ID = C.ID" +
+            " WHERE C.VARIETY LIKE :searchParam group by LOGBOOK.ID";
 
     private Logbook logbook1;
     private Logbook logbook2;
@@ -115,7 +122,19 @@ class LogbookServiceImplTest {
 
     @Test
     void shouldFindLogbookBySpecies() {
-        // TODO implement method
+        // given
+        TypedQuery<Logbook> queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
+
+        // when
+        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_PORT, Logbook.class)).thenReturn(queryByMock);
+        when(queryByMock.setParameter("searchParam", "%searchParam")).thenReturn(queryByMock);
+        when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1, logbook2));
+
+        List<Logbook> result = logbookService.findBySpecies("searchParam");
+
+        // then
+        assertNotNull(result, "List should not be empty");
+        assertEquals(2, result.size(), "List size should be 2");
     }
 
     @Test
