@@ -28,25 +28,16 @@ public class Catch extends BaseEntity {
         return variety;
     }
 
-    public Catch setVariety(String variety) {
+    public void setVariety(String variety) {
         this.variety = variety;
-        return this;
     }
 
     public Double getWeight() {
         return weight;
     }
 
-    public Catch setWeight(Double weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
-        return this;
-    }
-
-    public Catch build() {
-        Catch aCatch = new Catch();
-        aCatch.variety = this.variety;
-        aCatch.weight = this.weight;
-        return aCatch;
     }
 
     @Override
@@ -75,4 +66,28 @@ public class Catch extends BaseEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), variety, weight);
     }
+
+    public static class Builder {
+        private String variety;
+        private Double weight;
+
+        public Builder setVariety(String variety) {
+            this.variety = variety;
+            return this;
+        }
+
+        public Builder setWeight(Double weight) {
+            this.weight = weight;
+            return this;
+        }
+
+        public Catch build() {
+            Catch aCatch = new Catch();
+            aCatch.variety = this.variety;
+            aCatch.weight = this.weight;
+            return aCatch;
+        }
+
+    }
+
 }

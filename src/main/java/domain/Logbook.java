@@ -44,59 +44,44 @@ public class Logbook extends BaseEntity {
         this.communicationType = CommunicationType.valueOf(communicationType);
     }
 
-    public Logbook build() {
-        Logbook logbook = new Logbook();
-        logbook.arrival = this.arrival;
-        logbook.endOfFishing = this.endOfFishing;
-        logbook.departure = this.departure;
-        logbook.communicationType = this.getCommunicationType();
-        logbook.catches = this.catches;
-        return logbook;
-    }
-
     public Arrival getArrival() {
         return arrival;
     }
 
-    public Logbook setArrival(Arrival arrival) {
+    public void setArrival(Arrival arrival) {
         this.arrival = arrival;
-        return this;
     }
 
     public Departure getDeparture() {
         return departure;
     }
 
-    public Logbook setDeparture(Departure departure) {
+    public void setDeparture(Departure departure) {
         this.departure = departure;
-        return this;
     }
 
     public EndOfFishing getEndOfFishing() {
         return endOfFishing;
     }
 
-    public Logbook setEndOfFishing(EndOfFishing endOfFishing) {
+    public void setEndOfFishing(EndOfFishing endOfFishing) {
         this.endOfFishing = endOfFishing;
-        return this;
     }
 
     public List<Catch> getCatches() {
         return catches;
     }
 
-    public Logbook setCatches(List<Catch> catches) {
+    public void setCatches(List<Catch> catches) {
         this.catches = catches;
-        return this;
     }
 
     public CommunicationType getCommunicationType() {
         return communicationType;
     }
 
-    public Logbook setCommunicationType(CommunicationType communicationType) {
+    public void setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
-        return this;
     }
 
     @Override
@@ -128,4 +113,52 @@ public class Logbook extends BaseEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), arrival, departure, endOfFishing, catches, communicationType);
     }
+
+    public static class Builder {
+        private Arrival arrival;
+        private Departure departure;
+        private EndOfFishing endOfFishing;
+        private List<Catch> catches = new ArrayList<>();
+        private CommunicationType communicationType;
+
+        public Builder setArrival(Arrival arrival) {
+            this.arrival = arrival;
+            return this;
+        }
+
+        public Builder setDeparture(Departure departure) {
+            this.departure = departure;
+            return this;
+        }
+
+        public Builder setEndOfFishing(EndOfFishing endOfFishing) {
+            this.endOfFishing = endOfFishing;
+            return this;
+        }
+
+        public Builder setCatches(List<Catch> catches) {
+            this.catches = catches;
+            return this;
+        }
+
+        public Builder setCommunicationtype(CommunicationType communicationtype) {
+            this.communicationType = communicationtype;
+            return this;
+        }
+
+        public Logbook build() {
+            Logbook logbook = new Logbook();
+            logbook.arrival = this.arrival;
+            logbook.endOfFishing = this.endOfFishing;
+            logbook.departure = this.departure;
+            logbook.communicationType = this.communicationType;
+            logbook.catches = this.catches;
+            return logbook;
+        }
+
+    }
+
 }
+
+
+

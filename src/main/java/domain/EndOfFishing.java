@@ -27,19 +27,12 @@ public class EndOfFishing extends BaseEntity {
         this.date = date;
     }
 
-    public EndOfFishing build() {
-        EndOfFishing endOfFishing = new EndOfFishing();
-        endOfFishing.date = this.date;
-        return endOfFishing;
-    }
-
     public Date getDate() {
         return date;
     }
 
-    public EndOfFishing setDate(Date date) {
+    public void setDate(Date date) {
         this.date = date;
-        return this;
     }
 
     @Override
@@ -67,4 +60,21 @@ public class EndOfFishing extends BaseEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), date);
     }
+
+    public static class Builder {
+        private Date date;
+
+        public Builder setDate(Date date) {
+            this.date = date;
+            return this;
+        }
+
+        public EndOfFishing build() {
+            EndOfFishing endOfFishing = new EndOfFishing();
+            endOfFishing.date = this.date;
+            return endOfFishing;
+        }
+
+    }
+
 }

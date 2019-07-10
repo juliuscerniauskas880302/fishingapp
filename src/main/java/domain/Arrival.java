@@ -29,29 +29,20 @@ public class Arrival extends BaseEntity {
         this.date = date;
     }
 
-    public Arrival build() {
-        Arrival arrival = new Arrival();
-        arrival.date = this.date;
-        arrival.port = this.port;
-        return arrival;
-    }
-
     public String getPort() {
         return port;
     }
 
-    public Arrival setPort(String port) {
+    public void setPort(String port) {
         this.port = port;
-        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public Arrival setDate(Date date) {
+    public void setDate(Date date) {
         this.date = date;
-        return this;
     }
 
     @Override
@@ -80,4 +71,28 @@ public class Arrival extends BaseEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), port, date);
     }
+
+    public static class Builder {
+        private String port;
+        private Date date;
+
+        public Builder setPort(String port) {
+            this.port = port;
+            return this;
+        }
+
+        public Builder setDate(Date date) {
+            this.date = date;
+            return this;
+        }
+
+        public Arrival build() {
+            Arrival arrival = new Arrival();
+            arrival.port = this.port;
+            arrival.date = this.date;
+            return arrival;
+        }
+
+    }
+
 }

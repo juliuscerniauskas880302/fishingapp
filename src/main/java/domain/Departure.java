@@ -29,29 +29,20 @@ public class Departure extends BaseEntity {
         this.date = date;
     }
 
-    public Departure build() {
-        Departure departure = new Departure();
-        departure.port = this.port;
-        departure.date = this.date;
-        return departure;
-    }
-
     public String getPort() {
         return port;
     }
 
-    public Departure setPort(String port) {
+    public void setPort(String port) {
         this.port = port;
-        return this;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public Departure setDate(Date date) {
+    public void setDate(Date date) {
         this.date = date;
-        return this;
     }
 
     @Override
@@ -80,4 +71,28 @@ public class Departure extends BaseEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), port, date);
     }
+
+    public static class Builder {
+        private String port;
+        private Date date;
+
+        public Builder setPort(String port) {
+            this.port = port;
+            return this;
+        }
+
+        public Builder setDate(Date date) {
+            this.date = date;
+            return this;
+        }
+
+        public Departure build() {
+            Departure departure = new Departure();
+            departure.port = this.port;
+            departure.date = this.date;
+            return departure;
+        }
+
+    }
+
 }
