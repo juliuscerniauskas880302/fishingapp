@@ -36,6 +36,9 @@ class DepartureServiceImplTest {
 
     private static final String NAMED_QUERY_FIND_ALL = "departure.findAll";
 
+    private Departure departure1;
+    private Departure departure2;
+
     @Mock
     private EntityManager entityManager;
 
@@ -45,18 +48,22 @@ class DepartureServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        departure1 = new Departure();
+        departure1.setId(ID_1);
+        departure1.setPort(PORT_1);
+        departure1.setDate(DATE_1);
+
+        departure2 = new Departure();
+        departure2.setId(ID_2);
+        departure2.setPort(PORT_2);
+        departure2.setDate(DATE_2);
     }
 
     @Test
     void shouldGetDepartureById() {
-        // given
-        Departure departure = new Departure();
-        departure.setId(ID_1);
-        departure.setPort(PORT_1);
-        departure.setDate(DATE_1);
-
         // when
-        when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure);
+        when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
         Departure result = departureService.findById(ID_1);
 
         // then
@@ -68,17 +75,6 @@ class DepartureServiceImplTest {
 
     @Test
     void shouldReturnDepartureList() {
-        // given
-        Departure departure1 = new Departure();
-        departure1.setId(ID_1);
-        departure1.setPort(PORT_1);
-        departure1.setDate(DATE_1);
-
-        Departure departure2 = new Departure();
-        departure2.setId(ID_2);
-        departure2.setPort(PORT_2);
-        departure2.setDate(DATE_2);
-
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, Departure.class)).thenReturn(query);
@@ -93,37 +89,35 @@ class DepartureServiceImplTest {
 
     @Test
     void shouldCreateNewDeparture() {
-        //given
-        Departure departure = new Departure();
-        departure.setId(ID_1);
-        departure.setPort(PORT_1);
-        departure.setDate(DATE_1);
-
         // when
         doNothing().when(entityManager).persist(any(Departure.class));
-        Response response = departureService.save(departure);
+        Response response = departureService.save(departure1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus(), "Response status should be " + Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(),
+                response.getStatus(),
+                "Response status should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test
-    void update() {
-        // TODO implement method
+    void shouldUpdateDepartureById() {
+        // when
+        when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
+
+        departureService.update(departure2, ID_1);
+
+        // then
+        verify(entityManager, times(1)).merge(eq(departure1));
     }
 
     @Test
     void shouldDeleteByDepartureId() {
-        // given
-        Departure departure = new Departure();
-        departure.setId(ID_1);
-
         // when
-        when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure);
+        when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
 
         departureService.deleteById(ID_1);
 
         // then
-        verify(entityManager, times(1)).remove(eq(departure));
+        verify(entityManager, times(1)).remove(eq(departure1));
     }
 }

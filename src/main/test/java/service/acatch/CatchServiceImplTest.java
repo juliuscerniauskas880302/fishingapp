@@ -33,6 +33,9 @@ class CatchServiceImplTest {
     private static final Double WEIGHT_2 = 2D;
     private static final String NAMED_QUERY_FIND_ALL = "catch.findAll";
 
+    private Catch catch1;
+    private Catch catch2;
+
     @Mock
     private EntityManager entityManager;
 
@@ -42,18 +45,22 @@ class CatchServiceImplTest {
     @BeforeEach
     void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        catch1 = new Catch();
+        catch1.setId(ID_1);
+        catch1.setWeight(WEIGHT_1);
+        catch1.setVariety(VARIETY_1);
+
+        catch2 = new Catch();
+        catch2.setId(ID_2);
+        catch2.setWeight(WEIGHT_2);
+        catch2.setVariety(VARIETY_2);
     }
 
     @Test
     void shouldGetCatchById() {
-        // given
-        Catch aCatch = new Catch();
-        aCatch.setId(ID_1);
-        aCatch.setVariety(VARIETY_1);
-        aCatch.setWeight(WEIGHT_1);
-
         // when
-        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(aCatch);
+        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
         Catch result = catchService.findById(ID_1);
 
         // then
@@ -65,32 +72,17 @@ class CatchServiceImplTest {
 
     @Test
     void shouldDeleteCatchById() {
-        // given
-        Catch aCatch = new Catch();
-        aCatch.setId(ID_1);
-
         // when
-        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(aCatch);
+        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
 
         catchService.deleteById(ID_1);
 
         // then
-        verify(entityManager, times(1)).remove(eq(aCatch));
+        verify(entityManager, times(1)).remove(eq(catch1));
     }
 
     @Test
     void shouldReturnCatchList() {
-        // given
-        Catch catch1 = new Catch();
-        catch1.setId(ID_1);
-        catch1.setWeight(WEIGHT_1);
-        catch1.setVariety(VARIETY_1);
-
-        Catch catch2 = new Catch();
-        catch2.setId(ID_2);
-        catch2.setWeight(WEIGHT_2);
-        catch2.setVariety(VARIETY_2);
-
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, Catch.class)).thenReturn(query);
@@ -105,23 +97,25 @@ class CatchServiceImplTest {
 
     @Test
     void shouldCreateNewCatch() {
-        //given
-        Catch catch1 = new Catch();
-        catch1.setId(ID_1);
-        catch1.setWeight(WEIGHT_1);
-        catch1.setVariety(VARIETY_1);
-
         // when
         doNothing().when(entityManager).persist(any(Catch.class));
         Response response = catchService.save(catch1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus(), "Response value should be " + Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(),
+                response.getStatus(),
+                "Response value should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test
     void shouldUpdateCatchById() {
-        // TODO implement method
+        // when
+        when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
+
+        catchService.update(catch2, ID_1);
+
+        // then
+        verify(entityManager, times(1)).merge(eq(catch1));
     }
 
 }

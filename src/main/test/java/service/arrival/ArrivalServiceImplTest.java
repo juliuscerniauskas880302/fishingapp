@@ -36,6 +36,9 @@ class ArrivalServiceImplTest {
 
     private static final String NAMED_QUERY_FIND_ALL = "arrival.findAll";
 
+    private Arrival arrival1;
+    private Arrival arrival2;
+
     @Mock
     private EntityManager entityManager;
 
@@ -45,18 +48,22 @@ class ArrivalServiceImplTest {
     @BeforeEach
     void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+
+        arrival1 = new Arrival();
+        arrival1.setId(ID_1);
+        arrival1.setPort(PORT_1);
+        arrival1.setDate(DATE_1);
+
+        arrival2 = new Arrival();
+        arrival2.setId(ID_2);
+        arrival2.setPort(PORT_2);
+        arrival2.setDate(DATE_2);
     }
 
     @Test
     void shouldGetArrivalById() {
-        // given
-        Arrival arrival = new Arrival();
-        arrival.setId(ID_1);
-        arrival.setPort(PORT_1);
-        arrival.setDate(DATE_1);
-
         // when
-        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival);
+        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
         Arrival result = arrivalService.findById(ID_1);
 
         // then
@@ -68,17 +75,6 @@ class ArrivalServiceImplTest {
 
     @Test
     void shouldReturnArrivalList() {
-        // given
-        Arrival arrival1 = new Arrival();
-        arrival1.setId(ID_1);
-        arrival1.setPort(PORT_1);
-        arrival1.setDate(DATE_1);
-
-        Arrival arrival2 = new Arrival();
-        arrival2.setId(ID_2);
-        arrival2.setPort(PORT_2);
-        arrival2.setDate(DATE_2);
-
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, Arrival.class)).thenReturn(query);
@@ -93,37 +89,35 @@ class ArrivalServiceImplTest {
 
     @Test
     void shouldCrateNewArrival() {
-        //given
-        Arrival arrival = new Arrival();
-        arrival.setId(ID_1);
-        arrival.setPort(PORT_1);
-        arrival.setDate(DATE_1);
-
         // when
         doNothing().when(entityManager).persist(any(Arrival.class));
-        Response response = arrivalService.save(arrival);
+        Response response = arrivalService.save(arrival1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus(), "Response status should be " + Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(),
+                response.getStatus(),
+                "Response status should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test
     void shouldUpdateArrivalById() {
-        // TODO implement method
+        // when
+        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
+
+        arrivalService.update(arrival2, ID_1);
+
+        // then
+        verify(entityManager, times(1)).merge(eq(arrival1));
     }
 
     @Test
     void shouldDeleteByArrivalId() {
-        // given
-        Arrival arrival = new Arrival();
-        arrival.setId(ID_1);
-
         // when
-        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival);
+        when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
 
         arrivalService.deleteById(ID_1);
 
         // then
-        verify(entityManager, times(1)).remove(eq(arrival));
+        verify(entityManager, times(1)).remove(eq(arrival1));
     }
 }

@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,14 +25,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class LogbookServiceImplTest {
-    private static final String ID_1 = "ID_1";
-    private static final Date DATE_2 = new Date(2000, 2, 2);
+    private static final String ID_1 = "ID1";
+    private static final String ID_2 = "ID2";
     private static final String NATIVE_QUERY_FIND_ALL = "SELECT * FROM LOGBOOK";
 
-    private static final String NATIVE_QUERY_FIND_BY_PORT = "SELECT * FROM LOGBOOK" +
-            " LEFT JOIN ARRIVAL A ON LOGBOOK.ARRIVAL_ID = A.ID" +
-            " LEFT JOIN DEPARTURE D ON LOGBOOK.DEPARTURE_ID = D.ID" +
-            " WHERE A.PORT LIKE :searchParam OR D.PORT LIKE :searchParam";
+    private Logbook logbook1;
+    private Logbook logbook2;
 
     @Mock
     private EntityManager entityManager;
@@ -44,16 +41,18 @@ class LogbookServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        logbook1 = new Logbook();
+        logbook1.setId(ID_1);
+
+        logbook2 = new Logbook();
+        logbook2.setId(ID_2);
     }
 
     @Test
     void shouldGetLogBookById() {
-        // given
-        Logbook logbook = new Logbook();
-        logbook.setId(ID_1);
-
         // when
-        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook);
+        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
         Logbook result = logbookService.findById(ID_1);
 
         // then
@@ -63,10 +62,6 @@ class LogbookServiceImplTest {
 
     @Test
     void shouldReturnLogbookList() {
-        // given
-        Logbook logbook1 = new Logbook();
-        Logbook logbook2 = new Logbook();
-
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_ALL, Logbook.class)).thenReturn(query);
@@ -81,35 +76,36 @@ class LogbookServiceImplTest {
 
     @Test
     void shouldCrateLogbook() {
-        //given
-        Logbook logbook = new Logbook();
-
         // when
         doNothing().when(entityManager).persist(any(Logbook.class));
-        Response response = logbookService.save(logbook);
+        Response response = logbookService.save(logbook1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus(), "Response status should be " + Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(),
+                response.getStatus(),
+                "Response status should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test
     void shouldUpdateLogbookById() {
-        // TODO implement method
+        // when
+        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
+
+        logbookService.update(logbook2, ID_1);
+
+        // then
+        verify(entityManager, times(1)).merge(eq(logbook1));
     }
 
     @Test
     void shouldDeleteByLogbookId() {
-        // given
-        Logbook logbook = new Logbook();
-        logbook.setId(ID_1);
-
         // when
-        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook);
+        when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
 
         logbookService.deleteById(ID_1);
 
         // then
-        verify(entityManager, times(1)).remove(eq(logbook));
+        verify(entityManager, times(1)).remove(eq(logbook1));
     }
 
     @Test

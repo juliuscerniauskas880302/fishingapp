@@ -34,6 +34,9 @@ class EndOfFishingServiceImplTest {
 
     private static final String NAMED_QUERY_FIND_ALL = "endOfFishing.findAll";
 
+    private EndOfFishing endOfFishing1;
+    private EndOfFishing endOfFishing2;
+
     @Mock
     private EntityManager entityManager;
 
@@ -43,17 +46,20 @@ class EndOfFishingServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+        endOfFishing1 = new EndOfFishing();
+        endOfFishing1.setId(ID_1);
+        endOfFishing1.setDate(DATE_1);
+
+        endOfFishing2 = new EndOfFishing();
+        endOfFishing2.setId(ID_2);
+        endOfFishing2.setDate(DATE_2);
+
     }
 
     @Test
     void shouldGetByEndOfFishingId() {
-        // given
-        EndOfFishing endOfFishing = new EndOfFishing();
-        endOfFishing.setId(ID_1);
-        endOfFishing.setDate(DATE_1);
-
         // when
-        when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing);
+        when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
         EndOfFishing result = endOfFishingService.findById(ID_1);
 
         // then
@@ -64,15 +70,6 @@ class EndOfFishingServiceImplTest {
 
     @Test
     void shouldReturnEndOfFishingList() {
-        // given
-        EndOfFishing endOfFishing1 = new EndOfFishing();
-        endOfFishing1.setId(ID_1);
-        endOfFishing1.setDate(DATE_1);
-
-        EndOfFishing endOfFishing2 = new EndOfFishing();
-        endOfFishing2.setId(ID_2);
-        endOfFishing2.setDate(DATE_2);
-
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, EndOfFishing.class)).thenReturn(query);
@@ -87,36 +84,35 @@ class EndOfFishingServiceImplTest {
 
     @Test
     void shouldCreateNewEndOfFishing() {
-        //given
-        EndOfFishing endOfFishing = new EndOfFishing();
-        endOfFishing.setId(ID_1);
-        endOfFishing.setDate(DATE_1);
-
         // when
         doNothing().when(entityManager).persist(any(EndOfFishing.class));
-        Response response = endOfFishingService.save(endOfFishing);
+        Response response = endOfFishingService.save(endOfFishing1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus(), "Response status should be " + Response.Status.CREATED.getStatusCode());
+        assertEquals(Response.Status.CREATED.getStatusCode(),
+                response.getStatus(),
+                "Response status should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test
     void shouldUpdateEndOfFishingById() {
-        // TODO implement method
+        // when
+        when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
+
+        endOfFishingService.update(endOfFishing2, ID_1);
+
+        // then
+        verify(entityManager, times(1)).merge(eq(endOfFishing1));
     }
 
     @Test
     void shouldDeleteByEndOfFishingId() {
-        // given
-        EndOfFishing endOfFishing = new EndOfFishing();
-        endOfFishing.setId(ID_1);
-
         // when
-        when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing);
+        when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
 
         endOfFishingService.deleteById(ID_1);
 
         // then
-        verify(entityManager, times(1)).remove(eq(endOfFishing));
+        verify(entityManager, times(1)).remove(eq(endOfFishing1));
     }
 }

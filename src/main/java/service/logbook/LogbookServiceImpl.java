@@ -63,10 +63,11 @@ public class LogbookServiceImpl implements LogbookService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Logbook source) {
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
-            return new FileSavingStrategy(FILE_PATH).save(source);
+            savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
-            return new DatabaseSavingStrategy(manager).save(source);
+            savingStrategy = new DatabaseSavingStrategy(manager);
         }
+        return savingStrategy.save(source);
     }
 
     @Override
