@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
 
@@ -28,13 +29,31 @@ import static org.mockito.Mockito.when;
 class LogbookServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String ID_2 = "ID2";
-    private static final String NATIVE_QUERY_FIND_ALL = "SELECT * FROM LOGBOOK";
 
-    private static final String NATIVE_QUERY_FIND_BY_PORT = "SELECT DISTINCT (LOGBOOK.*)" +
+    private static final Date DATE_1 = new Date(1000, 01, 01);
+    private static final Date DATE_2 = new Date(2000, 02, 02);
+
+    private static final String NATIVE_QUERY_FIND_ALL = "SELECT * FROM LOGBOOK";
+    private static final String SEARCH_PARAM = "SEARCH_PARAM";
+
+    private static final String NATIVE_QUERY_FIND_BY_SPECIES = "SELECT DISTINCT (LOGBOOK.*)" +
             " FROM LOGBOOK " +
             " LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID" +
             " LEFT JOIN CATCH C ON LC.CATCHES_ID = C.ID" +
-            " WHERE C.VARIETY LIKE :searchParam group by LOGBOOK.ID";
+            " WHERE C.VARIETY LIKE ?1 group by LOGBOOK.ID";
+
+    private static final String NATIVE_QUERY_FIND_BY_PORT = "SELECT * FROM LOGBOOK" +
+            " LEFT JOIN ARRIVAL A ON LOGBOOK.ARRIVAL_ID = A.ID" +
+            " LEFT JOIN DEPARTURE D ON LOGBOOK.DEPARTURE_ID = D.ID" +
+            " WHERE A.PORT LIKE ?1 OR D.PORT LIKE ?1";
+
+    private static final String NATIVE_QUERY_FIND_BY_DEPARTURE_DATE = "SELECT LOGBOOK.* FROM LOGBOOK" +
+            " INNER JOIN DEPARTURE A on LOGBOOK.DEPARTURE_ID = A.ID" +
+            " WHERE DATE BETWEEN ?1 AND ?2";
+
+    private static final String NATIVE_QUERY_FIND_BY_ARRIVAL_DATE = "SELECT LOGBOOK.* FROM LOGBOOK" +
+            " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
+            " WHERE DATE BETWEEN ?1 AND ?2";
 
     private Logbook logbook1;
     private Logbook logbook2;
@@ -117,7 +136,19 @@ class LogbookServiceImplTest {
 
     @Test
     void shouldFindLogbookByPort() {
-        // TODO implement method
+        // given
+        TypedQuery<Logbook> queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
+
+        // when
+        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_PORT, Logbook.class)).thenReturn(queryByMock);
+        when(queryByMock.setParameter(1, SEARCH_PARAM)).thenReturn(queryByMock);
+        when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1));
+
+        List<Logbook> result = logbookService.findByPort(SEARCH_PARAM);
+
+        // then
+        assertNotNull(result, "List should not be empty");
+        assertEquals(1, result.size(), "List size should be 1");
     }
 
     @Test
@@ -126,11 +157,11 @@ class LogbookServiceImplTest {
         TypedQuery<Logbook> queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
 
         // when
-        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_PORT, Logbook.class)).thenReturn(queryByMock);
-        when(queryByMock.setParameter("searchParam", "%searchParam")).thenReturn(queryByMock);
+        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_SPECIES, Logbook.class)).thenReturn(queryByMock);
+        when(queryByMock.setParameter(1, SEARCH_PARAM)).thenReturn(queryByMock);
         when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1, logbook2));
 
-        List<Logbook> result = logbookService.findBySpecies("searchParam");
+        List<Logbook> result = logbookService.findBySpecies(SEARCH_PARAM);
 
         // then
         assertNotNull(result, "List should not be empty");
@@ -139,12 +170,38 @@ class LogbookServiceImplTest {
 
     @Test
     void shouldFindLogbookByArrivalDate() {
-        // TODO implement method
+        // given
+        TypedQuery<Logbook> queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
+
+        // when
+        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_ARRIVAL_DATE, Logbook.class)).thenReturn(queryByMock);
+        when(queryByMock.setParameter(1, DATE_1.toString())).thenReturn(queryByMock);
+        when(queryByMock.setParameter(2, DATE_2.toString())).thenReturn(queryByMock);
+        when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1, logbook2));
+
+        List<Logbook> result = logbookService.findByArrivalDate(DATE_1.toString(), DATE_2.toString());
+
+        // then
+        assertNotNull(result, "List should not be empty");
+        assertEquals(2, result.size(), "List size should be 2");
     }
 
     @Test
     void shouldFindLogbookByDepartureDate() {
-        // TODO implement method
+        // given
+        TypedQuery<Logbook> queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
+
+        // when
+        when(entityManager.createNativeQuery(NATIVE_QUERY_FIND_BY_DEPARTURE_DATE, Logbook.class)).thenReturn(queryByMock);
+        when(queryByMock.setParameter(1, DATE_1.toString())).thenReturn(queryByMock);
+        when(queryByMock.setParameter(2, DATE_2.toString())).thenReturn(queryByMock);
+        when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1, logbook2));
+
+        List<Logbook> result = logbookService.findByDepartureDate(DATE_1.toString(), DATE_2.toString());
+
+        // then
+        assertNotNull(result, "List should not be empty");
+        assertEquals(2, result.size(), "List size should be 2");
     }
 
 }
