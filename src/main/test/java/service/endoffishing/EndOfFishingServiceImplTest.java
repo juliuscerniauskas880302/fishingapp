@@ -32,8 +32,6 @@ class EndOfFishingServiceImplTest {
     private static final String ID_2 = "ID2";
     private static final Date DATE_2 = new Date(2000, 2, 2);
 
-    private static final String NAMED_QUERY_FIND_ALL = "endOfFishing.findAll";
-
     private EndOfFishing endOfFishing1;
     private EndOfFishing endOfFishing2;
 
@@ -46,6 +44,7 @@ class EndOfFishingServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+
         endOfFishing1 = new EndOfFishing();
         endOfFishing1.setId(ID_1);
         endOfFishing1.setDate(DATE_1);
@@ -53,7 +52,6 @@ class EndOfFishingServiceImplTest {
         endOfFishing2 = new EndOfFishing();
         endOfFishing2.setId(ID_2);
         endOfFishing2.setDate(DATE_2);
-
     }
 
     @Test
@@ -63,6 +61,7 @@ class EndOfFishingServiceImplTest {
         EndOfFishing result = endOfFishingService.findById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(EndOfFishing.class), anyString());
         assertNotNull(result, "Result should not be null");
         assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
         assertEquals(DATE_1, result.getDate(), "Date should be equal to " + DATE_1);
@@ -72,12 +71,13 @@ class EndOfFishingServiceImplTest {
     void shouldReturnEndOfFishingList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
-        when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, EndOfFishing.class)).thenReturn(query);
+        when(entityManager.createNamedQuery(anyString(), eq(EndOfFishing.class))).thenReturn(query);
         when(query.getResultList()).thenReturn(Arrays.asList(endOfFishing1, endOfFishing2));
 
         List<EndOfFishing> result = endOfFishingService.findAll();
 
         // then
+        verify(entityManager, times(1)).createNamedQuery(anyString(), eq(EndOfFishing.class));
         assertNotNull(result, "Result should not be null");
         assertEquals(2, result.size(), "Result size should be 2");
     }
@@ -102,6 +102,7 @@ class EndOfFishingServiceImplTest {
         endOfFishingService.update(endOfFishing2, ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(EndOfFishing.class), anyString());
         verify(entityManager, times(1)).merge(eq(endOfFishing1));
     }
 
@@ -113,6 +114,7 @@ class EndOfFishingServiceImplTest {
         endOfFishingService.deleteById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(EndOfFishing.class), anyString());
         verify(entityManager, times(1)).remove(eq(endOfFishing1));
     }
 }

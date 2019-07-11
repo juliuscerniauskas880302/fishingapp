@@ -34,8 +34,6 @@ class ArrivalServiceImplTest {
     private static final String PORT_2 = "PORT2";
     private static final Date DATE_2 = new Date(2000, 2, 2);
 
-    private static final String NAMED_QUERY_FIND_ALL = "arrival.findAll";
-
     private Arrival arrival1;
     private Arrival arrival2;
 
@@ -67,6 +65,7 @@ class ArrivalServiceImplTest {
         Arrival result = arrivalService.findById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Arrival.class), anyString());
         assertNotNull(result, "Result should not be null");
         assertEquals(PORT_1, result.getPort(), "Port should be equal to " + PORT_1);
         assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
@@ -77,12 +76,13 @@ class ArrivalServiceImplTest {
     void shouldReturnArrivalList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
-        when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, Arrival.class)).thenReturn(query);
+        when(entityManager.createNamedQuery(anyString(), eq(Arrival.class))).thenReturn(query);
         when(query.getResultList()).thenReturn(Arrays.asList(arrival1, arrival2));
 
         List<Arrival> result = arrivalService.findAll();
 
         // then
+        verify(entityManager, times(1)).createNamedQuery(anyString(), eq(Arrival.class));
         assertNotNull(result, "Result should not be null");
         assertEquals(2, result.size(), "Result size should be 2");
     }
@@ -107,6 +107,7 @@ class ArrivalServiceImplTest {
         arrivalService.update(arrival2, ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Arrival.class), anyString());
         verify(entityManager, times(1)).merge(eq(arrival1));
     }
 
@@ -118,6 +119,7 @@ class ArrivalServiceImplTest {
         arrivalService.deleteById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Arrival.class), anyString());
         verify(entityManager, times(1)).remove(eq(arrival1));
     }
 }

@@ -34,8 +34,6 @@ class DepartureServiceImplTest {
     private static final String PORT_2 = "PORT2";
     private static final Date DATE_2 = new Date(2000, 2, 2);
 
-    private static final String NAMED_QUERY_FIND_ALL = "departure.findAll";
-
     private Departure departure1;
     private Departure departure2;
 
@@ -67,6 +65,7 @@ class DepartureServiceImplTest {
         Departure result = departureService.findById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Departure.class), anyString());
         assertNotNull(result, "Result should not be null");
         assertEquals(PORT_1, result.getPort(), "Port should be equal to " + PORT_1);
         assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
@@ -77,12 +76,13 @@ class DepartureServiceImplTest {
     void shouldReturnDepartureList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
-        when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, Departure.class)).thenReturn(query);
+        when(entityManager.createNamedQuery(anyString(), eq(Departure.class))).thenReturn(query);
         when(query.getResultList()).thenReturn(Arrays.asList(departure1, departure2));
 
         List<Departure> result = departureService.findAll();
 
         // then
+        verify(entityManager, times(1)).createNamedQuery(anyString(), eq(Departure.class));
         assertNotNull(result, "Result should not be null");
         assertEquals(2, result.size(), "Result size should be 2");
     }
@@ -94,6 +94,7 @@ class DepartureServiceImplTest {
         Response response = departureService.save(departure1);
 
         // then
+        verify(entityManager, times(1)).persist(any(Departure.class));
         assertEquals(Response.Status.CREATED.getStatusCode(),
                 response.getStatus(),
                 "Response status should be " + Response.Status.CREATED.getStatusCode());
@@ -107,6 +108,7 @@ class DepartureServiceImplTest {
         departureService.update(departure2, ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Departure.class), anyString());
         verify(entityManager, times(1)).merge(eq(departure1));
     }
 
@@ -118,6 +120,7 @@ class DepartureServiceImplTest {
         departureService.deleteById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Departure.class), anyString());
         verify(entityManager, times(1)).remove(eq(departure1));
     }
 }

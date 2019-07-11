@@ -31,7 +31,6 @@ class CatchServiceImplTest {
     private static final String VARIETY_2 = "variety2";
     private static final Double WEIGHT_1 = 1D;
     private static final Double WEIGHT_2 = 2D;
-    private static final String NAMED_QUERY_FIND_ALL = "catch.findAll";
 
     private Catch catch1;
     private Catch catch2;
@@ -64,6 +63,7 @@ class CatchServiceImplTest {
         Catch result = catchService.findById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Catch.class), anyString());
         assertNotNull(result);
         assertEquals(VARIETY_1, result.getVariety(), "Variety should be equal to " + VARIETY_1);
         assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
@@ -78,6 +78,7 @@ class CatchServiceImplTest {
         catchService.deleteById(ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Catch.class), anyString());
         verify(entityManager, times(1)).remove(eq(catch1));
     }
 
@@ -85,12 +86,13 @@ class CatchServiceImplTest {
     void shouldReturnCatchList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
-        when(entityManager.createNamedQuery(NAMED_QUERY_FIND_ALL, Catch.class)).thenReturn(query);
+        when(entityManager.createNamedQuery(anyString(), eq(Catch.class))).thenReturn(query);
         when(query.getResultList()).thenReturn(Arrays.asList(catch1, catch2));
 
         List<Catch> result = catchService.findAll();
 
         // then
+        verify(entityManager, times(1)).createNamedQuery(anyString(), eq(Catch.class));
         assertNotNull(result, "Result should not be null");
         assertEquals(2, result.size(), "Result size should be 2");
     }
@@ -102,6 +104,7 @@ class CatchServiceImplTest {
         Response response = catchService.save(catch1);
 
         // then
+        verify(entityManager, times(1)).persist(any(Catch.class));
         assertEquals(Response.Status.CREATED.getStatusCode(),
                 response.getStatus(),
                 "Response value should be " + Response.Status.CREATED.getStatusCode());
@@ -115,6 +118,7 @@ class CatchServiceImplTest {
         catchService.update(catch2, ID_1);
 
         // then
+        verify(entityManager, times(1)).find(eq(Catch.class), anyString());
         verify(entityManager, times(1)).merge(eq(catch1));
     }
 
