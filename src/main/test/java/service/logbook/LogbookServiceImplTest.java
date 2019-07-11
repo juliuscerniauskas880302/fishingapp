@@ -11,8 +11,8 @@ import org.mockito.MockitoAnnotations;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
-import java.sql.Date;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,8 +31,8 @@ class LogbookServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String ID_2 = "ID2";
 
-    private static final Date DATE_1 = new Date(1000, 01, 01);
-    private static final Date DATE_2 = new Date(2000, 02, 02);
+    private static final Date DATE_1 = new Date();
+    private static final Date DATE_2 = new Date();
 
     private static final String SEARCH_PARAM = "SEARCH_PARAM";
 

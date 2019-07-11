@@ -28,7 +28,7 @@ public class ConfigurationController {
     public String getById(
             @PathParam("key") final String key,
             @PathParam("defaultValue") final String defaultValue) {
-        return configService.getOne(key, defaultValue);
+        return configService.getValueByKey(key, defaultValue);
     }
 
     @GET

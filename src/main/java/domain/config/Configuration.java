@@ -2,6 +2,7 @@ package domain.config;
 
 import domain.base.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -13,6 +14,7 @@ import javax.persistence.NamedQuery;
 }
 )
 public class Configuration extends BaseEntity {
+    @Column(unique = true)
     private String key;
     private String value;
     private String description;

@@ -2,12 +2,13 @@ package service.config;
 
 import domain.config.Configuration;
 
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 public interface ConfigService {
-    void add(Configuration configuration);
+    Response add(Configuration configuration);
     void delete(String key);
     void update(String key, String value, String description);
-    String getOne(String key, String defaultValue);
+    String getValueByKey(String key, String defaultValue);
     List<Configuration> getAll();
 }

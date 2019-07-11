@@ -1,10 +1,12 @@
 package service.departure;
 
 import domain.Departure;
+import domain.Logbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.persistence.EntityManager;
@@ -28,14 +30,16 @@ import static org.mockito.Mockito.when;
 class DepartureServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String PORT_1 = "PORT1";
-    private static final Date DATE_1 = new Date(1999, 1, 1);
+    private static final Date DATE_1 = new Date();
 
     private static final String ID_2 = "ID2";
     private static final String PORT_2 = "PORT2";
-    private static final Date DATE_2 = new Date(2000, 2, 2);
+    private static final Date DATE_2 = new Date();
 
     private Departure departure1;
     private Departure departure2;
+
+    private TypedQuery<Logbook> queryByMock;
 
     @Mock
     private EntityManager entityManager;
@@ -46,6 +50,8 @@ class DepartureServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
+
+        queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
 
         departure1 = new Departure();
         departure1.setId(ID_1);

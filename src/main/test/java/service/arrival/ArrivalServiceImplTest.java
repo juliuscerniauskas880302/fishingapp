@@ -28,11 +28,11 @@ import static org.mockito.Mockito.when;
 class ArrivalServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String PORT_1 = "PORT1";
-    private static final Date DATE_1 = new Date(1999, 1, 1);
+    private static final Date DATE_1 = new Date();
 
     private static final String ID_2 = "ID2";
     private static final String PORT_2 = "PORT2";
-    private static final Date DATE_2 = new Date(2000, 2, 2);
+    private static final Date DATE_2 = new Date();
 
     private Arrival arrival1;
     private Arrival arrival2;

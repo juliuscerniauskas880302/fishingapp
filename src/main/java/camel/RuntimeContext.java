@@ -1,9 +1,6 @@
 package camel;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-import common.PropertyLoader;
 import org.apache.camel.CamelContext;
-import org.apache.camel.PropertyInject;
 import org.apache.camel.impl.DefaultCamelContext;
 
 import javax.annotation.PostConstruct;
@@ -19,7 +16,6 @@ public class RuntimeContext {
     private CamelContext context = new DefaultCamelContext();
     @Inject
     private DataSaveRouteBuilder DataSaveRouteBuilder;
-
 
     @PostConstruct
     public void init() {
