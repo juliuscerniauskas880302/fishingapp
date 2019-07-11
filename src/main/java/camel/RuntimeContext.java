@@ -23,7 +23,6 @@ public class RuntimeContext {
 
     @PostConstruct
     public void init() {
-        System.out.println(PropertyLoader.getProperty("test"));
         try {
             context.addRoutes(DataSaveRouteBuilder);
             context.start();

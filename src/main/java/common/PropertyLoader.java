@@ -15,12 +15,7 @@ public class PropertyLoader {
 
     @PostConstruct
     public void init() {
-        try (InputStream input = new FileInputStream("C:\\dev\\fishingapp\\src\\main\\resources\\application.properties")) {
-            properties = new Properties();
-            properties.load(input);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        // TODO add file stream to read properties from file
     }
 
     public static String getProperty(String propertyName) {

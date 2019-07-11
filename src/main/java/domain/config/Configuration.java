@@ -1,4 +1,4 @@
-package domain;
+package domain.config;
 
 import domain.base.BaseEntity;
 
