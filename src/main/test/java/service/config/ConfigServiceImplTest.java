@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class ConfigServiceImplTest {
+public class ConfigServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String KEY_1 = "KEY1";
     private static final String VALUE_1 = "VALUE1";
@@ -48,7 +48,7 @@ class ConfigServiceImplTest {
     private Configuration config1, config2;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         queryByMock = (TypedQuery<Configuration>) Mockito.mock(TypedQuery.class);
@@ -67,7 +67,7 @@ class ConfigServiceImplTest {
     }
 
     @Test
-    void shouldCreateNewConfig() {
+    public void shouldCreateNewConfig() {
         // when
         doNothing().when(entityManager).persist(any(Configuration.class));
         Response response = configService.add(config1);
@@ -80,7 +80,7 @@ class ConfigServiceImplTest {
     }
 
     @Test
-    void shouldDeleteConfigByKey() {
+    public void shouldDeleteConfigByKey() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Configuration.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
@@ -94,7 +94,7 @@ class ConfigServiceImplTest {
     }
 
     @Test
-    void shouldUpdateByKey() {
+    public void shouldUpdateByKey() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Configuration.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
@@ -108,11 +108,11 @@ class ConfigServiceImplTest {
     }
 
     @Test
-    void shouldGetValueByKey() {
+    public void shouldGetValueByKey() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Configuration.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
-        when(queryByMock.getResultList()).thenReturn(Arrays.asList(config1));
+        when(queryByMock.getSingleResult()).thenReturn(config1);
 
         String value = configService.getValueByKey(KEY_1, DEFAULT_VALUE);
 
@@ -122,7 +122,7 @@ class ConfigServiceImplTest {
     }
 
     @Test
-    void shouldGetAllConfigs() {
+    public void shouldGetAllConfigs() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Configuration.class))).thenReturn(queryByMock);
         when(queryByMock.getResultList()).thenReturn(Arrays.asList(config1, config2));

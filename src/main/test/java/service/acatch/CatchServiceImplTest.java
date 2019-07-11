@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CatchServiceImplTest {
+public class CatchServiceImplTest {
     private static final String ID_1 = "1";
     private static final String ID_2 = "2";
     private static final String VARIETY_1 = "variety1";
@@ -57,7 +57,7 @@ class CatchServiceImplTest {
     }
 
     @Test
-    void shouldGetCatchById() {
+    public void shouldGetCatchById() {
         // when
         when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
         Catch result = catchService.findById(ID_1);
@@ -71,7 +71,7 @@ class CatchServiceImplTest {
     }
 
     @Test
-    void shouldDeleteCatchById() {
+    public void shouldDeleteCatchById() {
         // when
         when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
 
@@ -83,7 +83,7 @@ class CatchServiceImplTest {
     }
 
     @Test
-    void shouldReturnCatchList() {
+    public void shouldReturnCatchList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(anyString(), eq(Catch.class))).thenReturn(query);
@@ -98,7 +98,7 @@ class CatchServiceImplTest {
     }
 
     @Test
-    void shouldCreateNewCatch() {
+    public void shouldCreateNewCatch() {
         // when
         doNothing().when(entityManager).persist(any(Catch.class));
         Response response = catchService.save(catch1);

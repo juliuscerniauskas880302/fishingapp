@@ -25,7 +25,7 @@ public class ConfigurationController {
     @GET
     @Path("/{key}/{defaultValue}")
     @Produces({MediaType.APPLICATION_JSON})
-    public String getById(
+    public String getByKey(
             @PathParam("key") final String key,
             @PathParam("defaultValue") final String defaultValue) {
         return configService.getValueByKey(key, defaultValue);

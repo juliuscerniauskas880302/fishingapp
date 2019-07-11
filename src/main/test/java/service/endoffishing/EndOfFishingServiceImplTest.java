@@ -25,7 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class EndOfFishingServiceImplTest {
+public class EndOfFishingServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final Date DATE_1 = new Date();
 
@@ -42,7 +42,7 @@ class EndOfFishingServiceImplTest {
     private EndOfFishingServiceImpl endOfFishingService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         endOfFishing1 = new EndOfFishing();
@@ -55,7 +55,7 @@ class EndOfFishingServiceImplTest {
     }
 
     @Test
-    void shouldGetByEndOfFishingId() {
+    public void shouldGetByEndOfFishingId() {
         // when
         when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
         EndOfFishing result = endOfFishingService.findById(ID_1);
@@ -68,7 +68,7 @@ class EndOfFishingServiceImplTest {
     }
 
     @Test
-    void shouldReturnEndOfFishingList() {
+    public void shouldReturnEndOfFishingList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(anyString(), eq(EndOfFishing.class))).thenReturn(query);
@@ -83,7 +83,7 @@ class EndOfFishingServiceImplTest {
     }
 
     @Test
-    void shouldCreateNewEndOfFishing() {
+    public void shouldCreateNewEndOfFishing() {
         // when
         doNothing().when(entityManager).persist(any(EndOfFishing.class));
         Response response = endOfFishingService.save(endOfFishing1);
@@ -95,7 +95,7 @@ class EndOfFishingServiceImplTest {
     }
 
     @Test
-    void shouldUpdateEndOfFishingById() {
+    public void shouldUpdateEndOfFishingById() {
         // when
         when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
 
@@ -107,7 +107,7 @@ class EndOfFishingServiceImplTest {
     }
 
     @Test
-    void shouldDeleteByEndOfFishingId() {
+    public void shouldDeleteByEndOfFishingId() {
         // when
         when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
 

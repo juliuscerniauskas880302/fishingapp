@@ -27,7 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class DepartureServiceImplTest {
+public class DepartureServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String PORT_1 = "PORT1";
     private static final Date DATE_1 = new Date();
@@ -48,7 +48,7 @@ class DepartureServiceImplTest {
     private DepartureServiceImpl departureService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
@@ -65,7 +65,7 @@ class DepartureServiceImplTest {
     }
 
     @Test
-    void shouldGetDepartureById() {
+    public void shouldGetDepartureById() {
         // when
         when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
         Departure result = departureService.findById(ID_1);
@@ -79,7 +79,7 @@ class DepartureServiceImplTest {
     }
 
     @Test
-    void shouldReturnDepartureList() {
+    public void shouldReturnDepartureList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(anyString(), eq(Departure.class))).thenReturn(query);
@@ -94,7 +94,7 @@ class DepartureServiceImplTest {
     }
 
     @Test
-    void shouldCreateNewDeparture() {
+    public void shouldCreateNewDeparture() {
         // when
         doNothing().when(entityManager).persist(any(Departure.class));
         Response response = departureService.save(departure1);
@@ -107,7 +107,7 @@ class DepartureServiceImplTest {
     }
 
     @Test
-    void shouldUpdateDepartureById() {
+    public void shouldUpdateDepartureById() {
         // when
         when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
 
@@ -119,7 +119,7 @@ class DepartureServiceImplTest {
     }
 
     @Test
-    void shouldDeleteByDepartureId() {
+    public void shouldDeleteByDepartureId() {
         // when
         when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
 

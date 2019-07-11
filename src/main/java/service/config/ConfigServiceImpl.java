@@ -48,7 +48,11 @@ public class ConfigServiceImpl implements ConfigService {
     public String getValueByKey(String key, String defaultValue) {
         TypedQuery<Configuration> nativeQuery = (TypedQuery<Configuration>) manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class)
                 .setParameter(1, key);
-        return nativeQuery.getResultList().stream().findFirst().map(Configuration::getValue).orElse(defaultValue);
+        Optional<Configuration> singleResult = Optional.ofNullable(nativeQuery.getSingleResult());
+        if(singleResult.isPresent()){
+            return singleResult.get().getValue();
+        }
+        return defaultValue;
     }
 
     @Override
@@ -56,4 +60,5 @@ public class ConfigServiceImpl implements ConfigService {
         return Optional.ofNullable(manager.createNativeQuery(FIND_ALL_CONFIG, Configuration.class)
                 .getResultList()).orElse(Collections.emptyList());
     }
+
 }

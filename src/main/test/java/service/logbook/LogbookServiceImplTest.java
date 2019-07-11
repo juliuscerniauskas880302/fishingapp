@@ -27,7 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class LogbookServiceImplTest {
+public class LogbookServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String ID_2 = "ID2";
 
@@ -47,7 +47,7 @@ class LogbookServiceImplTest {
     private LogbookServiceImpl logbookService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
@@ -60,7 +60,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldGetLogBookById() {
+    public void shouldGetLogBookById() {
         // when
         when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
         Logbook result = logbookService.findById(ID_1);
@@ -72,7 +72,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldReturnLogbookList() {
+    public void shouldReturnLogbookList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNativeQuery(anyString(), eq(Logbook.class))).thenReturn(query);
@@ -87,7 +87,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldCrateLogbook() {
+    public void shouldCrateLogbook() {
         // when
         doNothing().when(entityManager).persist(any(Logbook.class));
         Response response = logbookService.save(logbook1);
@@ -100,7 +100,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldUpdateLogbookById() {
+    public void shouldUpdateLogbookById() {
         // when
         when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
 
@@ -112,7 +112,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldDeleteByLogbookId() {
+    public void shouldDeleteByLogbookId() {
         // when
         when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
 
@@ -124,7 +124,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldFindLogbookByPort() {
+    public void shouldFindLogbookByPort() {
         // given
         TypedQuery<Logbook> queryByMock = (TypedQuery<Logbook>) Mockito.mock(TypedQuery.class);
 
@@ -142,7 +142,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldFindLogbookBySpecies() {
+    public void shouldFindLogbookBySpecies() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Logbook.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
@@ -157,7 +157,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldFindLogbookByArrivalDate() {
+    public void shouldFindLogbookByArrivalDate() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Logbook.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
@@ -172,7 +172,7 @@ class LogbookServiceImplTest {
     }
 
     @Test
-    void shouldFindLogbookByDepartureDate() {
+    public void shouldFindLogbookByDepartureDate() {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Logbook.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class ArrivalServiceImplTest {
+public class ArrivalServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final String PORT_1 = "PORT1";
     private static final Date DATE_1 = new Date();
@@ -44,7 +44,7 @@ class ArrivalServiceImplTest {
     private ArrivalServiceImpl arrivalService;
 
     @BeforeEach
-    void setUp() throws Exception {
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
         arrival1 = new Arrival();
@@ -59,7 +59,7 @@ class ArrivalServiceImplTest {
     }
 
     @Test
-    void shouldGetArrivalById() {
+    public void shouldGetArrivalById() {
         // when
         when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
         Arrival result = arrivalService.findById(ID_1);
@@ -73,7 +73,7 @@ class ArrivalServiceImplTest {
     }
 
     @Test
-    void shouldReturnArrivalList() {
+    public void shouldReturnArrivalList() {
         // when
         TypedQuery query = mock(TypedQuery.class);
         when(entityManager.createNamedQuery(anyString(), eq(Arrival.class))).thenReturn(query);
@@ -88,7 +88,7 @@ class ArrivalServiceImplTest {
     }
 
     @Test
-    void shouldCrateNewArrival() {
+    public void shouldCrateNewArrival() {
         // when
         doNothing().when(entityManager).persist(any(Arrival.class));
         Response response = arrivalService.save(arrival1);
@@ -100,7 +100,7 @@ class ArrivalServiceImplTest {
     }
 
     @Test
-    void shouldUpdateArrivalById() {
+    public void shouldUpdateArrivalById() {
         // when
         when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
 
@@ -112,7 +112,7 @@ class ArrivalServiceImplTest {
     }
 
     @Test
-    void shouldDeleteByArrivalId() {
+    public void shouldDeleteByArrivalId() {
         // when
         when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
 
