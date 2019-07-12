@@ -1,6 +1,7 @@
 package service.acatch;
 
 import domain.Catch;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateful
+@Slf4j
 public class CatchServiceImpl implements CatchService {
     @PersistenceContext
     private EntityManager manager;
@@ -32,6 +34,7 @@ public class CatchServiceImpl implements CatchService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Catch source) {
         manager.persist(source);
+        log.info("Catch {} has been created.", source.toString());
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -42,6 +45,7 @@ public class CatchServiceImpl implements CatchService {
             aCatch.setVariety(source.getVariety());
             aCatch.setWeight(source.getWeight());
             manager.merge(aCatch);
+            log.info("Catch '{}' has been updated.", id);
         });
     }
 
@@ -50,5 +54,6 @@ public class CatchServiceImpl implements CatchService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Catch.class, id)).ifPresent(aCatch ->
                 manager.remove(aCatch));
+        log.info("Catch '{}' has been deleted.", id);
     }
 }

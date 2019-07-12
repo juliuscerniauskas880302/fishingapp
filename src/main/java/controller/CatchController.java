@@ -1,4 +1,4 @@
-package resource;
+package controller;
 
 import domain.Catch;
 import service.acatch.CatchService;

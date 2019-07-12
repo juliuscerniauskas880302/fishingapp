@@ -84,7 +84,7 @@ public class ConfigServiceImplTest {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Configuration.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
-        when(queryByMock.getResultList()).thenReturn(Arrays.asList(config1));
+        when(queryByMock.getSingleResult()).thenReturn(config1);
 
         configService.delete(KEY_1);
 
@@ -98,7 +98,7 @@ public class ConfigServiceImplTest {
         // when
         when(entityManager.createNativeQuery(anyString(), eq(Configuration.class))).thenReturn(queryByMock);
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
-        when(queryByMock.getResultList()).thenReturn(Arrays.asList(config1));
+        when(queryByMock.getSingleResult()).thenReturn(config1);
 
         configService.update(KEY_1, VALUE_1, DESCRIPTION_1);
 

@@ -2,6 +2,8 @@ package service.logbook;
 
 import domain.Logbook;
 import enums.CommunicationType;
+import lombok.extern.slf4j.Slf4j;
+import service.config.ConfigService;
 import strategy.DatabaseSavingStrategy;
 import strategy.FileSavingStrategy;
 import strategy.SavingStrategy;
@@ -9,6 +11,7 @@ import strategy.SavingStrategy;
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
@@ -17,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Stateful
+@Slf4j
+@SuppressWarnings("unchecked")
 public class LogbookServiceImpl implements LogbookService {
     private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT DISTINCT (LOGBOOK.*)" +
             " FROM LOGBOOK " +
@@ -39,10 +44,14 @@ public class LogbookServiceImpl implements LogbookService {
             " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
 
-    private static final String FILE_PATH = "C:\\datafiles\\satellite\\";
+    private static final String DEFAULT_FILE_PATH = "C:\\datafiles\\satellite\\";
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Inject
+    private ConfigService configService;
+
 
     private SavingStrategy savingStrategy;
 
@@ -60,11 +69,13 @@ public class LogbookServiceImpl implements LogbookService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Logbook source) {
+        String filePath = configService.getValueByKey("filePath", DEFAULT_FILE_PATH);
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
-            savingStrategy = new FileSavingStrategy(FILE_PATH);
+            savingStrategy = new FileSavingStrategy(filePath);
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);
         }
+        log.info("Logbook {} has been created using {} strategy.",source.toString(), savingStrategy.getClass().getName());
         return savingStrategy.save(source);
     }
 
@@ -78,6 +89,7 @@ public class LogbookServiceImpl implements LogbookService {
             logbook.setDeparture(source.getDeparture());
             logbook.setEndOfFishing(source.getEndOfFishing());
             manager.merge(logbook);
+            log.info("Logbook '{}' has been updated.", id);
         });
     }
 
@@ -86,6 +98,7 @@ public class LogbookServiceImpl implements LogbookService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook ->
                 manager.remove(logbook));
+        log.info("Logbook '{}' has been deleted.", id);
     }
 
     @Override

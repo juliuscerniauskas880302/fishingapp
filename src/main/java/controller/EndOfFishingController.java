@@ -1,7 +1,7 @@
-package resource;
+package controller;
 
-import domain.Departure;
-import service.departure.DepartureService;
+import domain.EndOfFishing;
+import service.endOffFishing.EndOffFishingService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -17,40 +17,41 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/departures")
+@Path("/end")
 @Produces({MediaType.APPLICATION_JSON})
-public class DepartureController {
+public class EndOfFishingController {
     @Inject
-    private DepartureService departureService;
+    private EndOffFishingService endOffFishingService;
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Departure getById(@PathParam("id") final String id) {
-        return departureService.findById(id);
+    public EndOfFishing getById(@PathParam("id") final String id) {
+        return endOffFishingService.findById(id);
+
     }
 
     @GET
-    public List<Departure> findAll() {
-        return departureService.findAll();
+    public List<EndOfFishing> findAll() {
+        return endOffFishingService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Departure source) {
-        return departureService.save(source);
+    public Response create(@Valid EndOfFishing source) {
+        return endOffFishingService.save(source);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void updateById(@PathParam("id") final String id, @Valid Departure source) {
-        departureService.update(source, id);
+    public void updateById(@PathParam("id") final String id, @Valid EndOfFishing source) {
+        endOffFishingService.update(source, id);
     }
 
     @DELETE
     @Path("/{id}")
     public void deleteById(@PathParam("id") final String id) {
-        departureService.deleteById(id);
+        endOffFishingService.deleteById(id);
     }
 }

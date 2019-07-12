@@ -1,4 +1,4 @@
-package resource;
+package controller;
 
 import domain.config.Configuration;
 import service.config.ConfigService;

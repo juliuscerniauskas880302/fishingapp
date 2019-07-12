@@ -1,10 +1,9 @@
-package resource;
+package controller;
 
-import domain.Arrival;
-import service.arrival.ArrivalService;
+import domain.Departure;
+import service.departure.DepartureService;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -18,42 +17,40 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/arrivals")
+@Path("/departures")
 @Produces({MediaType.APPLICATION_JSON})
-public class ArrivalController {
+public class DepartureController {
     @Inject
-    private ArrivalService arrivalService;
+    private DepartureService departureService;
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Arrival getById(@PathParam("id") final String id) {
-        return arrivalService.findById(id);
+    public Departure getById(@PathParam("id") final String id) {
+        return departureService.findById(id);
     }
 
     @GET
-    public List<Arrival> findAll() {
-        return arrivalService.findAll();
+    public List<Departure> findAll() {
+        return departureService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Arrival source) {
-        return arrivalService.save(source);
+    public Response create(@Valid Departure source) {
+        return departureService.save(source);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void updateById(@PathParam("id") final String id, @Valid Arrival source) {
-        arrivalService.update(source, id);
+    public void updateById(@PathParam("id") final String id, @Valid Departure source) {
+        departureService.update(source, id);
     }
 
     @DELETE
     @Path("/{id}")
-    @Transactional
     public void deleteById(@PathParam("id") final String id) {
-        arrivalService.deleteById(id);
+        departureService.deleteById(id);
     }
-
 }

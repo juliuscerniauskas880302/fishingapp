@@ -1,4 +1,4 @@
-package resource;
+package controller;
 
 import domain.Arrival;
 import domain.Catch;
