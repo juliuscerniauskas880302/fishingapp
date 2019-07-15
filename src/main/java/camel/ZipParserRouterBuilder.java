@@ -4,6 +4,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.zipfile.ZipSplitter;
 
 import javax.ejb.Stateless;
+import java.io.File;
 
 @Stateless
 public class ZipParserRouterBuilder extends RouteBuilder {
@@ -16,39 +17,49 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                         .streaming()
                             .choice()
                                 .when(header("zipFileName").isEqualTo("Arrival.csv"))
-                                    .multicast()
-                                        .to("file:c:/datafiles/data_import/test")
-                                        .end()
+                                        .to("file:c:/datafiles/data_import/arrival")
+                                        .pollEnrich("file:c:/datafiles/data_import/arrival").process().exchange(exchange ->
+                                            {
+                                                File file = exchange.getIn().getBody(File.class);
+                                                System.out.println("FILE PATH = "+ file);
+                                            })
+
                                 .endChoice()
 
                                 .when(header("zipFileName").isEqualTo("Departure.csv"))
-                                    .multicast()
-                                        .to("file:c:/datafiles/data_import/test")
-                                        .end()
+                                        .to("file:c:/datafiles/data_import/departure")
+                                        .pollEnrich("file:c:/datafiles/data_import/departure").process().exchange(exchange ->
+                                            {
+                                                File file = exchange.getIn().getBody(File.class);
+                                                System.out.println("FILE PATH = "+ file);
+                                            })
                                 .endChoice()
 
                                 .when(header("zipFileName").isEqualTo("Catch.csv"))
-                                    .multicast()
-                                        .to("file:c:/datafiles/data_import/test")
-                                        .end()
+                                        .to("file:c:/datafiles/data_import/catch")
+                                        .pollEnrich("file:c:/datafiles/data_import/catch").process().exchange(exchange ->
+                                            {
+                                                File file = exchange.getIn().getBody(File.class);
+                                                System.out.println("FILE PATH = "+ file);
+                                            })
                                 .endChoice()
 
                                 .when(header("zipFileName").isEqualTo("EndOfFishing.csv"))
-                                    .multicast()
-                                        .to("file:c:/datafiles/data_import/test")
-                                        .end()
+                                        .to("file:c:/datafiles/data_import/endOfFishing")
+                                        .pollEnrich("file:c:/datafiles/data_import/endOfFishing").process().exchange(exchange ->
+                                            {
+                                                File file = exchange.getIn().getBody(File.class);
+                                                System.out.println("FILE PATH = "+ file);
+                                            })
                                 .endChoice()
 
                                 .when(header("zipFileName").isEqualTo("Logbook.csv"))
-                                    .multicast()
-                                        .to("file:c:/datafiles/data_import/test")
-                                        .end()
-                                .endChoice()
-
-                                .when(header("zipFileName").isEqualTo("Variety.csv"))
-                                    .multicast()
-                                        .to("file:c:/datafiles/data_import/test")
-                                        .end()
+                                        .to("file:c:/datafiles/data_import/logbook")
+                                        .pollEnrich("file:c:/datafiles/data_import/logbook").process().exchange(exchange ->
+                                            {
+                                                File file = exchange.getIn().getBody(File.class);
+                                                System.out.println("FILE PATH = "+ file);
+                                            })
                                 .endChoice()
 
                         .end()
