@@ -3,7 +3,6 @@ package strategy;
 import domain.Logbook;
 
 import javax.persistence.EntityManager;
-import javax.ws.rs.core.Response;
 
 public class DatabaseSavingStrategy implements SavingStrategy {
     private EntityManager manager;
@@ -13,13 +12,11 @@ public class DatabaseSavingStrategy implements SavingStrategy {
     }
 
     @Override
-    public Response save(Logbook logbook) {
+    public void save(Logbook logbook) {
         if (!manager.contains(logbook)) {
             manager.persist(logbook);
-            return Response.status(Response.Status.CREATED).build();
         } else {
             manager.merge(logbook);
-            return Response.status(Response.Status.CREATED).build();
         }
     }
 }

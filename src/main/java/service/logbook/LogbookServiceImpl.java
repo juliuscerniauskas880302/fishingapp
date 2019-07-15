@@ -75,8 +75,9 @@ public class LogbookServiceImpl implements LogbookService {
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);
         }
-        log.info("Logbook {} has been created using {} strategy.",source.toString(), savingStrategy.getClass().getName());
-        return savingStrategy.save(source);
+        log.info("Logbook {} has been created using {} strategy.", source.toString(), savingStrategy.getClass().getName());
+        savingStrategy.save(source);
+        return Response.status(Response.Status.OK).build();
     }
 
     @Override

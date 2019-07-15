@@ -1,15 +1,15 @@
 package strategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import common.ResponseMessage;
 import domain.Logbook;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.ws.rs.core.Response;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Slf4j
 public class FileSavingStrategy implements SavingStrategy {
     private String path;
 
@@ -18,16 +18,12 @@ public class FileSavingStrategy implements SavingStrategy {
     }
 
     @Override
-    public Response save(Logbook logbook) {
+    public void save(Logbook logbook) {
         try {
             writeToFile(logbook);
         } catch (IOException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(new ResponseMessage("Error accrued saving logbook: "
-                    + logbook.toString()
-                    + " to file: "
-                    + path)).build();
+            log.warn("Error occurred saving Logbook '{}' to file {}.", logbook.getId(), path);
         }
-        return Response.status(Response.Status.OK).entity(new ResponseMessage("Logbook saved to file")).build();
     }
 
     private void writeToFile(Logbook logbook) throws IOException {

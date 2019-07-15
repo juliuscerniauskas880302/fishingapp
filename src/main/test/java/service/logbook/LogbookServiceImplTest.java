@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import service.config.ConfigService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -42,6 +43,9 @@ public class LogbookServiceImplTest {
 
     @Mock
     private EntityManager entityManager;
+
+    @Mock
+    private ConfigService configService;
 
     @InjectMocks
     private LogbookServiceImpl logbookService;
@@ -94,9 +98,9 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).persist(any(Logbook.class));
-        assertEquals(Response.Status.CREATED.getStatusCode(),
+        assertEquals(Response.Status.OK.getStatusCode(),
                 response.getStatus(),
-                "Response status should be " + Response.Status.CREATED.getStatusCode());
+                "Response status should be " + Response.Status.OK.getStatusCode());
     }
 
     @Test
