@@ -167,7 +167,7 @@ public class LogbookServiceImplTest {
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
         when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1, logbook2));
 
-        List<Logbook> result = logbookService.findByArrivalDate(DATE_1.toString(), DATE_2.toString());
+        List<Logbook> result = logbookService.findByArrivalDateIn(DATE_1.toString(), DATE_2.toString());
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
@@ -182,7 +182,7 @@ public class LogbookServiceImplTest {
         when(queryByMock.setParameter(anyInt(), anyString())).thenReturn(queryByMock);
         when(queryByMock.getResultList()).thenReturn(Arrays.asList(logbook1, logbook2));
 
-        List<Logbook> result = logbookService.findByDepartureDate(DATE_1.toString(), DATE_2.toString());
+        List<Logbook> result = logbookService.findByDepartureDateIn(DATE_1.toString(), DATE_2.toString());
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));

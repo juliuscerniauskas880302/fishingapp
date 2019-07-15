@@ -1,4 +1,4 @@
-package service.endOffFishing;
+package service.endOfFishing;
 
 import domain.EndOfFishing;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EndOffFishingServiceImplTest {
+public class EndOfFishingServiceImplTest {
     private static final String ID_1 = "ID1";
     private static final Date DATE_1 = new Date();
 
@@ -39,7 +39,7 @@ public class EndOffFishingServiceImplTest {
     private EntityManager entityManager;
 
     @InjectMocks
-    private EndOffFishingServiceImpl endOfFishingService;
+    private EndOfFishingServiceImpl endOfFishingService;
 
     @BeforeEach
     public void setUp() {

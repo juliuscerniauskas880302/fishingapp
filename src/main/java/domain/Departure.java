@@ -2,12 +2,14 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,7 +17,9 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "departure.findAll", query = "SELECT d FROM Departure d")
 )
+@Slf4j
 public class Departure extends BaseEntity {
+
     private String port;
 
     @Temporal(TemporalType.DATE)
@@ -52,7 +56,7 @@ public class Departure extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            //TODO add logger
+            log.error("Error mapping Departure {} to json string.", this);
         }
         return json;
     }
@@ -72,27 +76,9 @@ public class Departure extends BaseEntity {
         return Objects.hash(super.hashCode(), port, date);
     }
 
-    public static class Builder {
-        private String port;
-        private Date date;
-
-        public Builder setPort(String port) {
-            this.port = port;
-            return this;
-        }
-
-        public Builder setDate(Date date) {
-            this.date = date;
-            return this;
-        }
-
-        public Departure build() {
-            Departure departure = new Departure();
-            departure.port = this.port;
-            departure.date = this.date;
-            return departure;
-        }
-
+    public String getFormattedDate(String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(this.date);
     }
 
 }

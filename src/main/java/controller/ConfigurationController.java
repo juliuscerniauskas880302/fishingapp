@@ -26,8 +26,7 @@ public class ConfigurationController {
     @Path("/{key}/{defaultValue}")
     @Produces({MediaType.APPLICATION_JSON})
     public String getByKey(
-            @PathParam("key") final String key,
-            @PathParam("defaultValue") final String defaultValue) {
+            @PathParam("key") final String key, @PathParam("defaultValue") final String defaultValue) {
         return configService.getValueByKey(key, defaultValue);
     }
 
@@ -50,10 +49,8 @@ public class ConfigurationController {
 
     @PUT
     @Path("/{key}/{value}/{description}")
-    public void update(
-            @PathParam("key") final String key,
-            @PathParam("value") final String value,
-            @PathParam("description") final String description) {
+    public void update(@PathParam("key") final String key, @PathParam("value") final String value,
+                       @PathParam("description") final String description) {
         configService.update(key, value, description);
     }
 

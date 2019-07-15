@@ -2,7 +2,6 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import enums.CommunicationType;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -22,6 +21,7 @@ import java.util.Objects;
         @NamedQuery(name = "logbook.findAll", query = "select l from Logbook l")
 )
 public class Logbook extends BaseEntity {
+
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Arrival arrival;
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
@@ -155,7 +155,6 @@ public class Logbook extends BaseEntity {
             logbook.catches = this.catches;
             return logbook;
         }
-
     }
 
 }

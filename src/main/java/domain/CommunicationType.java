@@ -1,4 +1,4 @@
-package enums;
+package domain;
 
 public enum CommunicationType {
     SATELLITE, NETWORK

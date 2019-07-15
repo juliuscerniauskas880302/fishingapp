@@ -17,6 +17,7 @@ import java.util.Optional;
 @Slf4j
 @SuppressWarnings("unchecked")
 public class ConfigServiceImpl implements ConfigService {
+
     private static final String FIND_CONFIG_BY_KEY = "SELECT C.* FROM CONFIGURATION C where C.KEY = ?1";
     private static final String FIND_ALL_CONFIG = "SELECT * FROM CONFIGURATION";
 
@@ -39,7 +40,7 @@ public class ConfigServiceImpl implements ConfigService {
             manager.remove(singleResult);
             log.info("Configuration '{}' has been deleted", key);
         } catch (NoResultException ex) {
-            log.info("Configuration '{}' does not exists", key);
+            log.error("Configuration '{}' does not exists", key);
         }
     }
 
@@ -54,7 +55,7 @@ public class ConfigServiceImpl implements ConfigService {
             manager.merge(singleResult);
             log.info("Configuration '{}' updated", key);
         } catch (NoResultException ex) {
-            log.info("Configuration '{}' does not exists", key);
+            log.error("Configuration '{}' does not exists", key);
         }
     }
 

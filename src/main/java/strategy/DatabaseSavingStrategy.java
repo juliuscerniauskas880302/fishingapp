@@ -5,6 +5,7 @@ import domain.Logbook;
 import javax.persistence.EntityManager;
 
 public class DatabaseSavingStrategy implements SavingStrategy {
+
     private EntityManager manager;
 
     public DatabaseSavingStrategy(EntityManager manager) {
@@ -19,4 +20,5 @@ public class DatabaseSavingStrategy implements SavingStrategy {
             manager.merge(logbook);
         }
     }
+
 }

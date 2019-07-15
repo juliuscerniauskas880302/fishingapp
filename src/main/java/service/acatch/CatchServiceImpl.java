@@ -16,6 +16,7 @@ import java.util.Optional;
 @Stateful
 @Slf4j
 public class CatchServiceImpl implements CatchService {
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -56,4 +57,5 @@ public class CatchServiceImpl implements CatchService {
                 manager.remove(aCatch));
         log.info("Catch '{}' has been deleted.", id);
     }
+
 }

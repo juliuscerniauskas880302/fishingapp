@@ -14,6 +14,7 @@ import javax.persistence.NamedQuery;
 }
 )
 public class Configuration extends BaseEntity {
+
     @Column(unique = true)
     private String key;
     private String value;
@@ -51,4 +52,5 @@ public class Configuration extends BaseEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

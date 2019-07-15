@@ -2,12 +2,14 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,7 +17,9 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "arrival.findAll", query = "SELECT a FROM Arrival a")
 )
+@Slf4j
 public class Arrival extends BaseEntity {
+
     private String port;
 
     @Temporal(TemporalType.DATE)
@@ -52,7 +56,7 @@ public class Arrival extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            //TODO add logger
+            log.error("Error mapping Arrival {} to json string.", this);
         }
         return json;
     }
@@ -92,7 +96,11 @@ public class Arrival extends BaseEntity {
             arrival.date = this.date;
             return arrival;
         }
+    }
 
+    public String getFormattedDate(String pattern) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        return simpleDateFormat.format(this.date);
     }
 
 }

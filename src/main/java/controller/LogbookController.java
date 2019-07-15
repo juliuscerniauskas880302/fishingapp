@@ -1,11 +1,6 @@
 package controller;
 
-import domain.Arrival;
-import domain.Catch;
-import domain.Departure;
-import domain.EndOfFishing;
 import domain.Logbook;
-import enums.CommunicationType;
 import service.logbook.LogbookService;
 
 import javax.inject.Inject;
@@ -20,28 +15,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Path("/logs")
 @Produces({MediaType.APPLICATION_JSON})
 public class LogbookController {
+
     @Inject
     private LogbookService logbookService;
-
-    @GET
-    @Path("/test")
-    @Produces({MediaType.APPLICATION_JSON})
-    public Response getTest() {
-        Arrival arrival = new Arrival("Arrival port", new Date());
-        Departure departure = new Departure("Departure port", new Date());
-        EndOfFishing endOfFishing = new EndOfFishing(new Date());
-        List<Catch> catches = new ArrayList<>();
-        catches.add(new Catch("Salmon", 55.5D));
-        Logbook logbook = new Logbook(arrival, departure, endOfFishing, catches, CommunicationType.NETWORK.toString());
-        return Response.ok().entity(logbook).build();
-    }
 
     @GET
     @Path("/{id}")
@@ -88,20 +69,16 @@ public class LogbookController {
 
     @GET
     @Path("/search/departure/{date1}/{date2}")
-    public List<Logbook> getLogbookByArrivalDate(
-            @PathParam("date1") final String date1,
-            @PathParam("date2") final String date2
-    ) {
-        return logbookService.findByArrivalDate(date1, date2);
+    public List<Logbook> getLogbookByArrivalDateIn(
+            @PathParam("date1") final String date1, @PathParam("date2") final String date2) {
+        return logbookService.findByArrivalDateIn(date1, date2);
     }
 
     @GET
     @Path("/search/arrival/{date1}/{date2}")
-    public List<Logbook> getLogbookByDepartureDate(
-            @PathParam("date1") final String date1,
-            @PathParam("date2") final String date2
-    ) {
-        return logbookService.findByDepartureDate(date1, date2);
+    public List<Logbook> getLogbookByDepartureDateIn(
+            @PathParam("date1") final String date1, @PathParam("date2") final String date2) {
+        return logbookService.findByDepartureDateIn(date1, date2);
     }
 
 }

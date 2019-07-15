@@ -7,6 +7,7 @@ import java.util.UUID;
 
 @MappedSuperclass
 public class BaseEntity implements Serializable {
+
     @Id
     private String id;
 

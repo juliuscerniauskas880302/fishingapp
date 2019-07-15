@@ -21,6 +21,7 @@ import java.util.List;
 @Path("/arrivals")
 @Produces({MediaType.APPLICATION_JSON})
 public class ArrivalController {
+
     @Inject
     private ArrivalService arrivalService;
 

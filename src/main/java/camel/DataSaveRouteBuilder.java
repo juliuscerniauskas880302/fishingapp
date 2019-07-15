@@ -4,16 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Logbook;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import service.PropertyLoaderDBService;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.io.File;
 
 @Stateless
 public class DataSaveRouteBuilder extends RouteBuilder {
-    @Inject
-    private PropertyLoaderDBService propertyLoaderDBService;
+
     @Override
     public void configure() throws Exception {
         from("timer://schedulerTimer?fixedRate=true&period=5s&delay=5s")
@@ -29,4 +26,5 @@ public class DataSaveRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to("http://localhost:8080/fishingapp/api/logs/");
     }
+
 }

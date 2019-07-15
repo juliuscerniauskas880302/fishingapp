@@ -1,7 +1,7 @@
 package service.acatch;
 
 import domain.Catch;
-import service.Dao;
+import service.GenericDAO;
 
-public interface CatchService extends Dao<Catch, String> {
+public interface CatchService extends GenericDAO<Catch, String> {
 }

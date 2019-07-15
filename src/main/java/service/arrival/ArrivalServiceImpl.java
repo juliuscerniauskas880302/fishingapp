@@ -16,6 +16,7 @@ import java.util.Optional;
 @Stateful
 @Slf4j
 public class ArrivalServiceImpl implements ArrivalService {
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -56,4 +57,5 @@ public class ArrivalServiceImpl implements ArrivalService {
                 manager.remove(arrival));
         log.info("Arrival '{}' has been deleted.", id);
     }
+
 }

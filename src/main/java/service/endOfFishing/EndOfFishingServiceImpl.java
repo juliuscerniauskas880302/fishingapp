@@ -1,4 +1,4 @@
-package service.endOffFishing;
+package service.endOfFishing;
 
 import domain.EndOfFishing;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,8 @@ import java.util.Optional;
 
 @Stateful
 @Slf4j
-public class EndOffFishingServiceImpl implements EndOffFishingService {
+public class EndOfFishingServiceImpl implements EndOfFishingService {
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -31,7 +32,7 @@ public class EndOffFishingServiceImpl implements EndOffFishingService {
     @Override
     public Response save(EndOfFishing source) {
         manager.persist(source);
-        log.info("EndOffFishing {} has been created.", source.toString());
+        log.info("EndOfFishing {} has been created.", source.toString());
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -39,7 +40,7 @@ public class EndOffFishingServiceImpl implements EndOffFishingService {
     public void update(EndOfFishing source, String id) {
         Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing -> {
             endOfFishing.setDate(source.getDate());
-            log.info("EndOffFishing '{}' has been updated.", id);
+            log.info("EndOfFishing '{}' has been updated.", id);
             manager.merge(endOfFishing);
         });
     }
@@ -48,6 +49,7 @@ public class EndOffFishingServiceImpl implements EndOffFishingService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing ->
                 manager.remove(endOfFishing));
-        log.info("EndOffFishing '{}' has been deleted.", id);
+        log.info("EndOfFishing '{}' has been deleted.", id);
     }
+
 }

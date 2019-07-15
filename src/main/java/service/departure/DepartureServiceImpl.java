@@ -16,6 +16,7 @@ import java.util.Optional;
 @Stateful
 @Slf4j
 public class DepartureServiceImpl implements DepartureService {
+
     @PersistenceContext
     private EntityManager manager;
 

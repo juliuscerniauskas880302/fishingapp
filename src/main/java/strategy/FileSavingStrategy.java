@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Slf4j
 public class FileSavingStrategy implements SavingStrategy {
+
     private String path;
 
     public FileSavingStrategy(String path) {
@@ -22,7 +23,7 @@ public class FileSavingStrategy implements SavingStrategy {
         try {
             writeToFile(logbook);
         } catch (IOException ex) {
-            log.warn("Error occurred saving Logbook '{}' to file {}.", logbook.getId(), path);
+            log.error("Error occurred saving Logbook '{}' to file {}.", logbook.getId(), path);
         }
     }
 
@@ -40,4 +41,5 @@ public class FileSavingStrategy implements SavingStrategy {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss'.log'");
         return simpleDateFormat.format(new Date());
     }
+
 }

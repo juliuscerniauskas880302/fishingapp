@@ -1,7 +1,7 @@
 package controller;
 
 import domain.EndOfFishing;
-import service.endOffFishing.EndOffFishingService;
+import service.endOfFishing.EndOfFishingService;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -20,38 +20,39 @@ import java.util.List;
 @Path("/end")
 @Produces({MediaType.APPLICATION_JSON})
 public class EndOfFishingController {
+
     @Inject
-    private EndOffFishingService endOffFishingService;
+    private EndOfFishingService endOfFishingService;
 
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     public EndOfFishing getById(@PathParam("id") final String id) {
-        return endOffFishingService.findById(id);
-
+        return endOfFishingService.findById(id);
     }
 
     @GET
     public List<EndOfFishing> findAll() {
-        return endOffFishingService.findAll();
+        return endOfFishingService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@Valid EndOfFishing source) {
-        return endOffFishingService.save(source);
+        return endOfFishingService.save(source);
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     public void updateById(@PathParam("id") final String id, @Valid EndOfFishing source) {
-        endOffFishingService.update(source, id);
+        endOfFishingService.update(source, id);
     }
 
     @DELETE
     @Path("/{id}")
     public void deleteById(@PathParam("id") final String id) {
-        endOffFishingService.deleteById(id);
+        endOfFishingService.deleteById(id);
     }
+
 }

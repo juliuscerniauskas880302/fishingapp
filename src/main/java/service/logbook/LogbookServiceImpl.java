@@ -1,7 +1,7 @@
 package service.logbook;
 
 import domain.Logbook;
-import enums.CommunicationType;
+import domain.CommunicationType;
 import lombok.extern.slf4j.Slf4j;
 import service.config.ConfigService;
 import strategy.DatabaseSavingStrategy;
@@ -23,6 +23,7 @@ import java.util.Optional;
 @Slf4j
 @SuppressWarnings("unchecked")
 public class LogbookServiceImpl implements LogbookService {
+
     private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT DISTINCT (LOGBOOK.*)" +
             " FROM LOGBOOK " +
             " LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID" +
@@ -51,7 +52,6 @@ public class LogbookServiceImpl implements LogbookService {
 
     @Inject
     private ConfigService configService;
-
 
     private SavingStrategy savingStrategy;
 
@@ -117,7 +117,7 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
-    public List<Logbook> findByArrivalDate(String date1, String date2) {
+    public List<Logbook> findByArrivalDateIn(String date1, String date2) {
         return Optional.ofNullable(manager.createNativeQuery(FIND_BY_ARRIVAL_DATE, Logbook.class)
                 .setParameter(1, date1)
                 .setParameter(2, date2)
@@ -125,10 +125,11 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
-    public List<Logbook> findByDepartureDate(String date1, String date2) {
+    public List<Logbook> findByDepartureDateIn(String date1, String date2) {
         return Optional.ofNullable(manager.createNativeQuery(FIND_BY_DEPARTURE_DATE, Logbook.class)
                 .setParameter(1, date1)
                 .setParameter(2, date2)
                 .getResultList()).orElse(Collections.emptyList());
     }
+
 }

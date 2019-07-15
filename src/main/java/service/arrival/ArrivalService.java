@@ -1,7 +1,7 @@
 package service.arrival;
 
 import domain.Arrival;
-import service.Dao;
+import service.GenericDAO;
 
-public interface ArrivalService extends Dao<Arrival, String> {
+public interface ArrivalService extends GenericDAO<Arrival, String> {
 }

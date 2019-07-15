@@ -20,6 +20,7 @@ import java.util.List;
 @Path("/departures")
 @Produces({MediaType.APPLICATION_JSON})
 public class DepartureController {
+
     @Inject
     private DepartureService departureService;
 
@@ -53,4 +54,5 @@ public class DepartureController {
     public void deleteById(@PathParam("id") final String id) {
         departureService.deleteById(id);
     }
+
 }
