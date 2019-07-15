@@ -1,5 +1,6 @@
 package controller;
 
+import common.ApplicationVariables;
 import domain.EndOfFishing;
 import service.endOfFishing.EndOfFishingService;
 
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/end")
+@Path(ApplicationVariables.END_OF_FISHING_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class EndOfFishingController {
 

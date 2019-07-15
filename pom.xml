@@ -90,6 +90,11 @@
             <artifactId>commons-csv</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+            <groupId>io.xlate</groupId>
+            <artifactId>property-inject</artifactId>
+            <version>1.0.5</version>
+        </dependency>
     </dependencies>
 
 </project>

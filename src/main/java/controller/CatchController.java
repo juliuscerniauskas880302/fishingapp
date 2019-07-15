@@ -1,5 +1,6 @@
 package controller;
 
+import common.ApplicationVariables;
 import domain.Catch;
 import service.acatch.CatchService;
 
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/catches")
+@Path(ApplicationVariables.CATCH_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class CatchController {
 

@@ -1,5 +1,6 @@
 package controller;
 
+import common.ApplicationVariables;
 import domain.Arrival;
 import service.arrival.ArrivalService;
 
@@ -18,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/arrivals")
+@Path(ApplicationVariables.ARRIVAL_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class ArrivalController {
 

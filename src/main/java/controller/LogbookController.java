@@ -1,5 +1,6 @@
 package controller;
 
+import common.ApplicationVariables;
 import domain.Logbook;
 import service.logbook.LogbookService;
 
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/logs")
+@Path(ApplicationVariables.LOGBOOK_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class LogbookController {
 

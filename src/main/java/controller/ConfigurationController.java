@@ -1,5 +1,6 @@
 package controller;
 
+import common.ApplicationVariables;
 import domain.config.Configuration;
 import service.config.ConfigService;
 
@@ -15,7 +16,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Path("/configs")
+@Path(ApplicationVariables.CONFIG_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class ConfigurationController {
 

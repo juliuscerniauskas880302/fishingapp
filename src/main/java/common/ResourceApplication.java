@@ -3,7 +3,7 @@ package common;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("api")
+@ApplicationPath(ApplicationVariables.APPLICATION_PATH)
 public class ResourceApplication extends Application {
 
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import common.ApplicationVariables;
 import domain.Departure;
 import service.departure.DepartureService;
 
@@ -17,7 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/departures")
+@Path(ApplicationVariables.DEPARTURE_PATH)
 @Produces({MediaType.APPLICATION_JSON})
 public class DepartureController {
 

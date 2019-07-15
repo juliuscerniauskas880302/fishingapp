@@ -1,7 +1,10 @@
 package service.logbook;
 
+import common.ApplicationVariables;
 import domain.Logbook;
 import domain.CommunicationType;
+import io.xlate.inject.Property;
+import io.xlate.inject.PropertyResource;
 import lombok.extern.slf4j.Slf4j;
 import service.config.ConfigService;
 import strategy.DatabaseSavingStrategy;
@@ -45,7 +48,11 @@ public class LogbookServiceImpl implements LogbookService {
             " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
 
-    private static final String DEFAULT_FILE_PATH = "C:\\datafiles\\satellite\\";
+    @Inject
+    @Property(name = "strategy.file.filePath",
+            resource = @PropertyResource(ApplicationVariables.PROPERTIES_FILE_PATH),
+            defaultValue = "C:/datafiles/satellite/notfound")
+    private String FILE_PATH;
 
     @PersistenceContext
     private EntityManager manager;
@@ -69,9 +76,9 @@ public class LogbookServiceImpl implements LogbookService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Logbook source) {
-        String filePath = configService.getValueByKey("filePath", DEFAULT_FILE_PATH);
+        log.warn("FILEPATH {}", FILE_PATH);
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
-            savingStrategy = new FileSavingStrategy(filePath);
+            savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);
         }

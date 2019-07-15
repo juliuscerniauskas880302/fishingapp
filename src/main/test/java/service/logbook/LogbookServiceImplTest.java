@@ -64,7 +64,7 @@ public class LogbookServiceImplTest {
     }
 
     @Test
-    public void shouldGetLogBookById() {
+    public void shouldGetLogbookById() {
         // when
         when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
         Logbook result = logbookService.findById(ID_1);
