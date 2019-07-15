@@ -57,9 +57,6 @@ public class LogbookServiceImpl implements LogbookService {
     @PersistenceContext
     private EntityManager manager;
 
-    @Inject
-    private ConfigService configService;
-
     private SavingStrategy savingStrategy;
 
     @Override
