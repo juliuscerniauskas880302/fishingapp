@@ -12,6 +12,7 @@ import org.apache.camel.dataformat.zipfile.ZipSplitter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import utilities.DateUtilities;
 
 import javax.ejb.Stateless;
 import java.io.File;
@@ -19,8 +20,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
     private Map<String, List<Catch>> cachesMap = new HashMap<>();
     private static final String HEADER_NAME = "zipFileName";
     private static final String RESOURCE_URI = "file:c:/datafiles/data_import";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     @Override
     public void configure() throws Exception {
@@ -89,7 +89,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 }
             }
         } catch (IOException e) {
-            log.error("Error occurred building arrival object. {}", e);
+            log.error("Error occurred building arrival object. {}", e.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
             for (CSVRecord record : parser) {
                 String id = record.get("ID");
                 String logbookId = record.get("logbookID");
-                Date date = parseDateFromString(record.get("date"), "yyyy-MM-dd");
+                Date date = DateUtilities.parseDateFromString(record.get("date"), DATE_PATTERN);
                 EndOfFishing endOfFishing = new EndOfFishing(date);
                 endOfFishing.setId(id);
                 if (!logbookMap.containsKey(logbookId)) {
@@ -112,7 +112,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 }
             }
         } catch (IOException e) {
-            log.error("Error occurred building arrival object.");
+            log.error("Error occurred building arrival object. {}", e.getMessage());
         }
     }
 
@@ -136,7 +136,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 }
             }
         } catch (IOException e) {
-            log.error("Error occurred building arrival object.");
+            log.error("Error occurred building arrival object. {}", e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 String id = record.get("ID");
                 String logbookId = record.get("logbookID");
                 String port = record.get("port");
-                Date date = parseDateFromString(record.get("date"), "yyyy-MM-dd");
+                Date date = DateUtilities.parseDateFromString(record.get("date"), DATE_PATTERN);
                 Arrival arrival = new Arrival(port, date);
                 arrival.setId(id);
                 if (!logbookMap.containsKey(logbookId)) {
@@ -160,7 +160,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 }
             }
         } catch (IOException e) {
-            log.error("Error occurred building arrival object.");
+            log.error("Error occurred building arrival object. {}", e.getMessage());
         }
     }
 
@@ -173,7 +173,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 String id = record.get("ID");
                 String logbookId = record.get("logbookID");
                 String port = record.get("port");
-                Date date = parseDateFromString(record.get("date"), "yyyy-MM-dd");
+                Date date = DateUtilities.parseDateFromString(record.get("date"), DATE_PATTERN);
                 Departure departure = new Departure(port, date);
                 departure.setId(id);
                 if (!logbookMap.containsKey(logbookId)) {
@@ -184,19 +184,8 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 }
             }
         } catch (IOException e) {
-            log.error("Error occurred building arrival object.");
+            log.error("Error occurred building arrival object. {}", e.getMessage());
         }
-    }
-
-    private Date parseDateFromString(String dateString, String datePattern) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
-        Date date = null;
-        try {
-            date = simpleDateFormat.parse(dateString);
-        } catch (ParseException e) {
-            log.error("Cannot parse string {} to date.", dateString);
-        }
-        return date;
     }
 
     private List<Logbook> createLogbookList() {
