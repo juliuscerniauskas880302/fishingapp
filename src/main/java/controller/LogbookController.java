@@ -43,6 +43,13 @@ public class LogbookController {
         return logbookService.save(source);
     }
 
+    @POST
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Path("/logs")
+    public Response saveAll(@Valid List<Logbook> logbooks) {
+        return logbookService.saveAll(logbooks);
+    }
+
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})

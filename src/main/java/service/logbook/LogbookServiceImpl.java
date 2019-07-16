@@ -1,12 +1,11 @@
 package service.logbook;
 
 import common.ApplicationVariables;
-import domain.Logbook;
 import domain.CommunicationType;
+import domain.Logbook;
 import io.xlate.inject.Property;
 import io.xlate.inject.PropertyResource;
 import lombok.extern.slf4j.Slf4j;
-import service.config.ConfigService;
 import strategy.DatabaseSavingStrategy;
 import strategy.FileSavingStrategy;
 import strategy.SavingStrategy;
@@ -73,7 +72,6 @@ public class LogbookServiceImpl implements LogbookService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Logbook source) {
-        log.warn("FILEPATH {}", FILE_PATH);
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
             savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
@@ -134,6 +132,20 @@ public class LogbookServiceImpl implements LogbookService {
                 .setParameter(1, date1)
                 .setParameter(2, date2)
                 .getResultList()).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public Response saveAll(List<Logbook> logbooks) {
+        logbooks.forEach(logbook -> {
+            if (CommunicationType.SATELLITE.equals(logbook.getCommunicationType())) {
+                savingStrategy = new FileSavingStrategy(FILE_PATH);
+            } else {
+                savingStrategy = new DatabaseSavingStrategy(manager);
+            }
+            log.info("Logbook {} has been created using {} strategy.", logbook.toString(), savingStrategy.getClass().getName());
+            savingStrategy.save(logbook);
+        });
+        return Response.status(Response.Status.OK).build();
     }
 
 }
