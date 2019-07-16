@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class ZipParserRouterBuilder extends RouteBuilder {
 
     private Map<String, Map<String, Object>> logbookMap = new HashMap<>();
+    private Map<String, List<Catch>> cachesMap = new HashMap<>();
     private static final String HEADER_NAME = "zipFileName";
     private static final String RESOURCE_URI = "file:c:/datafiles/data_import";
 
@@ -126,6 +128,12 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 Double weight = Double.parseDouble(record.get("weight"));
                 Catch aCatch = new Catch(variety, weight);
                 aCatch.setId(id);
+                if (!cachesMap.containsKey(logbookId)) {
+                    cachesMap.put(logbookId, new ArrayList<>());
+                    cachesMap.get(logbookId).add(aCatch);
+                } else {
+                    cachesMap.get(logbookId).add(aCatch);
+                }
             }
         } catch (IOException e) {
             log.error("Error occurred building arrival object.");
@@ -193,11 +201,13 @@ public class ZipParserRouterBuilder extends RouteBuilder {
 
     private List<Logbook> createLogbookList() {
         return logbookMap.entrySet().stream().map(entry ->
-            new Logbook.Builder()
-                    .withId(entry.getKey()).withArrival((Arrival) entry.getValue().get("arrival"))
-                    .withDeparture((Departure) entry.getValue().get("departure"))
-                    .withEndOfFishing((EndOfFishing) entry.getValue().get("endOfFishing"))
-                    .withCommunicationtype(CommunicationType.valueOf(entry.getValue().get("communication").toString())).build()
+                new Logbook.Builder()
+                        .withId(entry.getKey()).withArrival((Arrival) entry.getValue().get("arrival"))
+                        .withDeparture((Departure) entry.getValue().get("departure"))
+                        .withEndOfFishing((EndOfFishing) entry.getValue().get("endOfFishing"))
+                        .withCommunicationtype(CommunicationType.valueOf(entry.getValue().get("communication").toString()))
+                        .withCatches(cachesMap.get(entry.getKey()))
+                        .build()
         ).collect(Collectors.toList());
     }
 
