@@ -7,6 +7,7 @@ import domain.Departure;
 import domain.EndOfFishing;
 import domain.Logbook;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.zipfile.ZipSplitter;
 import org.apache.commons.csv.CSVFormat;
@@ -69,8 +70,12 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                                 buildLogbook(exchange.getIn().getBody(File.class).getAbsolutePath()))
                         .endChoice()
                 .end().end().process(exchange -> {
-                    // TODO logic for saving list of logbooks to server
-        });
+            List<String> logbookJsonList = createLogbookList().stream().map(Logbook::toString).collect(Collectors.toList());
+            exchange.getOut().setBody(logbookJsonList.toString());
+        })
+                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
+                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
+                .to("http://localhost:8080/fishingapp/api/logs/logs/");
     }
 
     private void buildLogbook(String filePath) {
@@ -194,7 +199,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                         .withId(entry.getKey()).withArrival((Arrival) entry.getValue().get("arrival"))
                         .withDeparture((Departure) entry.getValue().get("departure"))
                         .withEndOfFishing((EndOfFishing) entry.getValue().get("endOfFishing"))
-                        .withCommunicationtype(CommunicationType.valueOf(entry.getValue().get("communication").toString()))
+                        .withCommunicationType(CommunicationType.valueOf(entry.getValue().get("communication").toString()))
                         .withCatches(cachesMap.get(entry.getKey()))
                         .build()
         ).collect(Collectors.toList());

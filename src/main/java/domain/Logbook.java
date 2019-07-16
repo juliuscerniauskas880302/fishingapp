@@ -150,7 +150,7 @@ public class Logbook extends BaseEntity {
             return this;
         }
 
-        public Builder withCommunicationtype(CommunicationType communicationtype) {
+        public Builder withCommunicationType(CommunicationType communicationtype) {
             this.communicationType = communicationtype;
             return this;
         }
@@ -162,6 +162,7 @@ public class Logbook extends BaseEntity {
             logbook.departure = this.departure;
             logbook.communicationType = this.communicationType;
             logbook.catches = this.catches;
+            logbook.setId(this.id);
             return logbook;
         }
     }
