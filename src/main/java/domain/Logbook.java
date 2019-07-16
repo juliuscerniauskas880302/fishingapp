@@ -2,6 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "logbook.findAll", query = "select l from Logbook l")
 )
+@Slf4j
 public class Logbook extends BaseEntity {
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
@@ -91,7 +93,7 @@ public class Logbook extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            //TODO add logger
+            log.error("Error mapping Logbook {} to json string.", this);
         }
         return json;
     }
@@ -115,33 +117,40 @@ public class Logbook extends BaseEntity {
     }
 
     public static class Builder {
+
+        private String id;
         private Arrival arrival;
         private Departure departure;
         private EndOfFishing endOfFishing;
         private List<Catch> catches = new ArrayList<>();
         private CommunicationType communicationType;
 
-        public Builder setArrival(Arrival arrival) {
+        public Builder withId(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withArrival(Arrival arrival) {
             this.arrival = arrival;
             return this;
         }
 
-        public Builder setDeparture(Departure departure) {
+        public Builder withDeparture(Departure departure) {
             this.departure = departure;
             return this;
         }
 
-        public Builder setEndOfFishing(EndOfFishing endOfFishing) {
+        public Builder withEndOfFishing(EndOfFishing endOfFishing) {
             this.endOfFishing = endOfFishing;
             return this;
         }
 
-        public Builder setCatches(List<Catch> catches) {
+        public Builder withCatches(List<Catch> catches) {
             this.catches = catches;
             return this;
         }
 
-        public Builder setCommunicationtype(CommunicationType communicationtype) {
+        public Builder withCommunicationtype(CommunicationType communicationtype) {
             this.communicationType = communicationtype;
             return this;
         }

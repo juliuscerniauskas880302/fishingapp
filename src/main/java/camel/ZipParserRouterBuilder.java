@@ -23,22 +23,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Stateless
 @Slf4j
 public class ZipParserRouterBuilder extends RouteBuilder {
 
-    private Map<String, Object> logbookMap = new HashMap<>();
-    private Map<String, Object> classesMap = new HashMap<>();
-    private Map<String, Object> catchesMap = new HashMap<>();
-
+    private Map<String, Map<String, Object>> logbookMap = new HashMap<>();
     private static final String HEADER_NAME = "zipFileName";
     private static final String RESOURCE_URI = "file:c:/datafiles/data_import";
 
     @Override
     public void configure() throws Exception {
-        from("file:c:/datafiles/data_import?noop=true&idempotent=true")
+        from(RESOURCE_URI + "?noop=true&idempotent=true")
                 .split(new ZipSplitter())
                 .streaming()
                     .choice()
@@ -67,7 +66,9 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                             .pollEnrich(RESOURCE_URI + "?fileName=Logbook.csv").process().exchange(exchange ->
                                 buildLogbook(exchange.getIn().getBody(File.class).getAbsolutePath()))
                         .endChoice()
-                .end();
+                .end().end().process(exchange -> {
+                    // TODO logic for saving list of logbooks to server
+        });
     }
 
     private void buildLogbook(String filePath) {
@@ -78,10 +79,12 @@ public class ZipParserRouterBuilder extends RouteBuilder {
             for (CSVRecord record : parser) {
                 String id = record.get("ID");
                 String communicationType = record.get("communicationType");
-                Logbook logbook = new Logbook();
-                logbook.setId(id);
-                logbook.setCommunicationType(CommunicationType.valueOf(communicationType));
-                log.info("Logbook id:{} communication:{}", logbook.getId(), communicationType);
+                if (!logbookMap.containsKey(id)) {
+                    logbookMap.put(id, new HashMap<>());
+                    logbookMap.get(id).put("communication", communicationType);
+                } else {
+                    logbookMap.get(id).put("communication", communicationType);
+                }
             }
         } catch (IOException e) {
             log.error("Error occurred building arrival object. {}", e);
@@ -99,7 +102,12 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 Date date = parseDateFromString(record.get("date"), "yyyy-MM-dd");
                 EndOfFishing endOfFishing = new EndOfFishing(date);
                 endOfFishing.setId(id);
-                log.info("EndOfFishing {}", endOfFishing.toString());
+                if (!logbookMap.containsKey(logbookId)) {
+                    logbookMap.put(logbookId, new HashMap<>());
+                    logbookMap.get(logbookId).put("endOfFishing", endOfFishing);
+                } else {
+                    logbookMap.get(logbookId).put("endOfFishing", endOfFishing);
+                }
             }
         } catch (IOException e) {
             log.error("Error occurred building arrival object.");
@@ -118,7 +126,6 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                 Double weight = Double.parseDouble(record.get("weight"));
                 Catch aCatch = new Catch(variety, weight);
                 aCatch.setId(id);
-                log.info("Catch {}", aCatch.toString());
             }
         } catch (IOException e) {
             log.error("Error occurred building arrival object.");
@@ -132,12 +139,17 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                      .withDelimiter(';').withTrim())) {
             for (CSVRecord record : parser) {
                 String id = record.get("ID");
-                String logbook_id = record.get("logbookID");
+                String logbookId = record.get("logbookID");
                 String port = record.get("port");
                 Date date = parseDateFromString(record.get("date"), "yyyy-MM-dd");
                 Arrival arrival = new Arrival(port, date);
                 arrival.setId(id);
-                log.info("Arrival {}", arrival.toString());
+                if (!logbookMap.containsKey(logbookId)) {
+                    logbookMap.put(logbookId, new HashMap<>());
+                    logbookMap.get(logbookId).put("arrival", arrival);
+                } else {
+                    logbookMap.get(logbookId).put("arrival", arrival);
+                }
             }
         } catch (IOException e) {
             log.error("Error occurred building arrival object.");
@@ -151,19 +163,24 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                      .withDelimiter(';').withTrim())) {
             for (CSVRecord record : parser) {
                 String id = record.get("ID");
-                String logbook_id = record.get("logbookID");
+                String logbookId = record.get("logbookID");
                 String port = record.get("port");
                 Date date = parseDateFromString(record.get("date"), "yyyy-MM-dd");
                 Departure departure = new Departure(port, date);
                 departure.setId(id);
-                log.info("Departure {}", departure.toString());
+                if (!logbookMap.containsKey(logbookId)) {
+                    logbookMap.put(logbookId, new HashMap<>());
+                    logbookMap.get(logbookId).put("departure", departure);
+                } else {
+                    logbookMap.get(logbookId).put("departure", departure);
+                }
             }
         } catch (IOException e) {
             log.error("Error occurred building arrival object.");
         }
     }
 
-    public Date parseDateFromString(String dateString, String datePattern) {
+    private Date parseDateFromString(String dateString, String datePattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
         Date date = null;
         try {
@@ -172,6 +189,16 @@ public class ZipParserRouterBuilder extends RouteBuilder {
             log.error("Cannot parse string {} to date.", dateString);
         }
         return date;
+    }
+
+    private List<Logbook> createLogbookList() {
+        return logbookMap.entrySet().stream().map(entry ->
+            new Logbook.Builder()
+                    .withId(entry.getKey()).withArrival((Arrival) entry.getValue().get("arrival"))
+                    .withDeparture((Departure) entry.getValue().get("departure"))
+                    .withEndOfFishing((EndOfFishing) entry.getValue().get("endOfFishing"))
+                    .withCommunicationtype(CommunicationType.valueOf(entry.getValue().get("communication").toString())).build()
+        ).collect(Collectors.toList());
     }
 
 }

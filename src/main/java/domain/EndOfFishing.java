@@ -45,7 +45,7 @@ public class EndOfFishing extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            log.error("Error mapping EndOfFishing {}.", this);
+            log.error("Error mapping EndOfFishing {} to json string.", this);
         }
         return json;
     }
