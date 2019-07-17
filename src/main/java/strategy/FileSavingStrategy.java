@@ -1,10 +1,9 @@
 package strategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import domain.Catch;
 import domain.Logbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FileSavingStrategy implements SavingStrategy {
-    private static final Logger LOG = LoggerFactory.getLogger(FileSavingStrategy.class);
+    private static final Logger LOG = LogManager.getLogger(FileSavingStrategy.class);
 
     private String path;
 

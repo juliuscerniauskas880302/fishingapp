@@ -1,8 +1,8 @@
 package service.departure;
 
 import domain.Departure;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Stateless
 public class DepartureServiceImpl implements DepartureService {
-    private static final Logger LOG = LoggerFactory.getLogger(DepartureServiceImpl.class);
+    private static final Logger LOG = LogManager.getLogger(DepartureServiceImpl.class);
 
     @PersistenceContext
     private EntityManager manager;

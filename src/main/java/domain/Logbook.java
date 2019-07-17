@@ -2,8 +2,8 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +23,7 @@ import java.util.Objects;
         @NamedQuery(name = "logbook.findAll", query = "select l from Logbook l")
 )
 public class Logbook extends BaseEntity {
-    private static final Logger LOG = LoggerFactory.getLogger(Logbook.class);
+    private static final Logger LOG = LogManager.getLogger(Logbook.class);
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Arrival arrival;

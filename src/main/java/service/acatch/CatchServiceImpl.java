@@ -1,8 +1,8 @@
 package service.acatch;
 
 import domain.Catch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Stateless
 public class CatchServiceImpl implements CatchService {
-    private static final Logger LOG = LoggerFactory.getLogger(CatchServiceImpl.class);
+    private static final Logger LOG = LogManager.getLogger(CatchServiceImpl.class);
 
     @PersistenceContext
     private EntityManager manager;

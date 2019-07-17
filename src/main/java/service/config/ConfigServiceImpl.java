@@ -1,8 +1,8 @@
 package service.config;
 
 import domain.config.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @Stateless
 @SuppressWarnings("unchecked")
 public class ConfigServiceImpl implements ConfigService {
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceImpl.class);
+    private static final Logger LOG = LogManager.getLogger(ConfigServiceImpl.class);
     private static final String FIND_CONFIG_BY_KEY = "SELECT C.* FROM CONFIGURATION C where C.KEY = ?1";
     private static final String FIND_ALL_CONFIG = "SELECT * FROM CONFIGURATION";
 

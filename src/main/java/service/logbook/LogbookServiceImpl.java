@@ -5,8 +5,8 @@ import domain.CommunicationType;
 import domain.Logbook;
 import io.xlate.inject.Property;
 import io.xlate.inject.PropertyResource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import strategy.DatabaseSavingStrategy;
 import strategy.FileSavingStrategy;
 import strategy.SavingStrategy;
@@ -25,7 +25,7 @@ import java.util.Optional;
 @Stateless
 @SuppressWarnings("unchecked")
 public class LogbookServiceImpl implements LogbookService {
-    private static final Logger LOG = LoggerFactory.getLogger(LogbookServiceImpl.class);
+    private static final Logger LOG = LogManager.getLogger(LogbookServiceImpl.class);
     private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT DISTINCT (LOGBOOK.*)" +
             " FROM LOGBOOK " +
             " LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID" +

@@ -1,8 +1,8 @@
 package service.endOfFishing;
 
 import domain.EndOfFishing;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Stateless
 public class EndOfFishingServiceImpl implements EndOfFishingService {
-    private static final Logger LOG = LoggerFactory.getLogger(EndOfFishingServiceImpl.class);
+    private static final Logger LOG = LogManager.getLogger(EndOfFishingServiceImpl.class);
 
     @PersistenceContext
     private EntityManager manager;

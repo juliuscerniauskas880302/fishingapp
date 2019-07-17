@@ -2,8 +2,8 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -19,7 +19,7 @@ import java.util.Objects;
         @NamedQuery(name = "arrival.findAll", query = "SELECT a FROM Arrival a")
 )
 public class Arrival extends BaseEntity {
-    private static final Logger LOG = LoggerFactory.getLogger(Arrival.class);
+    private static final Logger LOG = LogManager.getLogger(Arrival.class);
 
     private String port;
 
