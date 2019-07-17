@@ -54,9 +54,10 @@ public class DepartureServiceImpl implements DepartureService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure ->
-                manager.remove(departure));
-        LOG.info("Departure '{}' has been deleted.", id);
+        Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure -> {
+            manager.remove(departure);
+            LOG.info("Departure '{}' has been deleted.", id);
+        });
     }
 
 }

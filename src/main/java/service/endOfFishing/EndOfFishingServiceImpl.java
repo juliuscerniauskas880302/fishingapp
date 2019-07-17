@@ -48,9 +48,10 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
 
     @Override
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing ->
-                manager.remove(endOfFishing));
-        LOG.info("EndOfFishing '{}' has been deleted.", id);
+        Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing -> {
+            manager.remove(endOfFishing);
+            LOG.info("EndOfFishing '{}' has been deleted.", id);
+        });
     }
 
 }

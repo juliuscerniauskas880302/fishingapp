@@ -54,9 +54,10 @@ public class ArrivalServiceImpl implements ArrivalService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(Arrival.class, id)).ifPresent(arrival ->
-                manager.remove(arrival));
-        LOG.info("Arrival '{}' has been deleted.", id);
+        Optional.ofNullable(manager.find(Arrival.class, id)).ifPresent(arrival -> {
+            manager.remove(arrival);
+            LOG.info("Arrival '{}' has been deleted.", id);
+        });
     }
 
 }

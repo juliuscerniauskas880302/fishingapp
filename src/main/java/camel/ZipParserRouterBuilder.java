@@ -42,7 +42,7 @@ public class ZipParserRouterBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from(RESOURCE_URI + "?noop=true&idempotent=true")
+        from(RESOURCE_URI + "?noop=false")
                 .split(new ZipSplitter())
                 .streaming()
                     .choice()

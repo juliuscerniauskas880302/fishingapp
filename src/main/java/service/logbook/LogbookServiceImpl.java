@@ -95,9 +95,10 @@ public class LogbookServiceImpl implements LogbookService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook ->
-                manager.remove(logbook));
-        LOG.info("Logbook '{}' has been deleted.", id);
+        Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook -> {
+            manager.remove(logbook);
+            LOG.info("Logbook '{}' has been deleted.", id);
+        });
     }
 
     @Override

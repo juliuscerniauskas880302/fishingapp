@@ -54,9 +54,10 @@ public class CatchServiceImpl implements CatchService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(Catch.class, id)).ifPresent(aCatch ->
-                manager.remove(aCatch));
-        LOG.info("Catch '{}' has been deleted.", id);
+        Optional.ofNullable(manager.find(Catch.class, id)).ifPresent(aCatch -> {
+            manager.remove(aCatch);
+            LOG.info("Catch '{}' has been deleted.", id);
+        });
     }
 
 }
