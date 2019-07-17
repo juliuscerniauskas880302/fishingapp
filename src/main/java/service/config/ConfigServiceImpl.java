@@ -1,9 +1,10 @@
 package service.config;
 
 import domain.config.Configuration;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -13,11 +14,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Stateful
-@Slf4j
+@Stateless
 @SuppressWarnings("unchecked")
 public class ConfigServiceImpl implements ConfigService {
-
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigServiceImpl.class);
     private static final String FIND_CONFIG_BY_KEY = "SELECT C.* FROM CONFIGURATION C where C.KEY = ?1";
     private static final String FIND_ALL_CONFIG = "SELECT * FROM CONFIGURATION";
 
@@ -27,7 +27,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Response add(Configuration configuration) {
         manager.persist(configuration);
-        log.info("Configuration {} has been created", configuration.toString());
+        LOG.info("Configuration {} has been created", configuration.toString());
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -38,9 +38,9 @@ public class ConfigServiceImpl implements ConfigService {
         try {
             singleResult = nativeQuery.getSingleResult();
             manager.remove(singleResult);
-            log.info("Configuration '{}' has been deleted", key);
+            LOG.info("Configuration '{}' has been deleted", key);
         } catch (NoResultException ex) {
-            log.error("Configuration '{}' does not exists", key);
+            LOG.error("Configuration '{}' does not exists", key);
         }
     }
 
@@ -53,9 +53,9 @@ public class ConfigServiceImpl implements ConfigService {
             singleResult.setValue(value);
             singleResult.setDescription(description);
             manager.merge(singleResult);
-            log.info("Configuration '{}' updated", key);
+            LOG.info("Configuration '{}' updated", key);
         } catch (NoResultException ex) {
-            log.error("Configuration '{}' does not exists", key);
+            LOG.error("Configuration '{}' does not exists", key);
         }
     }
 

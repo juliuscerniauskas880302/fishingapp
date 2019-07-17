@@ -1,9 +1,10 @@
 package service.arrival;
 
 import domain.Arrival;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
@@ -13,9 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Stateful
-@Slf4j
+@Stateless
 public class ArrivalServiceImpl implements ArrivalService {
+    private static final Logger LOG = LoggerFactory.getLogger(ArrivalServiceImpl.class);
 
     @PersistenceContext
     private EntityManager manager;
@@ -34,7 +35,7 @@ public class ArrivalServiceImpl implements ArrivalService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Arrival source) {
-        log.info("Arrival {} has been added to db.", source.toString());
+        LOG.info("Arrival {} has been added to db.", source.toString());
         manager.persist(source);
         return Response.status(Response.Status.CREATED).build();
     }
@@ -46,7 +47,7 @@ public class ArrivalServiceImpl implements ArrivalService {
             arrival.setPort(source.getPort());
             arrival.setDate(source.getDate());
             manager.merge(arrival);
-            log.info("Arrival '{}' has been updated.", id);
+            LOG.info("Arrival '{}' has been updated.", id);
         });
     }
 
@@ -55,7 +56,7 @@ public class ArrivalServiceImpl implements ArrivalService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Arrival.class, id)).ifPresent(arrival ->
                 manager.remove(arrival));
-        log.info("Arrival '{}' has been deleted.", id);
+        LOG.info("Arrival '{}' has been deleted.", id);
     }
 
 }

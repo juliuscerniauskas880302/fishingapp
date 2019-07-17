@@ -2,7 +2,8 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -17,8 +18,8 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "endOfFishing.findAll", query = "SELECT e FROM EndOfFishing e")
 )
-@Slf4j
 public class EndOfFishing extends BaseEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(EndOfFishing.class);
 
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -45,7 +46,7 @@ public class EndOfFishing extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            log.error("Error mapping EndOfFishing {} to json string.", this);
+            LOG.error("Error mapping EndOfFishing {} to json string.", this);
         }
         return json;
     }

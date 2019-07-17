@@ -2,7 +2,8 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,8 +22,8 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "logbook.findAll", query = "select l from Logbook l")
 )
-@Slf4j
 public class Logbook extends BaseEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(Logbook.class);
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Arrival arrival;
@@ -93,7 +94,7 @@ public class Logbook extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            log.error("Error mapping Logbook {} to json string.", this);
+            LOG.error("Error mapping Logbook {} to json string.", this);
         }
         return json;
     }

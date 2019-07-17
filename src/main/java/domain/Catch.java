@@ -2,7 +2,8 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -13,8 +14,8 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "catch.findAll", query = "SELECT c FROM Catch c")
 )
-@Slf4j
 public class Catch extends BaseEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(Catch.class);
 
     private String variety;
     private Double weight;
@@ -50,7 +51,7 @@ public class Catch extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            log.error("Error mapping Catch {} to json string.", this);
+            LOG.error("Error mapping Catch {} to json string.", this);
         }
         return json;
     }

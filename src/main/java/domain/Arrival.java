@@ -2,7 +2,8 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -17,8 +18,8 @@ import java.util.Objects;
 @NamedQueries(
         @NamedQuery(name = "arrival.findAll", query = "SELECT a FROM Arrival a")
 )
-@Slf4j
 public class Arrival extends BaseEntity {
+    private static final Logger LOG = LoggerFactory.getLogger(Arrival.class);
 
     private String port;
 
@@ -56,7 +57,7 @@ public class Arrival extends BaseEntity {
         try {
             json = mapperObj.writeValueAsString(this);
         } catch (Exception e) {
-            log.error("Error mapping Arrival {} to json string.", this);
+            LOG.error("Error mapping Arrival {} to json string.", this);
         }
         return json;
     }

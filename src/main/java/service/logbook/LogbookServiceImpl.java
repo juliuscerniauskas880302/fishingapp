@@ -5,12 +5,13 @@ import domain.CommunicationType;
 import domain.Logbook;
 import io.xlate.inject.Property;
 import io.xlate.inject.PropertyResource;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import strategy.DatabaseSavingStrategy;
 import strategy.FileSavingStrategy;
 import strategy.SavingStrategy;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
@@ -21,28 +22,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Stateful
-@Slf4j
+@Stateless
 @SuppressWarnings("unchecked")
 public class LogbookServiceImpl implements LogbookService {
-
+    private static final Logger LOG = LoggerFactory.getLogger(LogbookServiceImpl.class);
     private static final String FIND_ALL_LOGBOOKS_BY_SPECIES = "SELECT DISTINCT (LOGBOOK.*)" +
             " FROM LOGBOOK " +
             " LEFT JOIN LOGBOOK_CATCH LC ON LOGBOOK.ID = LC.LOGBOOK_ID" +
             " LEFT JOIN CATCH C ON LC.CATCHES_ID = C.ID" +
             " WHERE C.VARIETY LIKE ?1 group by LOGBOOK.ID";
-
     private static final String GET_ALL_LOGBOOKS = "SELECT * FROM LOGBOOK";
-
     private static final String FIND_ALL_LOGBOOKS_BY_PORT = "SELECT * FROM LOGBOOK" +
             " LEFT JOIN ARRIVAL A ON LOGBOOK.ARRIVAL_ID = A.ID" +
             " LEFT JOIN DEPARTURE D ON LOGBOOK.DEPARTURE_ID = D.ID" +
             " WHERE A.PORT LIKE ?1 OR D.PORT LIKE ?1";
-
     private static final String FIND_BY_DEPARTURE_DATE = "SELECT LOGBOOK.* FROM LOGBOOK" +
             " INNER JOIN DEPARTURE A on LOGBOOK.DEPARTURE_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
-
     private static final String FIND_BY_ARRIVAL_DATE = "SELECT LOGBOOK.* FROM LOGBOOK" +
             " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
@@ -77,7 +73,7 @@ public class LogbookServiceImpl implements LogbookService {
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);
         }
-        log.info("Logbook {} has been created using {} strategy.", source.toString(), savingStrategy.getClass().getName());
+        LOG.info("Logbook {} has been created using {} strategy.", source.toString(), savingStrategy.getClass().getName());
         savingStrategy.save(source);
         return Response.status(Response.Status.OK).build();
     }
@@ -92,7 +88,7 @@ public class LogbookServiceImpl implements LogbookService {
             logbook.setDeparture(source.getDeparture());
             logbook.setEndOfFishing(source.getEndOfFishing());
             manager.merge(logbook);
-            log.info("Logbook '{}' has been updated.", id);
+            LOG.info("Logbook '{}' has been updated.", id);
         });
     }
 
@@ -101,7 +97,7 @@ public class LogbookServiceImpl implements LogbookService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook ->
                 manager.remove(logbook));
-        log.info("Logbook '{}' has been deleted.", id);
+        LOG.info("Logbook '{}' has been deleted.", id);
     }
 
     @Override
@@ -142,7 +138,7 @@ public class LogbookServiceImpl implements LogbookService {
             } else {
                 savingStrategy = new DatabaseSavingStrategy(manager);
             }
-            log.info("Logbook {} has been created using {} strategy.", logbook.toString(), savingStrategy.getClass().getName());
+            LOG.info("Logbook {} has been created using {} strategy.", logbook.getId(), savingStrategy.getClass().getName());
             savingStrategy.save(logbook);
         });
         return Response.status(Response.Status.OK).build();

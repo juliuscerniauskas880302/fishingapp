@@ -1,8 +1,9 @@
 package camel;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -12,10 +13,11 @@ import javax.inject.Inject;
 
 @Singleton
 @Startup
-@Slf4j
 public class RuntimeContext {
+    private static final Logger LOG = LoggerFactory.getLogger(RuntimeContext.class);
 
     private CamelContext context = new DefaultCamelContext();
+
     @Inject
     private DataSaveRouteBuilder DataSaveRouteBuilder;
     @Inject
@@ -28,7 +30,7 @@ public class RuntimeContext {
             context.addRoutes(zipParserRouterBuilder);
             context.start();
         } catch (Exception e) {
-            log.warn("Error occurred starting CamelContext {} ", context);
+            LOG.warn("Error occurred starting CamelContext {} ", context);
         }
     }
 
@@ -37,7 +39,7 @@ public class RuntimeContext {
         try {
             context.stop();
         } catch (Exception e) {
-            log.warn("Error occurred stopping CamelContext {} ", context);
+            LOG.warn("Error occurred stopping CamelContext {} ", context);
         }
     }
 

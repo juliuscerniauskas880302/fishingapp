@@ -6,16 +6,16 @@ import domain.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
 import domain.Logbook;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.zipfile.ZipSplitter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import service.logbook.LogbookService;
 import utilities.DateUtilities;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -29,14 +29,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Stateless
-@Slf4j
 public class ZipParserRouterBuilder extends RouteBuilder {
-
-    private Map<String, Map<String, Object>> logbookMap = new HashMap<>();
-    private Map<String, List<Catch>> cachesMap = new HashMap<>();
     private static final String HEADER_NAME = "zipFileName";
     private static final String RESOURCE_URI = "file:c:/datafiles/data_import";
     private static final String DATE_PATTERN = "yyyy-MM-dd";
+
+    private Map<String, Map<String, Object>> logbookMap = new HashMap<>();
+    private Map<String, List<Catch>> cachesMap = new HashMap<>();
+
+    @Inject
+    private LogbookService logbookService;
 
     @Override
     public void configure() throws Exception {
@@ -69,13 +71,10 @@ public class ZipParserRouterBuilder extends RouteBuilder {
                             .pollEnrich(RESOURCE_URI + "?fileName=Logbook.csv").process().exchange(exchange ->
                                 buildLogbook(exchange.getIn().getBody(File.class).getAbsolutePath()))
                         .endChoice()
-                .end().end().process(exchange -> {
-            List<String> logbookJsonList = createLogbookList().stream().map(Logbook::toString).collect(Collectors.toList());
-            exchange.getOut().setBody(logbookJsonList.toString());
-        })
-                .setHeader(Exchange.HTTP_METHOD, constant("POST"))
-                .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
-                .to("http://localhost:8080/fishingapp/api/logs/logs/");
+                .end().
+                end()
+                .process(exchange -> exchange.getOut().setBody(createLogbookList())
+        ).bean(logbookService, "saveAll");
     }
 
     private void buildLogbook(String filePath) {

@@ -14,7 +14,7 @@
             <property name="hibernate.connection.url" value="jdbc:h2:tcp://localhost/~/fish"/>
             <property name="hibernate.max_fetch_depth" value="3" />
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-            <property name="hibernate.show_sql" value="true" />
+            <property name="hibernate.show_sql" value="false" />
         </properties>
     </persistence-unit>
 </persistence>

@@ -1,13 +1,14 @@
 package utilities;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Slf4j
 public class DateUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(DateUtilities.class);
 
     public static Date parseDateFromString(String dateString, String datePattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(datePattern);
@@ -15,7 +16,7 @@ public class DateUtilities {
         try {
             date = simpleDateFormat.parse(dateString);
         } catch (ParseException e) {
-            log.error("Cannot parse string {} to date.", dateString);
+            LOG.error("Cannot parse string {} to date.", dateString);
         }
         return date;
     }

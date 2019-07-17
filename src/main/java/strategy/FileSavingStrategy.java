@@ -1,16 +1,18 @@
 package strategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import domain.Catch;
 import domain.Logbook;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Slf4j
 public class FileSavingStrategy implements SavingStrategy {
+    private static final Logger LOG = LoggerFactory.getLogger(FileSavingStrategy.class);
 
     private String path;
 
@@ -23,7 +25,7 @@ public class FileSavingStrategy implements SavingStrategy {
         try {
             writeToFile(logbook);
         } catch (IOException ex) {
-            log.error("Error occurred saving Logbook '{}' to file {}.", logbook.getId(), path);
+            LOG.error("Error occurred saving Logbook '{}' to file {}.", logbook.getId(), path);
         }
     }
 

@@ -1,9 +1,10 @@
 package service.departure;
 
 import domain.Departure;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
@@ -13,9 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Stateful
-@Slf4j
+@Stateless
 public class DepartureServiceImpl implements DepartureService {
+    private static final Logger LOG = LoggerFactory.getLogger(DepartureServiceImpl.class);
 
     @PersistenceContext
     private EntityManager manager;
@@ -35,7 +36,7 @@ public class DepartureServiceImpl implements DepartureService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Departure source) {
         manager.persist(source);
-        log.info("Departure {} has been created.", source.toString());
+        LOG.info("Departure {} has been created.", source.toString());
         return Response.status(Response.Status.CREATED).build();
     }
 
@@ -45,7 +46,7 @@ public class DepartureServiceImpl implements DepartureService {
         Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure -> {
             departure.setPort(source.getPort());
             departure.setDate(source.getDate());
-            log.info("Departure '{}' has been updated.", id);
+            LOG.info("Departure '{}' has been updated.", id);
             manager.merge(departure);
         });
     }
@@ -55,7 +56,7 @@ public class DepartureServiceImpl implements DepartureService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure ->
                 manager.remove(departure));
-        log.info("Departure '{}' has been deleted.", id);
+        LOG.info("Departure '{}' has been deleted.", id);
     }
 
 }
