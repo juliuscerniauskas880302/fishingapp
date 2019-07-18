@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Version;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +36,8 @@ public class Logbook extends BaseEntity {
     private List<Catch> catches = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private CommunicationType communicationType;
+    @Version
+    private Integer version;
 
     public Logbook() {
     }
@@ -85,6 +88,10 @@ public class Logbook extends BaseEntity {
 
     public void setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
     @Override

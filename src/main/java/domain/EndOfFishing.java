@@ -10,6 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -23,6 +24,8 @@ public class EndOfFishing extends BaseEntity {
 
     @Temporal(TemporalType.DATE)
     private Date date;
+    @Version
+    private Integer version;
 
     public EndOfFishing() {
     }
@@ -37,6 +40,10 @@ public class EndOfFishing extends BaseEntity {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
     @Override

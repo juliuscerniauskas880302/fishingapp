@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Version;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +20,8 @@ public class Catch extends BaseEntity {
 
     private String variety;
     private Double weight;
+    @Version
+    private Integer version;
 
     public Catch() {
     }
@@ -42,6 +45,10 @@ public class Catch extends BaseEntity {
 
     public void setWeight(Double weight) {
         this.weight = weight;
+    }
+
+    public Integer getVersion() {
+        return version;
     }
 
     @Override

@@ -35,7 +35,7 @@ public class ArrivalServiceImpl implements ArrivalService {
     @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response save(Arrival source) {
-        LOG.info("Arrival {} has been added to db.", source.toString());
+        LOG.info("Arrival {} has been added to db.", source.getId());
         manager.persist(source);
         return Response.status(Response.Status.CREATED).build();
     }

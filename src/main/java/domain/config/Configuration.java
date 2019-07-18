@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Version;
 
 @Entity
 @NamedQueries({
@@ -19,6 +20,8 @@ public class Configuration extends BaseEntity {
     private String key;
     private String value;
     private String description;
+    @Version
+    private Integer version;
 
     public Configuration() {
     }
@@ -53,4 +56,7 @@ public class Configuration extends BaseEntity {
         this.description = description;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
 }
