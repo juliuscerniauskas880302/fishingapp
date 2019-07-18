@@ -16,4 +16,15 @@ public class ApplicationVariables {
      * Properties file path
      */
     public static final String PROPERTIES_FILE_PATH = "classpath:application.properties";
+
+    /**
+     * Date patterns
+     */
+    public static final String DATE_PATTERN = "yyyy-MM-dd";
+
+    /**
+     * URI
+     */
+    public static final String HTTP_LOGS_URI = "http://localhost:8080/fishingapp/api/logs/";
+    public static final String HTTP_LOGS_LIST_URI = "http://localhost:8080/fishingapp/api/logs/logs/";
 }
