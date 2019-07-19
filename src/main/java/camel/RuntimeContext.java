@@ -21,13 +21,13 @@ public class RuntimeContext {
     @Inject
     private DataSaveRouteBuilder DataSaveRouteBuilder;
     @Inject
-    private ZipParserRouterBuilder zipParserRouterBuilder;
+    private ZipParserRouteBuilder zipParserRouteBuilder;
 
     @PostConstruct
     public void init() {
         try {
             context.addRoutes(DataSaveRouteBuilder);
-            context.addRoutes(zipParserRouterBuilder);
+            context.addRoutes(zipParserRouteBuilder);
             context.start();
         } catch (Exception e) {
             LOG.warn("Error occurred starting CamelContext {} ", context);

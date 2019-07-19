@@ -3,6 +3,9 @@ package strategy;
 import domain.Logbook;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
 
 public class DatabaseSavingStrategy implements SavingStrategy {
 
@@ -13,6 +16,7 @@ public class DatabaseSavingStrategy implements SavingStrategy {
     }
 
     @Override
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void save(Logbook logbook) {
         if (!manager.contains(logbook)) {
             manager.persist(logbook);

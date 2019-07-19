@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Stateless
-public class ZipParserRouterBuilder extends RouteBuilder {
+public class ZipParserRouteBuilder extends RouteBuilder {
     private static final String HEADER_NAME = "zipFileName";
     private static final String RESOURCE_URI = "file:c:/datafiles/data_import";
 

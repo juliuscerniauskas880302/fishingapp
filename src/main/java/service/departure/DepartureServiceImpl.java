@@ -5,11 +5,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class DepartureServiceImpl implements DepartureService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public Response save(Departure source) {
         manager.persist(source);
         LOG.info("Departure {} has been created.", source.toString());
@@ -41,7 +42,7 @@ public class DepartureServiceImpl implements DepartureService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void update(Departure source, String id) {
         Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure -> {
             departure.setPort(source.getPort());
@@ -52,7 +53,7 @@ public class DepartureServiceImpl implements DepartureService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure -> {
             manager.remove(departure);

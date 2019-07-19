@@ -12,12 +12,13 @@ import strategy.FileSavingStrategy;
 import strategy.SavingStrategy;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
+import java.sql.SQLException;
+import java.sql.SQLWarning;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -66,20 +67,20 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public Response save(Logbook source) {
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
             savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);
         }
-        LOG.info("Logbook {} has been created using {} strategy.", source.toString(), savingStrategy.getClass().getName());
+        LOG.info("Logbook {} has been created using {} strategy.", source.getId(), savingStrategy.getClass().getName());
         savingStrategy.save(source);
         return Response.status(Response.Status.OK).build();
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void update(Logbook source, String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook -> {
             logbook.setCommunicationType(source.getCommunicationType());
@@ -93,7 +94,7 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook -> {
             manager.remove(logbook);
@@ -132,6 +133,7 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
+    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public Response saveAll(List<Logbook> logbooks) {
         logbooks.forEach(logbook -> {
             if (CommunicationType.SATELLITE.equals(logbook.getCommunicationType())) {
