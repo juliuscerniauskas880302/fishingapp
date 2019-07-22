@@ -11,7 +11,6 @@ import java.io.File;
 
 @Stateless
 public class DataSaveRouteBuilder extends RouteBuilder {
-
     private static final String FILE_URI = "file:C:/datafiles/inbox/";
 
     @Override
@@ -29,5 +28,4 @@ public class DataSaveRouteBuilder extends RouteBuilder {
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to(ApplicationVariables.HTTP_LOGS_URI);
     }
-
 }

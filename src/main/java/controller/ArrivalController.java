@@ -3,6 +3,7 @@ package controller;
 import common.ApplicationVariables;
 import domain.Arrival;
 import service.arrival.ArrivalService;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
@@ -46,14 +47,26 @@ public class ArrivalController {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@Valid Arrival source) {
-        return arrivalService.save(source);
+        try {
+            arrivalService.save(source);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void updateById(@PathParam("id") final String id, @Valid Arrival source) {
-        arrivalService.update(source, id);
+    public Response updateById(@PathParam("id") final String id, @Valid Arrival source) {
+        try {
+            arrivalService.update(source, id);
+            return Response.status(Response.Status.OK).build();
+        } catch (ResourceLockedException ex) {
+            return Response.status(Response.Status.CONFLICT).entity(ex.toString()).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.toString()).build();
+        }
     }
 
     @DELETE
@@ -62,5 +75,4 @@ public class ArrivalController {
     public void deleteById(@PathParam("id") final String id) {
         arrivalService.deleteById(id);
     }
-
 }

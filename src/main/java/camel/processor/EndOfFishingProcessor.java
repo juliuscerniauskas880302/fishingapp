@@ -30,27 +30,29 @@ public class EndOfFishingProcessor implements Processor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         String filePath = exchange.getIn().getBody(File.class).getAbsolutePath();
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath));
-             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT
-                     .withHeader("ID", "logbookID", "date").withIgnoreHeaderCase().withSkipHeaderRecord()
-                     .withDelimiter(';').withTrim())) {
-            for (CSVRecord record : parser) {
-                String id = record.get("ID");
-                String logbookId = record.get("logbookID");
-                Date date = DateUtilities.parseDateFromString(record.get("date"), ApplicationVariables.DATE_PATTERN);
-                EndOfFishing endOfFishing = new EndOfFishing(date);
-                endOfFishing.setId(id);
-                if (!logbookMap.containsKey(logbookId)) {
-                    logbookMap.put(logbookId, new HashMap<>());
-                    logbookMap.get(logbookId).put("endOfFishing", endOfFishing);
-                } else {
-                    logbookMap.get(logbookId).put("endOfFishing", endOfFishing);
-                }
-            }
+             CSVParser parser = getParser(reader)) {
+            parser.forEach(this::mapObject);
         } catch (IOException e) {
             LOG.error("Error occurred building arrival object. {}", e.getMessage());
         }
+    }
+
+    private void mapObject(CSVRecord record) {
+        String id = record.get("ID");
+        String logbookId = record.get("logbookID");
+        Date date = DateUtilities.parseDateFromString(record.get("date"), ApplicationVariables.DATE_PATTERN);
+        EndOfFishing endOfFishing = new EndOfFishing(date);
+        endOfFishing.setId(id);
+        logbookMap.putIfAbsent(logbookId, new HashMap<>());
+        logbookMap.get(logbookId).put("endOfFishing", endOfFishing);
+    }
+
+    private CSVParser getParser(Reader reader) throws IOException {
+        return new CSVParser(reader, CSVFormat.DEFAULT
+                .withHeader("ID", "logbookID", "date").withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(';').withTrim());
     }
 }

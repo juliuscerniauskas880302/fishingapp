@@ -69,7 +69,7 @@ public class Catch extends BaseEntity {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Catch aCatch = (Catch) o;
-        return Objects.equals(variety, aCatch.variety) &&
+        return Objects.equals(getId(), aCatch.getId()) &&
                 Objects.equals(weight, aCatch.weight);
     }
 
@@ -77,5 +77,4 @@ public class Catch extends BaseEntity {
     public int hashCode() {
         return Objects.hash(super.hashCode(), variety, weight);
     }
-
 }

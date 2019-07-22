@@ -3,6 +3,7 @@ package controller;
 import common.ApplicationVariables;
 import domain.Departure;
 import service.departure.DepartureService;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
@@ -45,14 +46,26 @@ public class DepartureController {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@Valid Departure source) {
-        return departureService.save(source);
+        try {
+            departureService.save(source);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void updateById(@PathParam("id") final String id, @Valid Departure source) {
-        departureService.update(source, id);
+    public Response updateById(@PathParam("id") final String id, @Valid Departure source) {
+        try {
+            departureService.update(source, id);
+            return Response.status(Response.Status.OK).build();
+        } catch (ResourceLockedException ex) {
+            return Response.status(Response.Status.CONFLICT).entity(ex.toString()).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.toString()).build();
+        }
     }
 
     @DELETE
@@ -60,5 +73,4 @@ public class DepartureController {
     public void deleteById(@PathParam("id") final String id) {
         departureService.deleteById(id);
     }
-
 }

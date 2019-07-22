@@ -74,7 +74,6 @@ public class EndOfFishing extends BaseEntity {
 
     public String getFormattedDate(String pattern) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-        return simpleDateFormat.format(this.date);
+        return simpleDateFormat.format(date);
     }
-
 }

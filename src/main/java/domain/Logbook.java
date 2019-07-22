@@ -174,7 +174,6 @@ public class Logbook extends BaseEntity {
             return logbook;
         }
     }
-
 }
 
 

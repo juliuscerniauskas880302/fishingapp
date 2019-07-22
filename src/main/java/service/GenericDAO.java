@@ -1,8 +1,8 @@
 package service;
 
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
-import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.util.List;
 
@@ -12,9 +12,9 @@ public interface GenericDAO<T, K extends Serializable> {
 
     List<T> findAll();
 
-    Response save(T o);
+    void save(T o) throws Exception;
 
-    void update(T o, K id);
+    void update(T o, K id) throws ResourceNotFoundException, ResourceLockedException;
 
     void deleteById(K id);
 

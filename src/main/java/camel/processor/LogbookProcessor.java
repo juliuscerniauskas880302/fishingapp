@@ -26,24 +26,26 @@ public class LogbookProcessor implements Processor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         String filePath = exchange.getIn().getBody(File.class).getAbsolutePath();
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath));
-             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT
-                     .withHeader("ID", "communicationType").withIgnoreHeaderCase().withSkipHeaderRecord()
-                     .withDelimiter(',').withTrim())) {
-            for (CSVRecord record : parser) {
-                String id = record.get("ID");
-                String communicationType = record.get("communicationType");
-                if (!logbookMap.containsKey(id)) {
-                    logbookMap.put(id, new HashMap<>());
-                    logbookMap.get(id).put("communication", communicationType);
-                } else {
-                    logbookMap.get(id).put("communication", communicationType);
-                }
-            }
+             CSVParser parser = getParser(reader)) {
+            parser.forEach(this::mapObject);
         } catch (IOException e) {
             LOG.error("Error occurred building arrival object. {}", e.getMessage());
         }
+    }
+
+    private void mapObject(CSVRecord record) {
+        String id = record.get("ID");
+        String communicationType = record.get("communicationType");
+        logbookMap.putIfAbsent(id, new HashMap<>());
+        logbookMap.get(id).put("communication", communicationType);
+    }
+
+    private CSVParser getParser(Reader reader) throws IOException {
+        return new CSVParser(reader, CSVFormat.DEFAULT
+                .withHeader("ID", "communicationType").withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(',').withTrim());
     }
 }

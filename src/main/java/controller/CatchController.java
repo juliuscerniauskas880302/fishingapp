@@ -3,6 +3,7 @@ package controller;
 import common.ApplicationVariables;
 import domain.Catch;
 import service.acatch.CatchService;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
@@ -33,7 +34,7 @@ public class CatchController {
         try {
             return Response.status(Response.Status.CREATED).entity(catchService.findById(id)).build();
         } catch (ResourceNotFoundException e) {
-            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(e.toString()).build();
         }
     }
 
@@ -45,20 +46,32 @@ public class CatchController {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@Valid Catch source) {
-        return catchService.save(source);
+        try {
+            catchService.save(source);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void updateById(@PathParam("id") final String id, @Valid Catch source) {
-        catchService.update(source, id);
+    public Response updateById(@PathParam("id") final String id, @Valid Catch source) {
+        try {
+            catchService.update(source, id);
+            return Response.status(Response.Status.OK).build();
+        } catch (ResourceLockedException ex) {
+            return Response.status(Response.Status.CONFLICT).entity(ex.toString()).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.toString()).build();
+        }
     }
 
     @DELETE
     @Path("/{id}")
-    public void deleteById(@PathParam("id") final String id) {
+    public void deleteById(@PathParam("id") final String id)
+    {
         catchService.deleteById(id);
     }
-
 }

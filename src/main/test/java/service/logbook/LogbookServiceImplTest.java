@@ -1,5 +1,6 @@
 package service.logbook;
 
+import domain.CommunicationType;
 import domain.Logbook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,7 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import service.config.ConfigService;
+import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -44,9 +45,6 @@ public class LogbookServiceImplTest {
     @Mock
     private EntityManager entityManager;
 
-    @Mock
-    private ConfigService configService;
-
     @InjectMocks
     private LogbookServiceImpl logbookService;
 
@@ -64,7 +62,7 @@ public class LogbookServiceImplTest {
     }
 
     @Test
-    public void shouldGetLogbookById() {
+    public void shouldGetLogbookById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
         Logbook result = logbookService.findById(ID_1);
@@ -105,6 +103,8 @@ public class LogbookServiceImplTest {
 
     @Test
     public void shouldUpdateLogbookById() {
+
+
         // when
         when(entityManager.find(eq(Logbook.class), anyString())).thenReturn(logbook1);
 
@@ -188,6 +188,23 @@ public class LogbookServiceImplTest {
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
         assertNotNull(result, "List should not be empty");
         assertEquals(2, result.size(), "List size should be 2");
+    }
+
+    @Test
+    public void shouldReturnOptimisticLockException() throws ResourceNotFoundException {
+        Logbook logbook = new Logbook();
+        entityManager.persist(logbook);
+        entityManager.flush();
+        entityManager.detach(logbook);
+
+        Logbook newLogbook = entityManager.find( Logbook.class, logbook.getId());
+        newLogbook.setCommunicationType(CommunicationType.SATELLITE);
+        entityManager.persist(newLogbook);
+        entityManager.flush();
+
+        logbook.setCommunicationType(CommunicationType.NETWORK);
+        logbook = entityManager.merge(logbook);
+        entityManager.persist(logbook);
     }
 
 }

@@ -8,7 +8,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
@@ -27,17 +26,18 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Response add(Configuration configuration) {
         manager.persist(configuration);
+        manager.flush();
         LOG.info("Configuration {} has been created", configuration.toString());
         return Response.status(Response.Status.CREATED).build();
     }
 
     @Override
     public void delete(String key) {
-        TypedQuery<Configuration> nativeQuery = (TypedQuery<Configuration>) (manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class).setParameter(1, key));
-        Configuration singleResult;
         try {
-            singleResult = nativeQuery.getSingleResult();
+            Configuration singleResult = (Configuration) manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class)
+                    .setParameter(1, key).getSingleResult();
             manager.remove(singleResult);
+            manager.flush();
             LOG.info("Configuration '{}' has been deleted", key);
         } catch (NoResultException ex) {
             LOG.error("Configuration '{}' does not exists", key);
@@ -46,13 +46,13 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public void update(String key, String value, String description) {
-        TypedQuery<Configuration> nativeQuery = (TypedQuery<Configuration>) (manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class).setParameter(1, key));
-        Configuration singleResult;
         try {
-            singleResult = nativeQuery.getSingleResult();
+            Configuration singleResult = (Configuration) manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class)
+                    .setParameter(1, key).getSingleResult();
             singleResult.setValue(value);
             singleResult.setDescription(description);
             manager.merge(singleResult);
+            manager.flush();
             LOG.info("Configuration '{}' updated", key);
         } catch (NoResultException ex) {
             LOG.error("Configuration '{}' does not exists", key);
@@ -61,15 +61,12 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public String getValueByKey(String key, String defaultValue) {
-        TypedQuery<Configuration> nativeQuery = (TypedQuery<Configuration>) manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class)
-                .setParameter(1, key);
-        Configuration singleResult;
         try {
-            singleResult = nativeQuery.getSingleResult();
+            return ((Configuration) manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class)
+                    .setParameter(1, key).getSingleResult()).getValue();
         } catch (NoResultException ex) {
             return defaultValue;
         }
-        return singleResult.getValue();
     }
 
     @Override
@@ -77,5 +74,4 @@ public class ConfigServiceImpl implements ConfigService {
         return Optional.ofNullable(manager.createNativeQuery(FIND_ALL_CONFIG, Configuration.class)
                 .getResultList()).orElse(Collections.emptyList());
     }
-
 }

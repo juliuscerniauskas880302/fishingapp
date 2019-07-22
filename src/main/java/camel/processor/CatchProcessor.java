@@ -28,28 +28,29 @@ public class CatchProcessor implements Processor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         String filePath = exchange.getIn().getBody(File.class).getAbsolutePath();
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath));
-             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT
-                     .withHeader("ID", "logbookID", "variety", "weight").withIgnoreHeaderCase().withSkipHeaderRecord()
-                     .withDelimiter(';').withTrim())) {
-            for (CSVRecord record : parser) {
-                String id = record.get("ID");
-                String logbookId = record.get("logbookID");
-                String variety = record.get("variety");
-                Double weight = Double.parseDouble(record.get("weight"));
-                Catch aCatch = new Catch(variety, weight);
-                aCatch.setId(id);
-                if (!cachesMap.containsKey(logbookId)) {
-                    cachesMap.put(logbookId, new ArrayList<>());
-                    cachesMap.get(logbookId).add(aCatch);
-                } else {
-                    cachesMap.get(logbookId).add(aCatch);
-                }
-            }
+             CSVParser parser = getParser(reader)) {
+            parser.forEach(this::mapObject);
         } catch (IOException e) {
             LOG.error("Error occurred building arrival object. {}", e.getMessage());
         }
+    }
+
+    private void mapObject(CSVRecord record) {
+        String id = record.get("ID");
+        String logbookId = record.get("logbookID");
+        String variety = record.get("variety");
+        Double weight = Double.parseDouble(record.get("weight"));
+        Catch aCatch = new Catch(variety, weight);
+        aCatch.setId(id);
+        cachesMap.putIfAbsent(logbookId, new ArrayList<>());
+        cachesMap.get(logbookId).add(aCatch);
+    }
+    private CSVParser getParser(Reader reader) throws IOException {
+        return new CSVParser(reader, CSVFormat.DEFAULT
+                .withHeader("ID", "logbookID", "variety", "weight").withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(';').withTrim());
     }
 }

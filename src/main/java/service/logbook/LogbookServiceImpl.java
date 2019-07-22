@@ -1,6 +1,7 @@
 package service.logbook;
 
 import common.ApplicationVariables;
+import domain.Catch;
 import domain.CommunicationType;
 import domain.Logbook;
 import io.xlate.inject.Property;
@@ -15,9 +16,9 @@ import strategy.SavingStrategy;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -68,15 +69,19 @@ public class LogbookServiceImpl implements LogbookService {
 
     @Override
     @Transactional
-    public Response save(Logbook source) {
+    public void save(Logbook source) throws Exception {
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
             savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
             savingStrategy = new DatabaseSavingStrategy(manager);
         }
-        LOG.info("Logbook {} has been created using {} strategy.", source.getId(), savingStrategy.getClass().getName());
-        savingStrategy.save(source);
-        return Response.status(Response.Status.OK).build();
+        try {
+            savingStrategy.save(source);
+            LOG.info("Logbook {} has been created using {} strategy.", source.getId(), savingStrategy.getClass().getName());
+        } catch (Exception ex) {
+            LOG.info("Unable to create Logbook {} using {} strategy. {}.", source.getId(), savingStrategy.getClass().getName(), ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
@@ -84,12 +89,23 @@ public class LogbookServiceImpl implements LogbookService {
     public void update(Logbook source, String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook -> {
             logbook.setCommunicationType(source.getCommunicationType());
-            logbook.setArrival(source.getArrival());
-            logbook.setCatches(source.getCatches());
-            logbook.setDeparture(source.getDeparture());
-            logbook.setEndOfFishing(source.getEndOfFishing());
+            logbook.getArrival().setPort(source.getArrival().getPort());
+            logbook.getArrival().setDate(source.getArrival().getDate());
+            for (Catch aCatch : source.getCatches()) {
+                if (!logbook.getCatches().contains(aCatch)) {
+                    logbook.getCatches().add(aCatch);
+                }
+            }
+            logbook.getDeparture().setPort(source.getDeparture().getPort());
+            logbook.getDeparture().setDate(source.getDeparture().getDate());
+            logbook.getEndOfFishing().setDate(source.getEndOfFishing().getDate());
             manager.merge(logbook);
-            LOG.info("Logbook '{}' has been updated.", id);
+            try {
+                manager.flush();
+                LOG.info("Logbook {} has been updated.", id);
+            } catch (OptimisticLockException ex) {
+                LOG.error("Logbook {} is locked.", id);
+            }
         });
     }
 
@@ -98,7 +114,7 @@ public class LogbookServiceImpl implements LogbookService {
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook -> {
             manager.remove(logbook);
-            LOG.info("Logbook '{}' has been deleted.", id);
+            LOG.info("Logbook {} has been deleted.", id);
         });
     }
 
@@ -134,17 +150,12 @@ public class LogbookServiceImpl implements LogbookService {
 
     @Override
     @Transactional
-    public Response saveAll(List<Logbook> logbooks) {
-        logbooks.forEach(logbook -> {
-            if (CommunicationType.SATELLITE.equals(logbook.getCommunicationType())) {
-                savingStrategy = new FileSavingStrategy(FILE_PATH);
-            } else {
-                savingStrategy = new DatabaseSavingStrategy(manager);
+    public void saveAll(List<Logbook> logbooks) throws Exception {
+        logbooks.forEach(source -> {
+            try {
+                save(source);
+            } catch (Exception e) {
             }
-            LOG.info("Logbook {} has been created using {} strategy.", logbook.getId(), savingStrategy.getClass().getName());
-            savingStrategy.save(logbook);
         });
-        return Response.status(Response.Status.OK).build();
     }
-
 }

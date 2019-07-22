@@ -3,10 +3,12 @@ package service.endOfFishing;
 import domain.EndOfFishing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -33,19 +35,31 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     }
 
     @Override
-    public Response save(EndOfFishing source) {
+    public void save(EndOfFishing source) throws Exception {
         manager.persist(source);
-        LOG.info("EndOfFishing {} has been created.", source.toString());
-        return Response.status(Response.Status.CREATED).build();
+        try {
+            manager.flush();
+            LOG.info("EndOfFishing {} has been created.", source.toString());
+        } catch (Exception ex) {
+            LOG.error("unable to persist EndOfFishing {}. {}.", source.getId(), ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
-    public void update(EndOfFishing source, String id) {
-        Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing -> {
+    public void update(EndOfFishing source, String id) throws ResourceNotFoundException, ResourceLockedException {
+        Optional.ofNullable(manager.find(EndOfFishing.class, id)).map(endOfFishing -> {
             endOfFishing.setDate(source.getDate());
-            LOG.info("EndOfFishing '{}' has been updated.", id);
             manager.merge(endOfFishing);
-        });
+            try {
+                manager.flush();
+                LOG.info("EndOfFishing '{}' has been updated.", id);
+            } catch (OptimisticLockException ex) {
+                LOG.error("EndOfFishing resource {} is locked", id);
+                throw new ResourceLockedException("EndOfFishing resource with id: " + id + " is locked");
+            }
+            return Response.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Departure with id: " + id));
     }
 
     @Override

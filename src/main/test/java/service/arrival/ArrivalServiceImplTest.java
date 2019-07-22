@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -59,7 +60,7 @@ public class ArrivalServiceImplTest {
     }
 
     @Test
-    public void shouldGetArrivalById() {
+    public void shouldGetArrivalById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
         Arrival result = arrivalService.findById(ID_1);
@@ -100,7 +101,7 @@ public class ArrivalServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateArrivalById() {
+    public void shouldUpdateArrivalById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Arrival.class), anyString())).thenReturn(arrival1);
 

@@ -30,28 +30,30 @@ public class ArrivalProcessor implements Processor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         String filePath = exchange.getIn().getBody(File.class).getAbsolutePath();
         try (Reader reader = Files.newBufferedReader(Paths.get(filePath));
-             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT
-                     .withHeader("ID", "logbookID", "port", "date").withIgnoreHeaderCase().withSkipHeaderRecord()
-                     .withDelimiter(';').withTrim())) {
-            for (CSVRecord record : parser) {
-                String id = record.get("ID");
-                String logbookId = record.get("logbookID");
-                String port = record.get("port");
-                Date date = DateUtilities.parseDateFromString(record.get("date"), ApplicationVariables.DATE_PATTERN);
-                Arrival arrival = new Arrival(port, date);
-                arrival.setId(id);
-                if (!logbookMap.containsKey(logbookId)) {
-                    logbookMap.put(logbookId, new HashMap<>());
-                    logbookMap.get(logbookId).put("arrival", arrival);
-                } else {
-                    logbookMap.get(logbookId).put("arrival", arrival);
-                }
-            }
+             CSVParser parser = getParser(reader)) {
+            parser.forEach(this::mapObject);
         } catch (IOException e) {
             LOG.error("Error occurred building arrival object. {}", e.getMessage());
         }
+    }
+
+    private void mapObject(CSVRecord record) {
+        String id = record.get("ID");
+        String logbookId = record.get("logbookID");
+        String port = record.get("port");
+        Date date = DateUtilities.parseDateFromString(record.get("date"), ApplicationVariables.DATE_PATTERN);
+        Arrival arrival = new Arrival(port, date);
+        arrival.setId(id);
+        logbookMap.putIfAbsent(logbookId, new HashMap<>());
+        logbookMap.get(logbookId).put("arrival", arrival);
+    }
+
+    private CSVParser getParser(Reader reader) throws IOException {
+        return new CSVParser(reader, CSVFormat.DEFAULT
+                .withHeader("ID", "logbookID", "port", "date").withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(';').withTrim());
     }
 }

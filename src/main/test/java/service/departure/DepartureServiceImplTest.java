@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -65,7 +66,7 @@ public class DepartureServiceImplTest {
     }
 
     @Test
-    public void shouldGetDepartureById() {
+    public void shouldGetDepartureById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
         Departure result = departureService.findById(ID_1);
@@ -107,7 +108,7 @@ public class DepartureServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateDepartureById() {
+    public void shouldUpdateDepartureById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Departure.class), anyString())).thenReturn(departure1);
 

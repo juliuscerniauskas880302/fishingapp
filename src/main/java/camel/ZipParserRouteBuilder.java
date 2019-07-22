@@ -59,15 +59,18 @@ public class ZipParserRouteBuilder extends RouteBuilder {
                     .end()
                 .end()
                 .process(exchange ->{
-                    List<String> logbookJsonList = createLogbookList()
-                            .stream()
-                            .map(Logbook::toString)
-                            .collect(Collectors.toList());
-                    exchange.getOut().setBody(logbookJsonList.toString());
+                    exchange.getOut().setBody(getJsonStringList());
                 })
                 .setHeader(Exchange.HTTP_METHOD, constant("POST"))
                 .setHeader(Exchange.CONTENT_TYPE, constant("application/json"))
                 .to(ApplicationVariables.HTTP_LOGS_LIST_URI);
+    }
+
+    private String getJsonStringList() {
+        return createLogbookList()
+                .stream()
+                .map(Logbook::toString)
+                .collect(Collectors.toList()).toString();
     }
 
     private List<Logbook> createLogbookList() {
@@ -81,5 +84,4 @@ public class ZipParserRouteBuilder extends RouteBuilder {
                         .build()
         ).collect(Collectors.toList());
     }
-
 }

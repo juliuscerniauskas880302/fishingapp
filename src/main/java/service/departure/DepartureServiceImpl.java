@@ -3,10 +3,12 @@ package service.departure;
 import domain.Departure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -33,20 +35,32 @@ public class DepartureServiceImpl implements DepartureService {
     }
 
     @Override
-    public Response save(Departure source) {
+    public void save(Departure source) throws Exception {
         manager.persist(source);
-        LOG.info("Departure {} has been created.", source.toString());
-        return Response.status(Response.Status.CREATED).build();
+        try {
+            manager.flush();
+            LOG.info("Departure {} has been created.", source.toString());
+        } catch (Exception ex) {
+            LOG.error("unable to persist Departure {}. {}.", source.getId(), ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
-    public void update(Departure source, String id) {
-        Optional.ofNullable(manager.find(Departure.class, id)).ifPresent(departure -> {
+    public void update(Departure source, String id) throws ResourceNotFoundException, ResourceLockedException {
+        Optional.ofNullable(manager.find(Departure.class, id)).map(departure -> {
             departure.setPort(source.getPort());
             departure.setDate(source.getDate());
-            LOG.info("Departure '{}' has been updated.", id);
             manager.merge(departure);
-        });
+            try {
+                manager.flush();
+                LOG.info("Departure '{}' has been updated.", id);
+            } catch (OptimisticLockException ex) {
+                LOG.error("Departure resource {} is locked", id);
+                throw new ResourceLockedException("Departure resource with id: " + id + " is locked");
+            }
+            return Response.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Departure with id: " + id));
     }
 
     @Override

@@ -54,5 +54,4 @@ public class ConfigurationController {
                        @PathParam("description") final String description) {
         configService.update(key, value, description);
     }
-
 }

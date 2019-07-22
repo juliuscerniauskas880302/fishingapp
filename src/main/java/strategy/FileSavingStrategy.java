@@ -42,5 +42,4 @@ public class FileSavingStrategy implements SavingStrategy {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss'.log'");
         return simpleDateFormat.format(new Date());
     }
-
 }

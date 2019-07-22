@@ -2,6 +2,7 @@ package controller;
 
 import common.ApplicationVariables;
 import domain.Logbook;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 import service.logbook.LogbookService;
 
@@ -45,21 +46,37 @@ public class LogbookController {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     public Response create(@Valid Logbook source) {
-        return logbookService.save(source);
+        try {
+            logbookService.save(source);
+            return Response.status(Response.Status.CREATED).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.EXPECTATION_FAILED).build();
+        }
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/logs")
-    public Response saveAll(@Valid List<Logbook> logbooks) {
-        return logbookService.saveAll(logbooks);
+    public void saveAll(@Valid List<Logbook> logbooks) {
+        try {
+            logbookService.saveAll(logbooks);
+        } catch (Exception ex) {
+
+        }
     }
 
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public void updateById(@PathParam("id") final String id, @Valid Logbook source) {
-        logbookService.update(source, id);
+    public Response updateById(@PathParam("id") final String id, @Valid Logbook source) {
+        try {
+            logbookService.update(source, id);
+            return Response.status(Response.Status.OK).build();
+        } catch (ResourceLockedException ex) {
+            return Response.status(Response.Status.CONFLICT).entity(ex.toString()).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.toString()).build();
+        }
     }
 
     @DELETE
@@ -93,5 +110,4 @@ public class LogbookController {
             @PathParam("date1") final String date1, @PathParam("date2") final String date2) {
         return logbookService.findByDepartureDateIn(date1, date2);
     }
-
 }

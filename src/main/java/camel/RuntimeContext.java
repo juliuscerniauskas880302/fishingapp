@@ -42,5 +42,4 @@ public class RuntimeContext {
             LOG.error("Error occurred stopping CamelContext {} ", context);
         }
     }
-
 }

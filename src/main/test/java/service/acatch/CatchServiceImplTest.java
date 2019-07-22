@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -57,7 +58,7 @@ public class CatchServiceImplTest {
     }
 
     @Test
-    public void shouldGetCatchById() {
+    public void shouldGetCatchById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
         Catch result = catchService.findById(ID_1);
@@ -111,7 +112,7 @@ public class CatchServiceImplTest {
     }
 
     @Test
-    void shouldUpdateCatchById() {
+    void shouldUpdateCatchById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(Catch.class), anyString())).thenReturn(catch1);
 

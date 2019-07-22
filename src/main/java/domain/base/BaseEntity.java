@@ -40,5 +40,4 @@ public class BaseEntity implements Serializable {
         BaseEntity other = (BaseEntity) obj;
         return getId().equals(other.getId());
     }
-
 }

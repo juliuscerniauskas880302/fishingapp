@@ -19,5 +19,4 @@ public class DateUtilities {
         }
         return date;
     }
-
 }

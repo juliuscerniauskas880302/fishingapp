@@ -3,6 +3,7 @@ package service.arrival;
 import domain.Arrival;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
@@ -61,5 +62,4 @@ public class ArrivalServiceImpl implements ArrivalService {
             LOG.info("Arrival '{}' has been deleted.", id);
         });
     }
-
 }

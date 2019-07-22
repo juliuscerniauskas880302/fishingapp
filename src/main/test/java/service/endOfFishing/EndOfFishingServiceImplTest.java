@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -55,7 +56,7 @@ public class EndOfFishingServiceImplTest {
     }
 
     @Test
-    public void shouldGetByEndOfFishingId() {
+    public void shouldGetByEndOfFishingId() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
         EndOfFishing result = endOfFishingService.findById(ID_1);
@@ -95,7 +96,7 @@ public class EndOfFishingServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateEndOfFishingById() {
+    public void shouldUpdateEndOfFishingById() throws ResourceNotFoundException {
         // when
         when(entityManager.find(eq(EndOfFishing.class), anyString())).thenReturn(endOfFishing1);
 
