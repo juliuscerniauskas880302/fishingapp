@@ -3,6 +3,7 @@ package service.acatch;
 import domain.Catch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,8 +21,9 @@ public class CatchServiceImpl implements CatchService {
     private EntityManager manager;
 
     @Override
-    public Catch findById(String id) {
-        return Optional.ofNullable(manager.find(Catch.class, id)).orElse(null);
+    public Catch findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(manager.find(Catch.class, id))
+                .orElseThrow(()-> new ResourceNotFoundException("Cannot find Catch with id: " + id));
     }
 
     @Override

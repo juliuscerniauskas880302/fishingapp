@@ -1,12 +1,14 @@
 package service;
 
+import service.exception.ResourceNotFoundException;
+
 import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.util.List;
 
 public interface GenericDAO<T, K extends Serializable> {
 
-    T findById(K id);
+    T findById(K id) throws ResourceNotFoundException;
 
     List<T> findAll();
 

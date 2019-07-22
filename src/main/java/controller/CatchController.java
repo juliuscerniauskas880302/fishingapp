@@ -3,6 +3,7 @@ package controller;
 import common.ApplicationVariables;
 import domain.Catch;
 import service.acatch.CatchService;
+import service.exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -28,8 +29,12 @@ public class CatchController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Catch getById(@PathParam("id") final String id) {
-        return catchService.findById(id);
+    public Response getById(@PathParam("id") final String id) {
+        try {
+            return Response.status(Response.Status.CREATED).entity(catchService.findById(id)).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
 
     @GET

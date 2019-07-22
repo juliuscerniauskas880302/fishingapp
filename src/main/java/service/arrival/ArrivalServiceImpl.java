@@ -3,6 +3,7 @@ package service.arrival;
 import domain.Arrival;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -22,8 +23,9 @@ public class ArrivalServiceImpl implements ArrivalService {
     private EntityManager manager;
 
     @Override
-    public Arrival findById(String id) {
-        return Optional.ofNullable(manager.find(Arrival.class, id)).orElse(null);
+    public Arrival findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(manager.find(Arrival.class, id))
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Arrival with id: " + id));
     }
 
     @Override

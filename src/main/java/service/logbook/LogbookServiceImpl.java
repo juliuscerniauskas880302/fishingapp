@@ -7,6 +7,7 @@ import io.xlate.inject.Property;
 import io.xlate.inject.PropertyResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceNotFoundException;
 import strategy.DatabaseSavingStrategy;
 import strategy.FileSavingStrategy;
 import strategy.SavingStrategy;
@@ -54,8 +55,9 @@ public class LogbookServiceImpl implements LogbookService {
     private SavingStrategy savingStrategy;
 
     @Override
-    public Logbook findById(String id) {
-        return Optional.ofNullable(manager.find(Logbook.class, id)).orElse(null);
+    public Logbook findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(manager.find(Logbook.class, id))
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Logbook with id: " + id));
     }
 
     @Override

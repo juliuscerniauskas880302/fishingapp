@@ -3,6 +3,7 @@ package controller;
 import common.ApplicationVariables;
 import domain.EndOfFishing;
 import service.endOfFishing.EndOfFishingService;
+import service.exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -28,8 +29,12 @@ public class EndOfFishingController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public EndOfFishing getById(@PathParam("id") final String id) {
-        return endOfFishingService.findById(id);
+    public Response getById(@PathParam("id") final String id) {
+        try {
+            return Response.status(Response.Status.CREATED).entity(endOfFishingService.findById(id)).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
 
     @GET

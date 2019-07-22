@@ -30,7 +30,7 @@ public class RuntimeContext {
             context.addRoutes(zipParserRouteBuilder);
             context.start();
         } catch (Exception e) {
-            LOG.warn("Error occurred starting CamelContext {} ", context);
+            LOG.error("Error occurred starting CamelContext {} ", context);
         }
     }
 
@@ -39,7 +39,7 @@ public class RuntimeContext {
         try {
             context.stop();
         } catch (Exception e) {
-            LOG.warn("Error occurred stopping CamelContext {} ", context);
+            LOG.error("Error occurred stopping CamelContext {} ", context);
         }
     }
 

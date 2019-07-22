@@ -3,6 +3,7 @@ package controller;
 import common.ApplicationVariables;
 import domain.Arrival;
 import service.arrival.ArrivalService;
+import service.exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -29,8 +30,12 @@ public class ArrivalController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Arrival getById(@PathParam("id") final String id) {
-        return arrivalService.findById(id);
+    public Response getById(@PathParam("id") final String id) {
+        try {
+            return Response.status(Response.Status.CREATED).entity(arrivalService.findById(id)).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
 
     @GET

@@ -2,6 +2,7 @@ package controller;
 
 import common.ApplicationVariables;
 import domain.Logbook;
+import service.exception.ResourceNotFoundException;
 import service.logbook.LogbookService;
 
 import javax.inject.Inject;
@@ -28,8 +29,12 @@ public class LogbookController {
     @GET
     @Path("/{id}")
     @Produces({MediaType.APPLICATION_JSON})
-    public Logbook getById(@PathParam("id") final String id) {
-        return logbookService.findById(id);
+    public Response getById(@PathParam("id") final String id) {
+        try {
+            return Response.status(Response.Status.CREATED).entity(logbookService.findById(id)).build();
+        } catch (ResourceNotFoundException e) {
+            return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+        }
     }
 
     @GET

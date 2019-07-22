@@ -3,6 +3,7 @@ package service.departure;
 import domain.Departure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,8 +21,9 @@ public class DepartureServiceImpl implements DepartureService {
     private EntityManager manager;
 
     @Override
-    public Departure findById(String id) {
-        return Optional.ofNullable(manager.find(Departure.class, id)).orElse(null);
+    public Departure findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(manager.find(Departure.class, id))
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Departure with id: " + id));
     }
 
     @Override

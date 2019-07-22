@@ -3,6 +3,7 @@ package service.endOfFishing;
 import domain.EndOfFishing;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -20,8 +21,9 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     private EntityManager manager;
 
     @Override
-    public EndOfFishing findById(String id) {
-        return Optional.ofNullable(manager.find(EndOfFishing.class, id)).orElse(null);
+    public EndOfFishing findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(manager.find(EndOfFishing.class, id))
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find EndOfFishing with id: " + id));
     }
 
     @Override
