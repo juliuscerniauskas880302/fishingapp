@@ -7,10 +7,7 @@ import org.apache.logging.log4j.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +31,6 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public Response save(EndOfFishing source) {
         manager.persist(source);
         LOG.info("EndOfFishing {} has been created.", source.toString());
@@ -42,7 +38,6 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void update(EndOfFishing source, String id) {
         Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing -> {
             endOfFishing.setDate(source.getDate());
@@ -52,7 +47,6 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing -> {
             manager.remove(endOfFishing);

@@ -9,10 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +25,6 @@ public class ConfigServiceImpl implements ConfigService {
     private EntityManager manager;
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public Response add(Configuration configuration) {
         manager.persist(configuration);
         LOG.info("Configuration {} has been created", configuration.toString());
@@ -36,7 +32,6 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void delete(String key) {
         TypedQuery<Configuration> nativeQuery = (TypedQuery<Configuration>) (manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class).setParameter(1, key));
         Configuration singleResult;
@@ -50,7 +45,6 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void update(String key, String value, String description) {
         TypedQuery<Configuration> nativeQuery = (TypedQuery<Configuration>) (manager.createNativeQuery(FIND_CONFIG_BY_KEY, Configuration.class).setParameter(1, key));
         Configuration singleResult;

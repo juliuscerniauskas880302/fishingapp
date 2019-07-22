@@ -7,10 +7,7 @@ import org.apache.logging.log4j.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +31,6 @@ public class CatchServiceImpl implements CatchService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public Response save(Catch source) {
         manager.persist(source);
         LOG.info("Catch {} has been created.", source.toString());
@@ -42,7 +38,6 @@ public class CatchServiceImpl implements CatchService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void update(Catch source, String id) {
         Optional.ofNullable(manager.find(Catch.class, id)).ifPresent(aCatch -> {
             aCatch.setVariety(source.getVariety());
@@ -53,7 +48,6 @@ public class CatchServiceImpl implements CatchService {
     }
 
     @Override
-    @Transactional(rollbackOn = {SQLException.class}, dontRollbackOn = {SQLWarning.class})
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Catch.class, id)).ifPresent(aCatch -> {
             manager.remove(aCatch);
