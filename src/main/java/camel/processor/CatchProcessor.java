@@ -20,6 +20,11 @@ import java.util.Map;
 
 public class CatchProcessor implements Processor {
     private static final Logger LOG = LogManager.getLogger(EndOfFishingProcessor.class);
+    private static final String ID = "ID";
+    private static final String LOGBOOK_ID = "logbookID";
+    private static final String VARIETY = "variety";
+    private static final String WEIGHT = "weight";
+    private static final char DELIMITER = ';';
 
     private Map<String, List<Catch>> cachesMap;
 
@@ -39,10 +44,10 @@ public class CatchProcessor implements Processor {
     }
 
     private void mapObject(CSVRecord record) {
-        String id = record.get("ID");
-        String logbookId = record.get("logbookID");
-        String variety = record.get("variety");
-        Double weight = Double.parseDouble(record.get("weight"));
+        String id = record.get(ID);
+        String logbookId = record.get(LOGBOOK_ID);
+        String variety = record.get(VARIETY);
+        Double weight = Double.parseDouble(record.get(WEIGHT));
         Catch aCatch = new Catch(variety, weight);
         aCatch.setId(id);
         cachesMap.putIfAbsent(logbookId, new ArrayList<>());
@@ -50,7 +55,7 @@ public class CatchProcessor implements Processor {
     }
     private CSVParser getParser(Reader reader) throws IOException {
         return new CSVParser(reader, CSVFormat.DEFAULT
-                .withHeader("ID", "logbookID", "variety", "weight").withIgnoreHeaderCase().withSkipHeaderRecord()
-                .withDelimiter(';').withTrim());
+                .withHeader(ID, LOGBOOK_ID, VARIETY, WEIGHT).withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(DELIMITER).withTrim());
     }
 }

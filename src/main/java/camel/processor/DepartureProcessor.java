@@ -21,7 +21,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DepartureProcessor implements Processor {
+    private static final String ID = "ID";
     private static final Logger LOG = LogManager.getLogger(DepartureProcessor.class);
+    private static final String LOGBOOK_ID = "logbookID";
+    private static final String DEPARTURE = "departure";
+    private static final String PORT = "port";
+    private static final String DATE = "date";
+    private static final char DELIMITER = ';';
 
     private Map<String, Map<String, Object>> logbookMap;
 
@@ -41,19 +47,19 @@ public class DepartureProcessor implements Processor {
     }
 
     private void mapObject(CSVRecord record) {
-        String id = record.get("ID");
-        String logbookId = record.get("logbookID");
-        String port = record.get("port");
-        Date date = DateUtilities.parseDateFromString(record.get("date"), ApplicationVariables.DATE_PATTERN);
+        String id = record.get(ID);
+        String logbookId = record.get(LOGBOOK_ID);
+        String port = record.get(PORT);
+        Date date = DateUtilities.parseDateFromString(record.get(DATE), ApplicationVariables.DATE_PATTERN);
         Departure departure = new Departure(port, date);
         departure.setId(id);
         logbookMap.putIfAbsent(logbookId, new HashMap<>());
-        logbookMap.get(logbookId).put("departure", departure);
+        logbookMap.get(logbookId).put(DEPARTURE, departure);
     }
 
     private CSVParser getParser(Reader reader) throws IOException {
         return new CSVParser(reader, CSVFormat.DEFAULT
-                .withHeader("ID", "logbookID", "port", "date").withIgnoreHeaderCase().withSkipHeaderRecord()
-                .withDelimiter(';').withTrim());
+                .withHeader(ID, LOGBOOK_ID, PORT, DATE).withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(DELIMITER).withTrim());
     }
 }

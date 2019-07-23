@@ -18,6 +18,10 @@ import java.util.Map;
 
 public class LogbookProcessor implements Processor {
     private static final Logger LOG = LogManager.getLogger(LogbookProcessor.class);
+    private static final String ID = "ID";
+    private static final String COMMUNICATION = "communication";
+    private static final String COMMUNICATION_TYPE = "communicationType";
+    private static final char DELIMITER = ',';
 
     private Map<String, Map<String, Object>> logbookMap;
 
@@ -37,15 +41,15 @@ public class LogbookProcessor implements Processor {
     }
 
     private void mapObject(CSVRecord record) {
-        String id = record.get("ID");
-        String communicationType = record.get("communicationType");
+        String id = record.get(ID);
+        String communicationType = record.get(COMMUNICATION_TYPE);
         logbookMap.putIfAbsent(id, new HashMap<>());
-        logbookMap.get(id).put("communication", communicationType);
+        logbookMap.get(id).put(COMMUNICATION, communicationType);
     }
 
     private CSVParser getParser(Reader reader) throws IOException {
         return new CSVParser(reader, CSVFormat.DEFAULT
-                .withHeader("ID", "communicationType").withIgnoreHeaderCase().withSkipHeaderRecord()
-                .withDelimiter(',').withTrim());
+                .withHeader(ID, COMMUNICATION_TYPE).withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(DELIMITER).withTrim());
     }
 }

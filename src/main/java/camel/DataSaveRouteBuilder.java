@@ -12,10 +12,11 @@ import java.io.File;
 @Stateless
 public class DataSaveRouteBuilder extends RouteBuilder {
     private static final String FILE_URI = "file:C:/datafiles/inbox/";
+    public static final String TIMER = "timer://schedulerTimer?fixedRate=true&period=5s&delay=5s";
 
     @Override
     public void configure() throws Exception {
-        from("timer://schedulerTimer?fixedRate=true&period=5s&delay=5s")
+        from(TIMER)
                 .pollEnrich(FILE_URI + "?noop=false&delete=true")
                 .process(exchange -> {
                     File file = exchange.getIn().getBody(File.class);

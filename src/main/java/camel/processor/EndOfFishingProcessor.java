@@ -22,6 +22,11 @@ import java.util.Map;
 
 public class EndOfFishingProcessor implements Processor {
     private static final Logger LOG = LogManager.getLogger(EndOfFishingProcessor.class);
+    private static final String ID = "ID";
+    private static final String LOGBOOK_ID = "logbookID";
+    private static final String END_OF_FISHING = "endOfFishing";
+    private static final String DATE = "date";
+    private static final char DELIMITER = ';';
 
     private Map<String, Map<String, Object>> logbookMap;
 
@@ -41,18 +46,18 @@ public class EndOfFishingProcessor implements Processor {
     }
 
     private void mapObject(CSVRecord record) {
-        String id = record.get("ID");
-        String logbookId = record.get("logbookID");
-        Date date = DateUtilities.parseDateFromString(record.get("date"), ApplicationVariables.DATE_PATTERN);
+        String id = record.get(ID);
+        String logbookId = record.get(LOGBOOK_ID);
+        Date date = DateUtilities.parseDateFromString(record.get(DATE), ApplicationVariables.DATE_PATTERN);
         EndOfFishing endOfFishing = new EndOfFishing(date);
         endOfFishing.setId(id);
         logbookMap.putIfAbsent(logbookId, new HashMap<>());
-        logbookMap.get(logbookId).put("endOfFishing", endOfFishing);
+        logbookMap.get(logbookId).put(END_OF_FISHING, endOfFishing);
     }
 
     private CSVParser getParser(Reader reader) throws IOException {
         return new CSVParser(reader, CSVFormat.DEFAULT
-                .withHeader("ID", "logbookID", "date").withIgnoreHeaderCase().withSkipHeaderRecord()
-                .withDelimiter(';').withTrim());
+                .withHeader(ID, LOGBOOK_ID, DATE).withIgnoreHeaderCase().withSkipHeaderRecord()
+                .withDelimiter(DELIMITER).withTrim());
     }
 }
