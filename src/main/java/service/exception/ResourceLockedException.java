@@ -2,7 +2,7 @@ package service.exception;
 
 import javax.ejb.ApplicationException;
 
-@ApplicationException
+@ApplicationException(rollback = true)
 public class ResourceLockedException extends RuntimeException {
     private static final long serialVersionUID = -1208300942356269951L;
 
@@ -11,5 +11,4 @@ public class ResourceLockedException extends RuntimeException {
     public ResourceLockedException(String message) {
         this.message = message;
     }
-
 }

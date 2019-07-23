@@ -12,7 +12,6 @@ import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;

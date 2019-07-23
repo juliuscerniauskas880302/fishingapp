@@ -10,7 +10,6 @@ import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
 
@@ -119,5 +118,4 @@ public class CatchServiceImplTest {
         verify(entityManager, times(1)).find(eq(Catch.class), anyString());
         verify(entityManager, times(1)).merge(eq(catch1));
     }
-
 }
