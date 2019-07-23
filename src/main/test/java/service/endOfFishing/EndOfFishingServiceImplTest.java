@@ -84,15 +84,13 @@ public class EndOfFishingServiceImplTest {
     }
 
     @Test
-    public void shouldCreateNewEndOfFishing() {
+    public void shouldCreateNewEndOfFishing() throws Exception {
         // when
         doNothing().when(entityManager).persist(any(EndOfFishing.class));
-        Response response = endOfFishingService.save(endOfFishing1);
+        endOfFishingService.save(endOfFishing1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(),
-                response.getStatus(),
-                "Response status should be " + Response.Status.CREATED.getStatusCode());
+        verify(entityManager, times(1)).persist(any(EndOfFishing.class));
     }
 
     @Test

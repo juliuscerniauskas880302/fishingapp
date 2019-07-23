@@ -99,16 +99,13 @@ public class CatchServiceImplTest {
     }
 
     @Test
-    public void shouldCreateNewCatch() {
+    public void shouldCreateNewCatch() throws Exception {
         // when
         doNothing().when(entityManager).persist(any(Catch.class));
-        Response response = catchService.save(catch1);
+        catchService.save(catch1);
 
         // then
         verify(entityManager, times(1)).persist(any(Catch.class));
-        assertEquals(Response.Status.CREATED.getStatusCode(),
-                response.getStatus(),
-                "Response value should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test

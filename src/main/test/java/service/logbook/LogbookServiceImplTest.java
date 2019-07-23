@@ -89,16 +89,13 @@ public class LogbookServiceImplTest {
     }
 
     @Test
-    public void shouldCrateLogbook() {
+    public void shouldCrateLogbook() throws Exception {
         // when
         doNothing().when(entityManager).persist(any(Logbook.class));
-        Response response = logbookService.save(logbook1);
+        logbookService.save(logbook1);
 
         // then
         verify(entityManager, times(1)).persist(any(Logbook.class));
-        assertEquals(Response.Status.OK.getStatusCode(),
-                response.getStatus(),
-                "Response status should be " + Response.Status.OK.getStatusCode());
     }
 
     @Test

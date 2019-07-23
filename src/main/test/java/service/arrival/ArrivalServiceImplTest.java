@@ -89,15 +89,13 @@ public class ArrivalServiceImplTest {
     }
 
     @Test
-    public void shouldCrateNewArrival() {
+    public void shouldCrateNewArrival() throws Exception {
         // when
         doNothing().when(entityManager).persist(any(Arrival.class));
-        Response response = arrivalService.save(arrival1);
+        arrivalService.save(arrival1);
 
         // then
-        assertEquals(Response.Status.CREATED.getStatusCode(),
-                response.getStatus(),
-                "Response status should be " + Response.Status.CREATED.getStatusCode());
+        verify(entityManager, times(1)).persist(any(Arrival.class));
     }
 
     @Test

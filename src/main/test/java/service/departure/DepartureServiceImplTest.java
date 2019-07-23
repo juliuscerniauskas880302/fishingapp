@@ -95,16 +95,13 @@ public class DepartureServiceImplTest {
     }
 
     @Test
-    public void shouldCreateNewDeparture() {
+    public void shouldCreateNewDeparture() throws Exception {
         // when
         doNothing().when(entityManager).persist(any(Departure.class));
-        Response response = departureService.save(departure1);
+        departureService.save(departure1);
 
         // then
         verify(entityManager, times(1)).persist(any(Departure.class));
-        assertEquals(Response.Status.CREATED.getStatusCode(),
-                response.getStatus(),
-                "Response status should be " + Response.Status.CREATED.getStatusCode());
     }
 
     @Test

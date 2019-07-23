@@ -8,6 +8,7 @@ import io.xlate.inject.Property;
 import io.xlate.inject.PropertyResource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 import strategy.DatabaseSavingStrategy;
 import strategy.FileSavingStrategy;
@@ -105,6 +106,7 @@ public class LogbookServiceImpl implements LogbookService {
                 LOG.info("Logbook {} has been updated.", id);
             } catch (OptimisticLockException ex) {
                 LOG.error("Logbook {} is locked.", id);
+                throw new ResourceLockedException("Logbook resource with id: " + id + " is locked.");
             }
         });
     }
