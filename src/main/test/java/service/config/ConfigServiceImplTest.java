@@ -1,8 +1,8 @@
 package service.config;
 
 import domain.config.Configuration;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,7 +47,7 @@ public class ConfigServiceImplTest {
 
     private Configuration config1, config2;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
@@ -74,9 +74,8 @@ public class ConfigServiceImplTest {
 
         // then
         verify(entityManager, times(1)).persist(any(Configuration.class));
-        assertEquals(Response.Status.CREATED.getStatusCode(),
-                response.getStatus(),
-                "Response status should be " + Response.Status.CREATED.getStatusCode());
+        assertEquals("Response status should be " + Response.Status.CREATED.getStatusCode(), Response.Status.CREATED.getStatusCode(),
+                response.getStatus());
     }
 
     @Test
@@ -131,6 +130,6 @@ public class ConfigServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Configuration.class));
-        assertEquals(2, result.size(), "Result list size should be 2");
+        assertEquals("Result list size should be 2", 2, result.size());
     }
 }

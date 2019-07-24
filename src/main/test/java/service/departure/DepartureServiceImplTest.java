@@ -2,8 +2,8 @@ package service.departure;
 
 import domain.Departure;
 import domain.Logbook;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -12,13 +12,12 @@ import service.exception.ResourceNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -48,7 +47,7 @@ public class DepartureServiceImplTest {
     @InjectMocks
     private DepartureServiceImpl departureService;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
@@ -73,10 +72,10 @@ public class DepartureServiceImplTest {
 
         // then
         verify(entityManager, times(1)).find(eq(Departure.class), anyString());
-        assertNotNull(result, "Result should not be null");
-        assertEquals(PORT_1, result.getPort(), "Port should be equal to " + PORT_1);
-        assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
-        assertEquals(DATE_1, result.getDate(), "Date should be equal to " + DATE_1);
+        assertNotNull("Result should not be null", result);
+        assertEquals("Port should be equal to " + PORT_1, PORT_1, result.getPort());
+        assertEquals("ID should be equal to " + ID_1, ID_1, result.getId());
+        assertEquals("Date should be equal to " + DATE_1, DATE_1, result.getDate());
     }
 
     @Test
@@ -90,8 +89,8 @@ public class DepartureServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNamedQuery(anyString(), eq(Departure.class));
-        assertNotNull(result, "Result should not be null");
-        assertEquals(2, result.size(), "Result size should be 2");
+        assertNotNull("Result should not be null", result);
+        assertEquals("Result size should be 2",2, result.size());
     }
 
     @Test

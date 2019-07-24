@@ -17,6 +17,7 @@ import strategy.SavingStrategy;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -45,10 +46,10 @@ public class LogbookServiceImpl implements LogbookService {
             " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
 
-    @Inject
-    @Property(name = "strategy.file.filePath",
-            resource = @PropertyResource(ApplicationVariables.PROPERTIES_FILE_PATH),
-            defaultValue = "C:/datafiles/satellite/notfound")
+//    @Inject
+//    @Property(name = "strategy.file.filePath",
+//            resource = @PropertyResource(ApplicationVariables.PROPERTIES_FILE_PATH),
+//            defaultValue = "C:/datafiles/satellite/notfound")
     private String FILE_PATH;
 
     @PersistenceContext

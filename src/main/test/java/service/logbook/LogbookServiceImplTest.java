@@ -2,8 +2,8 @@ package service.logbook;
 
 import domain.CommunicationType;
 import domain.Logbook;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,7 +47,7 @@ public class LogbookServiceImplTest {
     @InjectMocks
     private LogbookServiceImpl logbookService;
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
@@ -68,8 +68,8 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).find(eq(Logbook.class), anyString());
-        assertNotNull(result, "Result should not be empty");
-        assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
+        assertNotNull("Result should not be empty", result);
+        assertEquals("ID should be equal to " + ID_1, ID_1, result.getId());
     }
 
     @Test
@@ -83,8 +83,8 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
-        assertNotNull(logbooks, "List should not be empty");
-        assertEquals(2, logbooks.size(), "List size should be 2");
+        assertNotNull("List should not be empty", logbooks);
+        assertEquals("List size should be 2", 2, logbooks.size());
     }
 
     @Test
@@ -137,8 +137,8 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
-        assertNotNull(result, "List should not be empty");
-        assertEquals(1, result.size(), "List size should be 1");
+        assertNotNull("List should not be empty", result);
+        assertEquals("List size should be 1", 1, result.size());
     }
 
     @Test
@@ -152,8 +152,8 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
-        assertNotNull(result, "List should not be empty");
-        assertEquals(2, result.size(), "List size should be 2");
+        assertNotNull("List should not be empty", result);
+        assertEquals("List size should be 2", 2, result.size());
     }
 
     @Test
@@ -167,8 +167,8 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
-        assertNotNull(result, "List should not be empty");
-        assertEquals(2, result.size(), "List size should be 2");
+        assertNotNull("List should not be empty", result);
+        assertEquals("List size should be 2", 2, result.size());
     }
 
     @Test
@@ -182,8 +182,8 @@ public class LogbookServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Logbook.class));
-        assertNotNull(result, "List should not be empty");
-        assertEquals(2, result.size(), "List size should be 2");
+        assertNotNull("List should not be empty", result);
+        assertEquals("List size should be 2", 2, result.size());
     }
 
     @Test
@@ -193,7 +193,7 @@ public class LogbookServiceImplTest {
         entityManager.flush();
         entityManager.detach(logbook);
 
-        Logbook newLogbook = entityManager.find( Logbook.class, logbook.getId());
+        Logbook newLogbook = entityManager.find(Logbook.class, logbook.getId());
         newLogbook.setCommunicationType(CommunicationType.SATELLITE);
         entityManager.persist(newLogbook);
         entityManager.flush();

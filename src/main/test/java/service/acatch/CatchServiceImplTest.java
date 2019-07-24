@@ -1,8 +1,8 @@
 package service.acatch;
 
 import domain.Catch;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -13,8 +13,8 @@ import javax.persistence.TypedQuery;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,7 +41,7 @@ public class CatchServiceImplTest {
     @InjectMocks
     private CatchServiceImpl catchService;
 
-    @BeforeEach
+    @Before
     void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
@@ -65,9 +65,9 @@ public class CatchServiceImplTest {
         // then
         verify(entityManager, times(1)).find(eq(Catch.class), anyString());
         assertNotNull(result);
-        assertEquals(VARIETY_1, result.getVariety(), "Variety should be equal to " + VARIETY_1);
-        assertEquals(ID_1, result.getId(), "ID should be equal to " + ID_1);
-        assertEquals(WEIGHT_1, result.getWeight(), "Weight should be equal to " + WEIGHT_1);
+        assertEquals("Variety should be equal to " + VARIETY_1, VARIETY_1, result.getVariety());
+        assertEquals("ID should be equal to " + ID_1, ID_1, result.getId());
+        assertEquals("Weight should be equal to " + WEIGHT_1, WEIGHT_1, result.getWeight());
     }
 
     @Test
@@ -93,8 +93,8 @@ public class CatchServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNamedQuery(anyString(), eq(Catch.class));
-        assertNotNull(result, "Result should not be null");
-        assertEquals(2, result.size(), "Result size should be 2");
+        assertNotNull("Result should not be null", result);
+        assertEquals("Result size should be 2", 2, result.size());
     }
 
     @Test
