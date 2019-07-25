@@ -7,9 +7,8 @@ import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
@@ -36,26 +35,35 @@ public class ArrivalServiceImpl implements ArrivalService {
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public Response save(Arrival source) {
-        LOG.info("Arrival {} has been added to db.", source.getId());
+    public void save(Arrival source) throws Exception {
         manager.persist(source);
-        return Response.status(Response.Status.CREATED).build();
+        try {
+            manager.flush();
+            LOG.info("Arrival {} has been created.", source.getId());
+        } catch (Exception ex) {
+            LOG.info("Unable to persist Arrival {}. {}.", source.getId(), ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void update(Arrival source, String id) {
-        Optional.ofNullable(manager.find(Arrival.class, id)).ifPresent(arrival -> {
+    public void update(Arrival source, String id) throws ResourceNotFoundException, ResourceLockedException {
+        Optional.ofNullable(manager.find(Arrival.class, id)).map(arrival -> {
             arrival.setPort(source.getPort());
             arrival.setDate(source.getDate());
             manager.merge(arrival);
-            LOG.info("Arrival '{}' has been updated.", id);
-        });
+            try {
+                manager.flush();
+                LOG.info("Arrival '{}' has been updated.", id);
+            } catch (OptimisticLockException ex) {
+                LOG.error("Arrival resource {} is locked", id);
+                throw new ResourceLockedException("Arrival resource with id: " + id + " is locked");
+            }
+            return Response.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Arrival with id: " + id));
     }
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void deleteById(String id) {
         Optional.ofNullable(manager.find(Arrival.class, id)).ifPresent(arrival -> {
             manager.remove(arrival);
