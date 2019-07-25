@@ -34,7 +34,7 @@ public class CatchServiceImpl implements CatchService {
     }
 
     @Override
-    public void save(Catch source) throws Exception {
+    public void save(Catch source) {
         manager.persist(source);
         try {
             manager.flush();

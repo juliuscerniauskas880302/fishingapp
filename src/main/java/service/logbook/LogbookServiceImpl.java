@@ -21,6 +21,7 @@ import javax.persistence.LockModeType;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +72,7 @@ public class LogbookServiceImpl implements LogbookService {
 
     @Override
     @Transactional
-    public void save(Logbook source) throws Exception {
+    public void save(Logbook source){
         if (CommunicationType.SATELLITE.equals(source.getCommunicationType())) {
             savingStrategy = new FileSavingStrategy(FILE_PATH);
         } else {
@@ -89,27 +90,24 @@ public class LogbookServiceImpl implements LogbookService {
     @Override
     @Transactional
     public void update(Logbook source, String id) {
-        Optional.ofNullable(manager.find(Logbook.class, id)).ifPresent(logbook -> {
+        Optional.ofNullable(manager.find(Logbook.class, id)).map(logbook -> {
             logbook.setCommunicationType(source.getCommunicationType());
             logbook.getArrival().setPort(source.getArrival().getPort());
             logbook.getArrival().setDate(source.getArrival().getDate());
-            for (Catch aCatch : source.getCatches()) {
-                if (!logbook.getCatches().contains(aCatch)) {
-                    logbook.getCatches().add(aCatch);
-                }
-            }
+            logbook.setCatches(source.getCatches());
             logbook.getDeparture().setPort(source.getDeparture().getPort());
             logbook.getDeparture().setDate(source.getDeparture().getDate());
             logbook.getEndOfFishing().setDate(source.getEndOfFishing().getDate());
-            manager.merge(logbook);
             try {
+                manager.merge(source);
                 manager.flush();
                 LOG.info("Logbook {} has been updated.", id);
             } catch (OptimisticLockException ex) {
                 LOG.error("Logbook {} is locked.", id);
                 throw new ResourceLockedException("Logbook resource with id: " + id + " is locked.");
             }
-        });
+            return Response.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Logbook with id: " + id));
     }
 
     @Override

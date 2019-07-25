@@ -94,6 +94,10 @@ public class Logbook extends BaseEntity {
         return version;
     }
 
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapperObj = new ObjectMapper();

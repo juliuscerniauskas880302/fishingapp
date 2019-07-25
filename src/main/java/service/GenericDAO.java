@@ -12,7 +12,7 @@ public interface GenericDAO<T, K extends Serializable> {
 
     List<T> findAll();
 
-    void save(T o) throws Exception;
+    void save(T o);
 
     void update(T o, K id) throws ResourceNotFoundException, ResourceLockedException;
 

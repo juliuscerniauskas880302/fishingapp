@@ -15,7 +15,7 @@ public class DatabaseSavingStrategy implements SavingStrategy {
 
     @Override
     @Transactional
-    public void save(Logbook logbook) throws Exception {
+    public void save(Logbook logbook) {
         manager.persist(logbook);
     }
 }

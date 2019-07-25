@@ -35,7 +35,7 @@ public class EndOfFishingServiceImpl implements EndOfFishingService {
     }
 
     @Override
-    public void save(EndOfFishing source) throws Exception {
+    public void save(EndOfFishing source) {
         manager.persist(source);
         try {
             manager.flush();

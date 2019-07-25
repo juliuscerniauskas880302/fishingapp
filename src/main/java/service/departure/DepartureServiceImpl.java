@@ -35,7 +35,7 @@ public class DepartureServiceImpl implements DepartureService {
     }
 
     @Override
-    public void save(Departure source) throws Exception {
+    public void save(Departure source) {
         manager.persist(source);
         try {
             manager.flush();

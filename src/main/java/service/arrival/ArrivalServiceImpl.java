@@ -35,7 +35,7 @@ public class ArrivalServiceImpl implements ArrivalService {
     }
 
     @Override
-    public void save(Arrival source) throws Exception {
+    public void save(Arrival source) {
         manager.persist(source);
         try {
             manager.flush();
