@@ -1,7 +1,21 @@
 package service.endOfFishing;
 
-import domain.EndOfFishing;
-import service.GenericDAO;
+import dto.endOfFishing.EndOfFishingGetDTO;
+import dto.endOfFishing.EndOfFishingPostDTO;
+import service.exception.ResourceLockedException;
+import service.exception.ResourceNotFoundException;
 
-public interface EndOfFishingService extends GenericDAO<EndOfFishing, String> {
+import java.util.List;
+
+public interface EndOfFishingService {
+
+    EndOfFishingGetDTO findById(String id) throws ResourceNotFoundException;
+
+    List<EndOfFishingGetDTO> findAll();
+
+    void save(EndOfFishingPostDTO dto);
+
+    void update(EndOfFishingPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException;
+
+    void deleteById(String id);
 }

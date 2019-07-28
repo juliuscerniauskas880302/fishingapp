@@ -1,7 +1,8 @@
 package controller;
 
 import common.ApplicationVariables;
-import domain.Departure;
+import dto.departure.DepartureGetDTO;
+import dto.departure.DeparturePostDTO;
 import service.departure.DepartureService;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
@@ -39,13 +40,13 @@ public class DepartureController {
     }
 
     @GET
-    public List<Departure> findAll() {
+    public List<DepartureGetDTO> findAll() {
         return departureService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Departure source) {
+    public Response create(@Valid DeparturePostDTO source) {
         try {
             departureService.save(source);
             return Response.status(Response.Status.CREATED).build();
@@ -57,7 +58,7 @@ public class DepartureController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Departure source) {
+    public Response updateById(@PathParam("id") final String id, @Valid DeparturePostDTO source) {
         try {
             departureService.update(source, id);
             return Response.status(Response.Status.OK).build();

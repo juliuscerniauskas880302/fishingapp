@@ -1,7 +1,8 @@
 package controller;
 
 import common.ApplicationVariables;
-import domain.Catch;
+import dto.aCatch.CatchGetDTO;
+import dto.aCatch.CatchPostDTO;
 import service.acatch.CatchService;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
@@ -39,13 +40,13 @@ public class CatchController {
     }
 
     @GET
-    public List<Catch> findAll() {
+    public List<CatchGetDTO> findAll() {
         return catchService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Catch source) {
+    public Response create(@Valid CatchPostDTO source) {
         try {
             catchService.save(source);
             return Response.status(Response.Status.CREATED).build();
@@ -57,7 +58,7 @@ public class CatchController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Catch source) {
+    public Response updateById(@PathParam("id") final String id, @Valid CatchPostDTO source) {
         try {
             catchService.update(source, id);
             return Response.status(Response.Status.OK).build();
@@ -70,8 +71,7 @@ public class CatchController {
 
     @DELETE
     @Path("/{id}")
-    public void deleteById(@PathParam("id") final String id)
-    {
+    public void deleteById(@PathParam("id") final String id) {
         catchService.deleteById(id);
     }
 }

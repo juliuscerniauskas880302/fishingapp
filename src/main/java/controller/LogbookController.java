@@ -1,7 +1,8 @@
 package controller;
 
 import common.ApplicationVariables;
-import domain.Logbook;
+import dto.logbook.LogbookGetDTO;
+import dto.logbook.LogbookPostDTO;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
 import service.logbook.LogbookService;
@@ -39,13 +40,13 @@ public class LogbookController {
     }
 
     @GET
-    public List<Logbook> findAll() {
+    public List<LogbookGetDTO> findAll() {
         return logbookService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Logbook source) {
+    public Response create(@Valid LogbookPostDTO source) {
         try {
             logbookService.save(source);
             return Response.status(Response.Status.CREATED).build();
@@ -57,7 +58,7 @@ public class LogbookController {
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("/logs")
-    public void saveAll(@Valid List<Logbook> logbooks) {
+    public void saveAll(@Valid List<LogbookPostDTO> logbooks) {
         try {
             logbookService.saveAll(logbooks);
         } catch (Exception ex) {
@@ -68,7 +69,7 @@ public class LogbookController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Logbook source) {
+    public Response updateById(@PathParam("id") final String id, @Valid LogbookPostDTO source) {
         try {
             logbookService.update(source, id);
             return Response.status(Response.Status.OK).build();
@@ -87,26 +88,26 @@ public class LogbookController {
 
     @GET
     @Path("/search/port/{port}")
-    public List<Logbook> getLogbookByPort(@PathParam("port") final String port) {
+    public List<LogbookGetDTO> getLogbookByPort(@PathParam("port") final String port) {
         return logbookService.findByPort(port);
     }
 
     @GET
     @Path("/search/species/{species}")
-    public List<Logbook> getLogbookBySpecies(@PathParam("species") final String species) {
+    public List<LogbookGetDTO> getLogbookBySpecies(@PathParam("species") final String species) {
         return logbookService.findBySpecies(species);
     }
 
     @GET
     @Path("/search/departure/{date1}/{date2}")
-    public List<Logbook> getLogbookByArrivalDateIn(
+    public List<LogbookGetDTO> getLogbookByArrivalDateIn(
             @PathParam("date1") final String date1, @PathParam("date2") final String date2) {
         return logbookService.findByArrivalDateIn(date1, date2);
     }
 
     @GET
     @Path("/search/arrival/{date1}/{date2}")
-    public List<Logbook> getLogbookByDepartureDateIn(
+    public List<LogbookGetDTO> getLogbookByDepartureDateIn(
             @PathParam("date1") final String date1, @PathParam("date2") final String date2) {
         return logbookService.findByDepartureDateIn(date1, date2);
     }

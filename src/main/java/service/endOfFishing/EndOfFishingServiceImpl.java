@@ -1,73 +1,85 @@
 package service.endOfFishing;
 
+import dao.endOfFishing.EndOfFishingDAO;
 import domain.EndOfFishing;
+import dto.endOfFishing.EndOfFishingGetDTO;
+import dto.endOfFishing.EndOfFishingPostDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
+import utilities.PropertyCopierImpl;
 
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
+import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.core.Response;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Stateless
 public class EndOfFishingServiceImpl implements EndOfFishingService {
     private static final Logger LOG = LogManager.getLogger(EndOfFishingServiceImpl.class);
 
-    @PersistenceContext
-    private EntityManager manager;
+    @Inject
+    private EndOfFishingDAO endOfFishingDAO;
+    @Inject
+    private PropertyCopierImpl propertyCopier;
 
     @Override
-    public EndOfFishing findById(String id) throws ResourceNotFoundException {
-        return Optional.ofNullable(manager.find(EndOfFishing.class, id))
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot find EndOfFishing with id: " + id));
+    public EndOfFishingGetDTO findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(endOfFishingDAO.findById(id)).map(arrival -> {
+            EndOfFishingGetDTO dto = new EndOfFishingGetDTO();
+            propertyCopier.copy(dto, arrival);
+            return dto;
+        }).orElseThrow(() -> new ResourceNotFoundException("Cannot find EndOfFishing with id: " + id));
     }
 
     @Override
-    public List<EndOfFishing> findAll() {
-        return Optional.ofNullable(manager.createNamedQuery("endOfFishing.findAll", EndOfFishing.class)
-                .getResultList()).orElse(Collections.emptyList());
+    public List<EndOfFishingGetDTO> findAll() {
+        return endOfFishingDAO.findAll().stream().map(endOfFishing -> {
+                    EndOfFishingGetDTO dto = new EndOfFishingGetDTO();
+                    propertyCopier.copy(dto, endOfFishing);
+                    return dto;
+                }
+        ).collect(Collectors.toList());
     }
 
     @Override
-    public void save(EndOfFishing source) {
-        manager.persist(source);
+    public void save(EndOfFishingPostDTO dto) {
+        EndOfFishing endOfFishing = new EndOfFishing();
+        propertyCopier.copy(endOfFishing, dto);
         try {
-            manager.flush();
-            LOG.info("EndOfFishing {} has been created.", source.toString());
+            endOfFishingDAO.save(endOfFishing);
+            LOG.info("EndOfFishing {} has been created.", endOfFishing.getId());
         } catch (Exception ex) {
-            LOG.error("unable to persist EndOfFishing {}. {}.", source.getId(), ex.getMessage());
-            throw ex;
+            LOG.info("Unable to persist EndOfFishing {}. {}.", endOfFishing.getId(), ex.getMessage());
         }
     }
 
     @Override
-    public void update(EndOfFishing source, String id) throws ResourceNotFoundException, ResourceLockedException {
-        Optional.ofNullable(manager.find(EndOfFishing.class, id)).map(endOfFishing -> {
-            endOfFishing.setDate(source.getDate());
-            manager.merge(endOfFishing);
-            try {
-                manager.flush();
-                LOG.info("EndOfFishing '{}' has been updated.", id);
-            } catch (OptimisticLockException ex) {
-                LOG.error("EndOfFishing resource {} is locked", id);
-                throw new ResourceLockedException("EndOfFishing resource with id: " + id + " is locked");
-            }
-            return Response.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Departure with id: " + id));
+    public void update(EndOfFishingPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException {
+        Optional.ofNullable(endOfFishingDAO.findById(id))
+                .map(endOfFishing -> {
+                    propertyCopier.copy(endOfFishingDAO, dto);
+                    try {
+                        endOfFishingDAO.update(endOfFishing);
+                        LOG.info("EndOfFishing {} has been updated.", id);
+                    } catch (OptimisticLockException ex) {
+                        throw new ResourceLockedException("EndOfFishing resource with id: " + id + " is locked");
+                    }
+                    return endOfFishing;
+                })
+                .orElseThrow(() ->
+                        {
+                            LOG.warn("Cannot find EndOfFishing {}.", id);
+                            return new ResourceNotFoundException("Cannot find EndOfFishing with id: " + id);
+                        }
+                );
     }
 
     @Override
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(EndOfFishing.class, id)).ifPresent(endOfFishing -> {
-            manager.remove(endOfFishing);
-            LOG.info("EndOfFishing '{}' has been deleted.", id);
-        });
+        endOfFishingDAO.deleteById(id);
     }
-
 }

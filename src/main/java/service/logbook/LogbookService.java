@@ -1,18 +1,31 @@
 package service.logbook;
 
-import domain.Logbook;
-import service.GenericDAO;
+import dto.logbook.LogbookGetDTO;
+import dto.logbook.LogbookPostDTO;
+import service.exception.ResourceLockedException;
+import service.exception.ResourceNotFoundException;
 
 import java.util.List;
 
-public interface LogbookService extends GenericDAO<Logbook, String> {
-    List<Logbook> findByPort(String port);
+public interface LogbookService {
 
-    List<Logbook> findBySpecies(String species);
+    List<LogbookGetDTO> findByPort(String port);
 
-    List<Logbook> findByArrivalDateIn(String date1, String date2);
+    List<LogbookGetDTO> findBySpecies(String species);
 
-    List<Logbook> findByDepartureDateIn(String date1, String date2);
+    List<LogbookGetDTO> findByArrivalDateIn(String date1, String date2);
 
-    void saveAll(List<Logbook> logbooks) throws Exception;
+    List<LogbookGetDTO> findByDepartureDateIn(String date1, String date2);
+
+    void saveAll(List<LogbookPostDTO> logbooks) throws Exception;
+
+    LogbookGetDTO findById(String id) throws ResourceNotFoundException;
+
+    List<LogbookGetDTO> findAll();
+
+    void save(LogbookPostDTO dto);
+
+    void update(LogbookPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException;
+
+    void deleteById(String id);
 }

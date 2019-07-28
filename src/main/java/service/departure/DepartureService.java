@@ -1,7 +1,21 @@
 package service.departure;
 
-import domain.Departure;
-import service.GenericDAO;
+import dto.departure.DepartureGetDTO;
+import dto.departure.DeparturePostDTO;
+import service.exception.ResourceLockedException;
+import service.exception.ResourceNotFoundException;
 
-public interface DepartureService extends GenericDAO<Departure, String> {
+import java.util.List;
+
+public interface DepartureService {
+
+    DepartureGetDTO findById(String id) throws ResourceNotFoundException;
+
+    List<DepartureGetDTO> findAll();
+
+    void save(DeparturePostDTO dto);
+
+    void update(DeparturePostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException;
+
+    void deleteById(String id);
 }

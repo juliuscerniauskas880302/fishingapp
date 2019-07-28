@@ -1,7 +1,8 @@
 package controller;
 
 import common.ApplicationVariables;
-import domain.Arrival;
+import dto.arrival.ArrivalGetDTO;
+import dto.arrival.ArrivalPostDTO;
 import service.arrival.ArrivalService;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
@@ -40,13 +41,13 @@ public class ArrivalController {
     }
 
     @GET
-    public List<Arrival> findAll() {
+    public List<ArrivalGetDTO> findAll() {
         return arrivalService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid Arrival source) {
+    public Response create(@Valid ArrivalPostDTO source) {
         try {
             arrivalService.save(source);
             return Response.status(Response.Status.CREATED).build();
@@ -58,7 +59,7 @@ public class ArrivalController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid Arrival source) {
+    public Response updateById(@PathParam("id") final String id, @Valid ArrivalPostDTO source) {
         try {
             arrivalService.update(source, id);
             return Response.status(Response.Status.OK).build();

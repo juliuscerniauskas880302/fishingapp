@@ -1,73 +1,80 @@
 package service.arrival;
 
+import dao.arrival.ArrivalDAO;
 import domain.Arrival;
+import dto.arrival.ArrivalGetDTO;
+import dto.arrival.ArrivalPostDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
+import utilities.PropertyCopierImpl;
 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceContext;
-import javax.ws.rs.core.Response;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Stateless
+@Model
 public class ArrivalServiceImpl implements ArrivalService {
     private static final Logger LOG = LogManager.getLogger(ArrivalServiceImpl.class);
 
-    @PersistenceContext
-    private EntityManager manager;
+    @Inject
+    private ArrivalDAO arrivalDao;
+    @Inject
+    private PropertyCopierImpl propertyCopier;
 
     @Override
-    public Arrival findById(String id) throws ResourceNotFoundException {
-        return Optional.ofNullable(manager.find(Arrival.class, id))
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Arrival with id: " + id));
-    }
-
-    @Override
-    public List<Arrival> findAll() {
-        return Optional.ofNullable(manager.createNamedQuery("arrival.findAll", Arrival.class)
-                .getResultList()).orElse(Collections.emptyList());
-    }
-
-    @Override
-    public void save(Arrival source) {
-        manager.persist(source);
-        try {
-            manager.flush();
-            LOG.info("Arrival {} has been created.", source.getId());
-        } catch (Exception ex) {
-            LOG.info("Unable to persist Arrival {}. {}.", source.getId(), ex.getMessage());
-            throw ex;
-        }
-    }
-
-    @Override
-    public void update(Arrival source, String id) throws ResourceNotFoundException, ResourceLockedException {
-        Optional.ofNullable(manager.find(Arrival.class, id)).map(arrival -> {
-            arrival.setPort(source.getPort());
-            arrival.setDate(source.getDate());
-            manager.merge(arrival);
-            try {
-                manager.flush();
-                LOG.info("Arrival '{}' has been updated.", id);
-            } catch (OptimisticLockException ex) {
-                LOG.error("Arrival resource {} is locked", id);
-                throw new ResourceLockedException("Arrival resource with id: " + id + " is locked");
-            }
-            return Response.ok().build();
+    public ArrivalGetDTO findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(arrivalDao.findById(id)).map(arrival -> {
+            ArrivalGetDTO dto = new ArrivalGetDTO();
+            propertyCopier.copy(dto, arrival);
+            return dto;
         }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Arrival with id: " + id));
     }
 
     @Override
+    public List<ArrivalGetDTO> findAll() {
+        return arrivalDao.findAll().stream().map(arrival -> {
+                    ArrivalGetDTO dto = new ArrivalGetDTO();
+                    propertyCopier.copy(dto, arrival);
+                    return dto;
+                }
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public void save(ArrivalPostDTO dto) {
+        Arrival arrival = new Arrival();
+        propertyCopier.copy(arrival, dto);
+        try {
+            arrivalDao.save(arrival);
+            LOG.info("Arrival {} has been created.", arrival.getId());
+        } catch (Exception ex) {
+            LOG.info("Unable to persist Arrival {}. {}.", arrival.getId(), ex.getMessage());
+        }
+    }
+
+    @Override
+    public void update(ArrivalPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException {
+        Optional.ofNullable(arrivalDao.findById(id))
+                .map(arrival -> {
+                    propertyCopier.copy(arrival, dto);
+                    try {
+                        arrivalDao.update(arrival);
+                        LOG.info("Arrival {} has been updated.", id);
+                    } catch (OptimisticLockException ex) {
+                        throw new ResourceLockedException("Arrival resource with id: " + id + " is locked");
+                    }
+                    return arrival;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Arrival with id: " + id));
+    }
+
+    @Override
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(Arrival.class, id)).ifPresent(arrival -> {
-            manager.remove(arrival);
-            LOG.info("Arrival '{}' has been deleted.", id);
-        });
+        arrivalDao.deleteById(id);
     }
 }

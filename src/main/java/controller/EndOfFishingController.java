@@ -1,7 +1,8 @@
 package controller;
 
 import common.ApplicationVariables;
-import domain.EndOfFishing;
+import dto.endOfFishing.EndOfFishingGetDTO;
+import dto.endOfFishing.EndOfFishingPostDTO;
 import service.endOfFishing.EndOfFishingService;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
@@ -39,13 +40,13 @@ public class EndOfFishingController {
     }
 
     @GET
-    public List<EndOfFishing> findAll() {
+    public List<EndOfFishingGetDTO> findAll() {
         return endOfFishingService.findAll();
     }
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response create(@Valid EndOfFishing source) {
+    public Response create(@Valid EndOfFishingPostDTO source) {
         try {
             endOfFishingService.save(source);
             return Response.status(Response.Status.CREATED).build();
@@ -57,7 +58,7 @@ public class EndOfFishingController {
     @PUT
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updateById(@PathParam("id") final String id, @Valid EndOfFishing source) {
+    public Response updateById(@PathParam("id") final String id, @Valid EndOfFishingPostDTO source) {
         try {
             endOfFishingService.update(source, id);
             return Response.status(Response.Status.OK).build();

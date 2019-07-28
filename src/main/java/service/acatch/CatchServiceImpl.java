@@ -1,72 +1,80 @@
 package service.acatch;
 
+import dao.aCatch.CatchDAO;
 import domain.Catch;
+import dto.aCatch.CatchGetDTO;
+import dto.aCatch.CatchPostDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.exception.ResourceLockedException;
 import service.exception.ResourceNotFoundException;
+import utilities.PropertyCopierImpl;
 
-import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
+import javax.enterprise.inject.Model;
+import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Stateless
+@Model
 public class CatchServiceImpl implements CatchService {
     private static final Logger LOG = LogManager.getLogger(CatchServiceImpl.class);
 
-    @PersistenceContext
-    private EntityManager manager;
+    @Inject
+    private CatchDAO catchDao;
+    @Inject
+    private PropertyCopierImpl propertyCopier;
 
     @Override
-    public Catch findById(String id) throws ResourceNotFoundException {
-        return Optional.ofNullable(manager.find(Catch.class, id))
-                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Catch with id: " + id));
-    }
-
-    @Override
-    public List<Catch> findAll() {
-        return Optional.ofNullable(manager.createNamedQuery("catch.findAll", Catch.class)
-                .getResultList()).orElse(Collections.emptyList());
-    }
-
-    @Override
-    public void save(Catch source) {
-        manager.persist(source);
-        try {
-            manager.flush();
-            LOG.info("Catch {} has been created.", source.getId());
-        } catch (Exception ex) {
-            LOG.info("Unable to persist Catch {}. {}.", source.getId(), ex.getMessage());
-            throw ex;
-        }
-    }
-
-    @Override
-    public void update(Catch source, String id) throws ResourceNotFoundException, ResourceLockedException {
-        Optional.ofNullable(manager.find(Catch.class, id)).map(aCatch -> {
-            aCatch.setVariety(source.getVariety());
-            aCatch.setWeight(source.getWeight());
-            manager.merge(aCatch);
-            try {
-                manager.flush();
-                LOG.info("Catch {} has been updated.", id);
-            } catch (OptimisticLockException ex) {
-                LOG.error("Catch resource {} is locked", id);
-                throw new ResourceLockedException("Catch resource with id: " + id + " is locked");
-            }
-            return aCatch;
+    public CatchGetDTO findById(String id) throws ResourceNotFoundException {
+        return Optional.ofNullable(catchDao.findById(id)).map(aCatch -> {
+            CatchGetDTO dto = new CatchGetDTO();
+            propertyCopier.copy(dto, aCatch);
+            return dto;
         }).orElseThrow(() -> new ResourceNotFoundException("Cannot find Catch with id: " + id));
     }
 
     @Override
+    public List<CatchGetDTO> findAll() {
+        return catchDao.findAll().stream().map(aCatch -> {
+                    CatchGetDTO dto = new CatchGetDTO();
+                    propertyCopier.copy(dto, aCatch);
+                    return dto;
+                }
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public void save(CatchPostDTO dto) {
+        Catch aCatch = new Catch();
+        propertyCopier.copy(aCatch, dto);
+        try {
+            catchDao.save(aCatch);
+            LOG.info("Arrival {} has been created.", aCatch.getId());
+        } catch (Exception ex) {
+            LOG.info("Unable to persist Arrival {}. {}.", aCatch.getId(), ex.getMessage());
+        }
+    }
+
+    @Override
+    public void update(CatchPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException {
+        Optional.ofNullable(catchDao.findById(id))
+                .map(aCatch -> {
+                    propertyCopier.copy(aCatch, dto);
+                    try {
+                        catchDao.update(aCatch);
+                        LOG.info("Catch {} has been updated.", id);
+                    } catch (OptimisticLockException ex) {
+                        throw new ResourceLockedException("Catch resource with id: " + id + " is locked");
+                    }
+                    return aCatch;
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Cannot find Catch with id: " + id));
+    }
+
+    @Override
     public void deleteById(String id) {
-        Optional.ofNullable(manager.find(Catch.class, id)).ifPresent(aCatch -> {
-            manager.remove(aCatch);
-            LOG.info("Catch '{}' has been deleted.", id);
-        });
+        catchDao.deleteById(id);
     }
 }

@@ -1,7 +1,21 @@
 package service.arrival;
 
-import domain.Arrival;
-import service.GenericDAO;
+import dto.arrival.ArrivalGetDTO;
+import dto.arrival.ArrivalPostDTO;
+import service.exception.ResourceLockedException;
+import service.exception.ResourceNotFoundException;
 
-public interface ArrivalService extends GenericDAO<Arrival, String> {
+import java.util.List;
+
+public interface ArrivalService {
+
+    ArrivalGetDTO findById(String id) throws ResourceNotFoundException;
+
+    List<ArrivalGetDTO> findAll();
+
+    void save(ArrivalPostDTO dto);
+
+    void update(ArrivalPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException;
+
+    void deleteById(String id);
 }
