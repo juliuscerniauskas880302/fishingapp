@@ -17,6 +17,8 @@ public interface LogbookService {
 
     List<LogbookGetDTO> findByDepartureDateIn(String date1, String date2);
 
+    List<LogbookGetDTO> findAllInactiveLogbooks();
+
     void saveAll(List<LogbookPostDTO> logbooks) throws Exception;
 
     LogbookGetDTO findById(String id) throws ResourceNotFoundException;
@@ -28,4 +30,6 @@ public interface LogbookService {
     void update(LogbookPostDTO dto, String id) throws ResourceNotFoundException, ResourceLockedException;
 
     void deleteById(String id);
+
+
 }

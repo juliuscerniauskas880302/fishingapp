@@ -2,10 +2,12 @@ package domain;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.base.BaseEntity;
+import domain.enums.CommunicationType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -38,16 +40,20 @@ public class Logbook extends BaseEntity {
     private CommunicationType communicationType;
     @Version
     private Integer version;
+    @Column(name = "ENABLED", nullable = false)
+    private boolean enabled = true;
 
     public Logbook() {
     }
 
-    public Logbook(Arrival arrival, Departure departure, EndOfFishing endOfFishing, List<Catch> catches, String communicationType) {
+    public Logbook(Arrival arrival, Departure departure, EndOfFishing endOfFishing,
+                   List<Catch> catches, String communicationType, boolean enabled) {
         this.arrival = arrival;
         this.departure = departure;
         this.endOfFishing = endOfFishing;
         this.catches = catches;
         this.communicationType = CommunicationType.valueOf(communicationType);
+        this.enabled = enabled;
     }
 
     public Arrival getArrival() {
@@ -88,6 +94,14 @@ public class Logbook extends BaseEntity {
 
     public void setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Integer getVersion() {

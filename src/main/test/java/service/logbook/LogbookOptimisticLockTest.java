@@ -2,7 +2,7 @@ package service.logbook;
 
 import domain.Arrival;
 import domain.Catch;
-import domain.CommunicationType;
+import domain.enums.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
 import domain.config.Configuration;
@@ -23,6 +23,7 @@ import utilities.PropertyCopierImpl;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(Arquillian.class)
 public class LogbookOptimisticLockTest {
@@ -55,10 +56,13 @@ public class LogbookOptimisticLockTest {
         aCatch = new Catch(VARIETY, WEIGHT);
         endOfFishing = new EndOfFishing(END_OF_FISHING);
 
-        logbook = new LogbookPostDTO.Builder().withEndOfFishing(endOfFishing)
+        logbook = new LogbookPostDTO.Builder()
+                .withEndOfFishing(endOfFishing)
                 .withDeparture(departure)
-                .withArrival(arrival).withCommunicationType(COMMUNICATION_TYPE)
-                .withCatches(Arrays.asList(aCatch)).build();
+                .withArrival(arrival)
+                .withCatches(Arrays.asList(aCatch))
+                .withCommunicationType(COMMUNICATION_TYPE)
+                .build();
     }
 
     @Deployment
@@ -66,7 +70,7 @@ public class LogbookOptimisticLockTest {
         return ShrinkWrap.create(WebArchive.class)
                 .addPackages(true, "org.apache.logging.log4j", "domain",
                         "strategy", "service", "exception",
-                        "dao", "dto", "utilities", "io.xlate.inject")
+                        "dao", "dto", "utilities")
                 .addPackage(Configuration.class.getPackage())
                 .addAsResource("application.properties")
                 .addAsResource("META-INF/persistence.xml")
@@ -78,13 +82,16 @@ public class LogbookOptimisticLockTest {
     public void shouldThrowResourceLockedException() {
         logbookService.save(logbook);
 
-        LogbookGetDTO logbookGetDTO = logbookService.findById(LOGBOOK_ID);
+        List<LogbookGetDTO> all = logbookService.findAll();
+
+        LogbookGetDTO logbookGetDTO = logbookService.findById(all.get(0).getId());
 
         logbookGetDTO.setCommunicationType(COMMUNICATION_TYPE);
         logbookGetDTO.setArrival(arrival);
         logbookGetDTO.setEndOfFishing(endOfFishing);
         logbookGetDTO.setDeparture(departure);
         logbookGetDTO.setCatches(Arrays.asList(aCatch));
+        logbookGetDTO.setVersion(5);
 
         LogbookPostDTO postDTO = new LogbookPostDTO();
         propertyCopier.copy(postDTO, logbookGetDTO);

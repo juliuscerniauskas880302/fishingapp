@@ -1,7 +1,7 @@
 package dao.logbook;
 
 import common.ApplicationVariables;
-import domain.CommunicationType;
+import domain.enums.CommunicationType;
 import domain.Logbook;
 import io.xlate.inject.Property;
 import io.xlate.inject.PropertyResource;
@@ -41,6 +41,7 @@ public class LogbookDAOImpl implements LogbookDAO {
     private static final String FIND_BY_ARRIVAL_DATE = "SELECT LOGBOOK.* FROM LOGBOOK" +
             " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
+    private static final String FIND_ALL_INACTIVE_LOGBOOKS = "SELECT * FROM LOGBOOK L WHERE L.ENABLED IS FALSE;";
 
     @Inject
     @Property(name = "strategy.file.filePath",
@@ -86,6 +87,12 @@ public class LogbookDAOImpl implements LogbookDAO {
     @Override
     public void saveAll(List<Logbook> logbooks) {
         logbooks.forEach(this::save);
+    }
+
+    @Override
+    public List<Logbook> findAllInactiveLogbooks() {
+        return Optional.ofNullable(entityManager.createNativeQuery(FIND_ALL_INACTIVE_LOGBOOKS, Logbook.class)
+                .getResultList()).orElse(Collections.emptyList());
     }
 
     @Override

@@ -120,6 +120,15 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
+    public List<LogbookGetDTO> findAllInactiveLogbooks() {
+        return logbookDAO.findAllInactiveLogbooks().stream().map(logbook -> {
+            LogbookGetDTO dto = new LogbookGetDTO();
+            propertyCopier.copy(dto, logbook);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public void saveAll(List<LogbookPostDTO> logbooks) throws Exception {
         logbooks.forEach(source -> {

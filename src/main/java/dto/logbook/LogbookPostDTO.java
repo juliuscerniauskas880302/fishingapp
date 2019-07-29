@@ -3,7 +3,7 @@ package dto.logbook;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Arrival;
 import domain.Catch;
-import domain.CommunicationType;
+import domain.enums.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +20,7 @@ public class LogbookPostDTO {
     private EndOfFishing endOfFishing;
     private List<Catch> catches;
     private CommunicationType communicationType;
+    private Integer version;
 
     public Arrival getArrival() {
         return arrival;
@@ -66,6 +67,14 @@ public class LogbookPostDTO {
 
     public void setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override

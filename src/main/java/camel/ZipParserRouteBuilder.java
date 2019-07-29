@@ -8,7 +8,7 @@ import camel.processor.LogbookProcessor;
 import common.ApplicationVariables;
 import domain.Arrival;
 import domain.Catch;
-import domain.CommunicationType;
+import domain.enums.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
 import dto.logbook.LogbookPostDTO;

@@ -2,7 +2,7 @@ package dto.logbook;
 
 import domain.Arrival;
 import domain.Catch;
-import domain.CommunicationType;
+import domain.enums.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
 
@@ -16,6 +16,7 @@ public class LogbookGetDTO {
     private EndOfFishing endOfFishing;
     private List<Catch> catches;
     private CommunicationType communicationType;
+    private Integer version;
 
     public LogbookGetDTO() {
     }
@@ -76,5 +77,13 @@ public class LogbookGetDTO {
 
     public void setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }
