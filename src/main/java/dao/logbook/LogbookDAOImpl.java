@@ -41,7 +41,8 @@ public class LogbookDAOImpl implements LogbookDAO {
     private static final String FIND_BY_ARRIVAL_DATE = "SELECT LOGBOOK.* FROM LOGBOOK" +
             " INNER JOIN ARRIVAL A on LOGBOOK.ARRIVAL_ID = A.ID" +
             " WHERE DATE BETWEEN ?1 AND ?2";
-    private static final String FIND_ALL_INACTIVE_LOGBOOKS = "SELECT * FROM LOGBOOK L WHERE L.ENABLED IS FALSE;";
+    private static final String FIND_ALL_INACTIVE_OR_OLD_LOGBOOKS = "SELECT * FROM LOGBOOK L" +
+            " WHERE L.ENABLED IS FALSE OR LASTUPDATE <= DATEADD(dayofyear, ?1, GetDate())";
 
     @Inject
     @Property(name = "strategy.file.filePath",
@@ -90,8 +91,10 @@ public class LogbookDAOImpl implements LogbookDAO {
     }
 
     @Override
-    public List<Logbook> findAllInactiveLogbooks() {
-        return Optional.ofNullable(entityManager.createNativeQuery(FIND_ALL_INACTIVE_LOGBOOKS, Logbook.class)
+    public List<Logbook> findAllInactiveOrOldLogbooks(int daysOld) {
+        String olderThan = String.valueOf(-Math.abs(daysOld));
+        return Optional.ofNullable(entityManager.createNativeQuery(FIND_ALL_INACTIVE_OR_OLD_LOGBOOKS, Logbook.class)
+                .setParameter(1, olderThan)
                 .getResultList()).orElse(Collections.emptyList());
     }
 

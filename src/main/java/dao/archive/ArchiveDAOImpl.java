@@ -51,10 +51,11 @@ public class ArchiveDAOImpl implements ArchiveDAO {
     }
 
     @Override
-    public List<Archive> findAllArchiveToDelete(String interval, String number) {
+    public List<Archive> findAllArchiveToDelete(String interval, int difference) {
+        String diff = String.valueOf(-Math.abs(difference));
         return Optional.ofNullable(entityManager.createNativeQuery(FIND_ALL_ARCHIVES_TO_BE_DELETED, Archive.class)
                 .setParameter(1, interval)
-                .setParameter(2, number)
+                .setParameter(2, diff)
                 .getResultList()).orElse(Collections.emptyList());
     }
 

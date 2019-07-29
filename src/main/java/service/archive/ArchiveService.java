@@ -12,7 +12,7 @@ public interface ArchiveService {
 
     List<Archive> findAll();
 
-    List<Archive> findAllArchiveToDelete(String interval, String number);
+    List<Archive> findAllArchiveToDelete(String interval, int difference);
 
     void save(Archive archive);
 

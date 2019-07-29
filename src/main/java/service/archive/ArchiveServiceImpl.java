@@ -26,8 +26,8 @@ public class ArchiveServiceImpl implements ArchiveService {
     }
 
     @Override
-    public List<Archive> findAllArchiveToDelete(String interval, String number) {
-        return archiveDAO.findAllArchiveToDelete(interval, number);
+    public List<Archive> findAllArchiveToDelete(String interval, int difference) {
+        return archiveDAO.findAllArchiveToDelete(interval, difference);
     }
 
     @Override

@@ -17,7 +17,7 @@ public interface LogbookService {
 
     List<LogbookGetDTO> findByDepartureDateIn(String date1, String date2);
 
-    List<LogbookGetDTO> findAllInactiveLogbooks();
+    List<LogbookGetDTO> findAllInactiveOrOldLogbooks(int daysOld);
 
     void saveAll(List<LogbookPostDTO> logbooks) throws Exception;
 

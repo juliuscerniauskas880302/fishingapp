@@ -16,8 +16,11 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,18 +45,21 @@ public class Logbook extends BaseEntity {
     private Integer version;
     @Column(name = "ENABLED", nullable = false)
     private boolean enabled = true;
+    @Temporal(TemporalType.DATE)
+    private Date lastUpdate;
 
     public Logbook() {
     }
 
     public Logbook(Arrival arrival, Departure departure, EndOfFishing endOfFishing,
-                   List<Catch> catches, String communicationType, boolean enabled) {
+                   List<Catch> catches, String communicationType, boolean enabled, Date lastUpdate) {
         this.arrival = arrival;
         this.departure = departure;
         this.endOfFishing = endOfFishing;
         this.catches = catches;
         this.communicationType = CommunicationType.valueOf(communicationType);
         this.enabled = enabled;
+        this.lastUpdate = lastUpdate;
     }
 
     public Arrival getArrival() {
@@ -112,6 +118,14 @@ public class Logbook extends BaseEntity {
         this.version = version;
     }
 
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapperObj = new ObjectMapper();
@@ -150,6 +164,8 @@ public class Logbook extends BaseEntity {
         private EndOfFishing endOfFishing;
         private List<Catch> catches = new ArrayList<>();
         private CommunicationType communicationType;
+        private boolean enabled;
+        private Date lastUpdate;
 
         public Builder withId(String id) {
             this.id = id;
@@ -181,6 +197,16 @@ public class Logbook extends BaseEntity {
             return this;
         }
 
+        public Builder withLastUpdate(Date lastUpdate) {
+            this.lastUpdate = lastUpdate;
+            return this;
+        }
+
+        public Builder withEnabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
         public Logbook build() {
             Logbook logbook = new Logbook();
             logbook.arrival = this.arrival;
@@ -188,6 +214,8 @@ public class Logbook extends BaseEntity {
             logbook.departure = this.departure;
             logbook.communicationType = this.communicationType;
             logbook.catches = this.catches;
+            logbook.lastUpdate = this.lastUpdate;
+            logbook.enabled = this.enabled;
             logbook.setId(this.id);
             return logbook;
         }

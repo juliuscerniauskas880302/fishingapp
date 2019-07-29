@@ -1,25 +1,39 @@
 package scheduler;
 
-import domain.enums.Interval;
+import common.ApplicationVariables;
+import io.xlate.inject.Property;
+import io.xlate.inject.PropertyResource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import service.archive.ArchiveService;
 
 import javax.ejb.Schedule;
-import javax.ejb.Schedules;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 
 @Singleton
 public class ArchiveDeletionScheduler {
+    private static final Logger LOG = LogManager.getLogger(ArchiveDeletionScheduler.class);
 
     @Inject
     private ArchiveService archiveService;
 
-    @Schedules({
-            @Schedule(dayOfWeek = "Mon", hour = "12")
-    })
+    @Inject
+    @Property(name = "scheduler.archive.difference",
+            resource = @PropertyResource(ApplicationVariables.PROPERTIES_FILE_PATH),
+            defaultValue = "1")
+    private int difference;
+
+    @Inject
+    @Property(name = "scheduler.archive.interval",
+            resource = @PropertyResource(ApplicationVariables.PROPERTIES_FILE_PATH),
+            defaultValue = "year")
+    private String interval;
+
+    @Schedule(dayOfWeek = "Sun", minute = "*/30", hour = "22,23")
     public void deleteOldArchivedRecord() {
-        System.out.println("Trying to delete from archive");
-        archiveService.findAllArchiveToDelete(Interval.YEAR.getName(), "-1").stream().forEach(logbookGetDTO -> {
+        LOG.info("Starting old archive cleanup...");
+        archiveService.findAllArchiveToDelete(interval, difference).stream().forEach(logbookGetDTO -> {
             archiveService.deleteById(logbookGetDTO.getId());
         });
     }

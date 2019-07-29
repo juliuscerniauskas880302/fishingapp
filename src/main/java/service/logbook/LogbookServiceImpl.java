@@ -120,8 +120,8 @@ public class LogbookServiceImpl implements LogbookService {
     }
 
     @Override
-    public List<LogbookGetDTO> findAllInactiveLogbooks() {
-        return logbookDAO.findAllInactiveLogbooks().stream().map(logbook -> {
+    public List<LogbookGetDTO> findAllInactiveOrOldLogbooks(int daysOld) {
+        return logbookDAO.findAllInactiveOrOldLogbooks(daysOld).stream().map(logbook -> {
             LogbookGetDTO dto = new LogbookGetDTO();
             propertyCopier.copy(dto, logbook);
             return dto;

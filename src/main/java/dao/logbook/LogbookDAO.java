@@ -17,5 +17,5 @@ public interface LogbookDAO extends AbstractDAO<Logbook, String> {
 
     void saveAll(List<Logbook> logbooks) throws Exception;
 
-    List<Logbook> findAllInactiveLogbooks();
+    List<Logbook> findAllInactiveOrOldLogbooks(int daysOld);
 }
