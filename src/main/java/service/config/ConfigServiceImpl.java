@@ -4,7 +4,7 @@ import domain.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.ejb.Stateless;
+import javax.enterprise.inject.Model;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Stateless
+@Model
 @SuppressWarnings("unchecked")
 public class ConfigServiceImpl implements ConfigService {
     private static final Logger LOG = LogManager.getLogger(ConfigServiceImpl.class);

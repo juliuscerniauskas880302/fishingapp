@@ -4,20 +4,20 @@ import dao.endOfFishing.EndOfFishingDAO;
 import domain.EndOfFishing;
 import dto.endOfFishing.EndOfFishingGetDTO;
 import dto.endOfFishing.EndOfFishingPostDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import exception.ResourceLockedException;
 import exception.ResourceNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utilities.PropertyCopierImpl;
 
-import javax.ejb.Stateless;
+import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Stateless
+@Model
 public class EndOfFishingServiceImpl implements EndOfFishingService {
     private static final Logger LOG = LogManager.getLogger(EndOfFishingServiceImpl.class);
 

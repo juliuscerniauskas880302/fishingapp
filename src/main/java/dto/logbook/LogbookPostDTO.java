@@ -1,15 +1,19 @@
 package dto.logbook;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import domain.Arrival;
 import domain.Catch;
 import domain.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogbookPostDTO {
+    private static final Logger LOG = LogManager.getLogger(LogbookPostDTO.class);
 
     private Arrival arrival;
     private Departure departure;
@@ -62,6 +66,18 @@ public class LogbookPostDTO {
 
     public void setCommunicationType(CommunicationType communicationType) {
         this.communicationType = communicationType;
+    }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapperObj = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapperObj.writeValueAsString(this);
+        } catch (Exception e) {
+            LOG.error("Error mapping Logbook {} to json string.", this);
+        }
+        return json;
     }
 
     public static class Builder {

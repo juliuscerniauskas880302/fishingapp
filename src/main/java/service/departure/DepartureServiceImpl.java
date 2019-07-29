@@ -4,20 +4,20 @@ import dao.departure.DepartureDAO;
 import domain.Departure;
 import dto.departure.DepartureGetDTO;
 import dto.departure.DeparturePostDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import exception.ResourceLockedException;
 import exception.ResourceNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utilities.PropertyCopierImpl;
 
-import javax.ejb.Stateless;
+import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Stateless
+@Model
 public class DepartureServiceImpl implements DepartureService {
     private static final Logger LOG = LogManager.getLogger(DepartureServiceImpl.class);
 

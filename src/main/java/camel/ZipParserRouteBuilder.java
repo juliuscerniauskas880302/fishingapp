@@ -11,7 +11,7 @@ import domain.Catch;
 import domain.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
-import domain.Logbook;
+import dto.logbook.LogbookPostDTO;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.dataformat.zipfile.ZipSplitter;
@@ -69,14 +69,14 @@ public class ZipParserRouteBuilder extends RouteBuilder {
     private String getJsonStringList() {
         return createLogbookList()
                 .stream()
-                .map(Logbook::toString)
+                .map(LogbookPostDTO::toString)
                 .collect(Collectors.toList()).toString();
     }
 
-    private List<Logbook> createLogbookList() {
+    private List<LogbookPostDTO> createLogbookList() {
         return logbookMap.entrySet().stream().map(entry ->
-                new Logbook.Builder()
-                        .withId(entry.getKey()).withArrival((Arrival) entry.getValue().get("arrival"))
+                new LogbookPostDTO.Builder()
+                        .withArrival((Arrival) entry.getValue().get("arrival"))
                         .withDeparture((Departure) entry.getValue().get("departure"))
                         .withEndOfFishing((EndOfFishing) entry.getValue().get("endOfFishing"))
                         .withCommunicationType(CommunicationType.valueOf(entry.getValue().get("communication").toString()))

@@ -64,8 +64,11 @@ public class LogbookOptimisticLockTest {
     @Deployment
     public static Archive<?> createDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addPackages(true, "org.apache.logging.log4j", "domain", "strategy", "service")
+                .addPackages(true, "org.apache.logging.log4j", "domain",
+                        "strategy", "service", "exception",
+                        "dao", "dto", "utilities", "io.xlate.inject")
                 .addPackage(Configuration.class.getPackage())
+                .addAsResource("application.properties")
                 .addAsResource("META-INF/persistence.xml")
                 .addAsResource("log4j2.properties")
                 .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");

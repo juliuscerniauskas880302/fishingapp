@@ -4,13 +4,13 @@ import dao.logbook.LogbookDAO;
 import domain.Logbook;
 import dto.logbook.LogbookGetDTO;
 import dto.logbook.LogbookPostDTO;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import exception.ResourceLockedException;
 import exception.ResourceNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utilities.PropertyCopierImpl;
 
-import javax.ejb.Stateless;
+import javax.enterprise.inject.Model;
 import javax.inject.Inject;
 import javax.persistence.OptimisticLockException;
 import javax.transaction.Transactional;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Stateless
+@Model
 @SuppressWarnings("unchecked")
 public class LogbookServiceImpl implements LogbookService {
     private static final Logger LOG = LogManager.getLogger(LogbookServiceImpl.class);
