@@ -2,8 +2,8 @@ package service.departure;
 
 import dto.departure.DepartureGetDTO;
 import dto.departure.DeparturePostDTO;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import java.util.List;
 

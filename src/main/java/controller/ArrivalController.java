@@ -4,8 +4,8 @@ import common.ApplicationVariables;
 import dto.arrival.ArrivalGetDTO;
 import dto.arrival.ArrivalPostDTO;
 import service.arrival.ArrivalService;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

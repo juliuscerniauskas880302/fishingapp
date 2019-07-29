@@ -81,7 +81,7 @@ public class LogbookPostDTO {
             return this;
         }
 
-        public Builder withEendOfFishing(EndOfFishing eendOfFishing) {
+        public Builder withEndOfFishing(EndOfFishing eendOfFishing) {
             this.endOfFishing = eendOfFishing;
             return this;
         }

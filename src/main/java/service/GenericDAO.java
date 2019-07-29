@@ -1,7 +1,7 @@
 package service;
 
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import java.io.Serializable;
 import java.util.List;

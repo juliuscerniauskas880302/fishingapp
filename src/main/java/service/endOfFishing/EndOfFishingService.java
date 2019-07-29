@@ -2,8 +2,8 @@ package service.endOfFishing;
 
 import dto.endOfFishing.EndOfFishingGetDTO;
 import dto.endOfFishing.EndOfFishingPostDTO;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import java.util.List;
 

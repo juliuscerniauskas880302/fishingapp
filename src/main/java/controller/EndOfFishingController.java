@@ -4,8 +4,8 @@ import common.ApplicationVariables;
 import dto.endOfFishing.EndOfFishingGetDTO;
 import dto.endOfFishing.EndOfFishingPostDTO;
 import service.endOfFishing.EndOfFishingService;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

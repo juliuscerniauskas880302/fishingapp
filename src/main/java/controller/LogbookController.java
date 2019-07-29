@@ -3,8 +3,8 @@ package controller;
 import common.ApplicationVariables;
 import dto.logbook.LogbookGetDTO;
 import dto.logbook.LogbookPostDTO;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 import service.logbook.LogbookService;
 
 import javax.inject.Inject;

@@ -6,8 +6,8 @@ import dto.aCatch.CatchGetDTO;
 import dto.aCatch.CatchPostDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 import utilities.PropertyCopierImpl;
 
 import javax.enterprise.inject.Model;

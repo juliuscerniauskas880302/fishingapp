@@ -4,8 +4,8 @@ import common.ApplicationVariables;
 import dto.aCatch.CatchGetDTO;
 import dto.aCatch.CatchPostDTO;
 import service.acatch.CatchService;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

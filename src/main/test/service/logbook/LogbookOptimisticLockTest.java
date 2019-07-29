@@ -5,8 +5,10 @@ import domain.Catch;
 import domain.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
-import domain.Logbook;
 import domain.config.Configuration;
+import dto.logbook.LogbookGetDTO;
+import dto.logbook.LogbookPostDTO;
+import exception.ResourceLockedException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -16,7 +18,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import service.exception.ResourceLockedException;
+import utilities.PropertyCopierImpl;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -39,10 +41,12 @@ public class LogbookOptimisticLockTest {
     private Departure departure;
     private Catch aCatch;
     private EndOfFishing endOfFishing;
-    private Logbook logbook;
+    private LogbookPostDTO logbook;
 
     @Inject
     private LogbookService logbookService;
+    @Inject
+    private PropertyCopierImpl propertyCopier;
 
     @Before
     public void init() {
@@ -51,10 +55,10 @@ public class LogbookOptimisticLockTest {
         aCatch = new Catch(VARIETY, WEIGHT);
         endOfFishing = new EndOfFishing(END_OF_FISHING);
 
-        logbook = new Logbook.Builder().withEndOfFishing(endOfFishing)
+        logbook = new LogbookPostDTO.Builder().withEndOfFishing(endOfFishing)
                 .withDeparture(departure)
                 .withArrival(arrival).withCommunicationType(COMMUNICATION_TYPE)
-                .withCatches(Arrays.asList(aCatch)).withId(LOGBOOK_ID).build();
+                .withCatches(Arrays.asList(aCatch)).build();
     }
 
     @Deployment
@@ -71,16 +75,18 @@ public class LogbookOptimisticLockTest {
     public void shouldThrowResourceLockedException() {
         logbookService.save(logbook);
 
-        Logbook persistedLogbook = logbookService.findById(LOGBOOK_ID);
+        LogbookGetDTO logbookGetDTO = logbookService.findById(LOGBOOK_ID);
 
-        persistedLogbook.setCommunicationType(COMMUNICATION_TYPE);
-        persistedLogbook.setArrival(arrival);
-        persistedLogbook.setEndOfFishing(endOfFishing);
-        persistedLogbook.setDeparture(departure);
-        persistedLogbook.setCatches(Arrays.asList(aCatch));
-        persistedLogbook.setVersion(VERSION);
+        logbookGetDTO.setCommunicationType(COMMUNICATION_TYPE);
+        logbookGetDTO.setArrival(arrival);
+        logbookGetDTO.setEndOfFishing(endOfFishing);
+        logbookGetDTO.setDeparture(departure);
+        logbookGetDTO.setCatches(Arrays.asList(aCatch));
 
-        logbookService.update(persistedLogbook, persistedLogbook.getId());
+        LogbookPostDTO postDTO = new LogbookPostDTO();
+        propertyCopier.copy(postDTO, logbookGetDTO);
+
+        logbookService.update(postDTO, logbookGetDTO.getId());
     }
 }
 

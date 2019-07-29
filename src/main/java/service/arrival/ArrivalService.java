@@ -2,8 +2,8 @@ package service.arrival;
 
 import dto.arrival.ArrivalGetDTO;
 import dto.arrival.ArrivalPostDTO;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import java.util.List;
 

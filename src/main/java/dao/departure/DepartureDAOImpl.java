@@ -1,7 +1,7 @@
 package dao.departure;
 
 import domain.Departure;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

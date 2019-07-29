@@ -1,8 +1,8 @@
 package dao.aCatch;
 
 import domain.Catch;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

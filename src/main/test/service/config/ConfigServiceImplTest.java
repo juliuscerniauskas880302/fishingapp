@@ -117,7 +117,7 @@ public class ConfigServiceImplTest {
 
         // then
         verify(entityManager, times(1)).createNativeQuery(anyString(), eq(Configuration.class));
-        assertEquals(config1.getValue(), value, "Configuration value should be " + config1.getValue());
+        assertEquals("Configuration value should be " + config1.getValue(), config1.getValue(), value);
     }
 
     @Test

@@ -2,8 +2,8 @@ package service.acatch;
 
 import dto.aCatch.CatchGetDTO;
 import dto.aCatch.CatchPostDTO;
-import service.exception.ResourceLockedException;
-import service.exception.ResourceNotFoundException;
+import exception.ResourceLockedException;
+import exception.ResourceNotFoundException;
 
 import java.util.List;
 
