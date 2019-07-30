@@ -20,6 +20,7 @@ import java.util.Objects;
         @NamedQuery(name = "arrival.findAll", query = "SELECT a FROM Arrival a")
 )
 public class Arrival extends BaseEntity {
+    private static final long serialVersionUID = -3045860780418919534L;
     private static final Logger LOG = LogManager.getLogger(Arrival.class);
 
     private String port;

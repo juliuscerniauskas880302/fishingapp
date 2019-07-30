@@ -20,6 +20,7 @@ import java.util.Objects;
         @NamedQuery(name = "endOfFishing.findAll", query = "SELECT e FROM EndOfFishing e")
 )
 public class EndOfFishing extends BaseEntity {
+    private static final long serialVersionUID = -2046299488077448946L;
     private static final Logger LOG = LogManager.getLogger(EndOfFishing.class);
 
     @Temporal(TemporalType.DATE)

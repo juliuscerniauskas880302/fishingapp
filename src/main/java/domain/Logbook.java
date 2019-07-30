@@ -29,6 +29,7 @@ import java.util.Objects;
         @NamedQuery(name = "logbook.findAll", query = "select l from Logbook l")
 )
 public class Logbook extends BaseEntity {
+    private static final long serialVersionUID = -6012302675086300381L;
     private static final Logger LOG = LogManager.getLogger(Logbook.class);
 
     @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)

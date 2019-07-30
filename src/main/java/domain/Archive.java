@@ -15,6 +15,7 @@ import java.util.Date;
         @NamedQuery(name = "archive.findAll", query = "SELECT a FROM Archive a")
 )
 public class Archive extends BaseEntity {
+    private static final long serialVersionUID = 1724994586549989883L;
 
     @Temporal(TemporalType.DATE)
     private Date dateArchived;

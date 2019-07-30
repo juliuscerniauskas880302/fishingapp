@@ -16,6 +16,7 @@ import java.util.Objects;
         @NamedQuery(name = "catch.findAll", query = "SELECT c FROM Catch c")
 )
 public class Catch extends BaseEntity {
+    private static final long serialVersionUID = -6111601450440513109L;
     private static final Logger LOG = LogManager.getLogger(Catch.class);
 
     private String variety;
