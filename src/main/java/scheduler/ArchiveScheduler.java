@@ -38,6 +38,7 @@ public class ArchiveScheduler {
             String serialized = mapper.serialize(logbookGetDTO);
             archiveService.archive(serialized);
             logbookService.deleteById(logbookGetDTO.getId());
+            LOG.info("Logbook {} has been archived and deleted from logbook table.", logbookGetDTO.getId());
         });
     }
 }

@@ -33,8 +33,9 @@ public class ArchiveDeletionScheduler {
     @Schedule(dayOfWeek = "Sun", minute = "*/30", hour = "22,23")
     public void deleteOldArchivedRecord() {
         LOG.info("Starting old archive cleanup...");
-        archiveService.findAllArchiveToDelete(interval, difference).stream().forEach(logbookGetDTO -> {
-            archiveService.deleteById(logbookGetDTO.getId());
+        archiveService.findAllArchiveToDelete(interval, difference).stream().forEach(archive -> {
+            archiveService.deleteById(archive.getId());
+            LOG.info("Archive record {} has been removed.", archive.getId());
         });
     }
 }
