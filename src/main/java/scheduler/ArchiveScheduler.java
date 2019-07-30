@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import service.archive.ArchiveService;
 import service.logbook.LogbookService;
-import utilities.ObjectMapper;
+import utilities.ObjectSerializer;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -23,7 +23,7 @@ public class ArchiveScheduler {
     @Inject
     private ArchiveService archiveService;
 
-    ObjectMapper<LogbookGetDTO> mapper = new ObjectMapper<>();
+    ObjectSerializer<LogbookGetDTO> mapper = new ObjectSerializer<>();
 
     @Inject
     @Property(name = "scheduler.logbook.daysOld",
@@ -31,7 +31,8 @@ public class ArchiveScheduler {
             defaultValue = "356")
     private int daysOld;
 
-    @Schedule(dayOfWeek = "Mon", minute = "*/30", hour = "22,23")
+//    @Schedule(dayOfWeek = "Mon", minute = "*/30", hour = "22,23")
+    @Schedule(second = "*/5", minute = "*", hour = "*")
     public void moveInactiveLogbooksToArchive() {
         LOG.info("Starting inactive/old logbook cleanup...");
         logbookService.findAllInactiveOrOldLogbooks(daysOld).stream().forEach(logbookGetDTO -> {

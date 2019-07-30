@@ -6,11 +6,12 @@ import domain.enums.CommunicationType;
 import domain.Departure;
 import domain.EndOfFishing;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class LogbookGetDTO {
-
+public class LogbookGetDTO implements Serializable {
+    private static final long serialVersionUID = -7181886553884532043L;
     private String id;
     private Arrival arrival;
     private Departure departure;
